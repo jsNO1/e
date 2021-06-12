@@ -9,7 +9,7 @@ https://t.me/wenmouxx
 ============Quantumultx===============
 [task_local]
 #新潮品牌狂欢
-30 9,10 1-18 6 * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_mcxhd_brandcity.js, tag=新潮品牌狂欢, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 0,9,10 1-18 6 * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_mcxhd_brandcity.js, tag=新潮品牌狂欢, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
