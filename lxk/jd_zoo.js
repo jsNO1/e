@@ -13,11 +13,11 @@ PK互助：内部账号自行互助(排名靠前账号得到的机会多),多余
 ===================quantumultx================
 [task_local]
 #618动物联萌
-33 0,6-23/2 * * * jd_zoo.js, tag=618动物联萌, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+3 0,6-23/2 * * * jd_zoo.js, tag=618动物联萌, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 =====================Loon================
 [Script]
-cron "33 0,6-23/2 * * *" script-path=jd_zoo.js, tag=618动物联萌
+cron "3 0,6-23/2 * * *" script-path=jd_zoo.js, tag=618动物联萌
 
 ====================Surge================
 618动物联萌 = type=cron,cronexp="33 0,6-23/2 * * *",wake-system=1,timeout=3600,script-path=jd_zoo.js
