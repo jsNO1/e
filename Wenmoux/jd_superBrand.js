@@ -11,7 +11,7 @@
 ============Quantumultx===============
 [task_local]
 #特物Z|万物皆可国创
-30 11 * * * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js, tag=特物Z|万物皆可国创, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+30 7 * * * https://raw.githubusercontent.com/Wenmoux/scripts/master/jd/jd_superBrand.js, tag=特物Z|万物皆可国创, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
