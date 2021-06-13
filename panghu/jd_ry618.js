@@ -1,15 +1,17 @@
 /*
  [task_local]
 #柠檬华为荣耀618
- 1 0 * * * https://github.com/panghu999/panghu/raw/master/jd_ry618.js, tag=柠檬华为荣耀618, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+ 1 0 * * * http://nm66.top/jd_cctx.js, tag=柠檬华为荣耀618, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 */
 const $ = new Env('柠檬华为荣耀618');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let allMessage = '';
+
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
+let allMessage = '';
+
 
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -46,8 +48,20 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         continue
       }
 
-      await list()
+      
+      
       await cj1()
+      if($.Lottery.data.success == true){
+       cj=$.Lottery.data.result.userScore/500
+       cj=parseInt(cj)
+       if(cj > 0){
+       for (let i = 0 ; i < cj; i++){
+       await cj1()
+       }
+           
+       }
+      }
+     await list()
       
 
     }
@@ -62,7 +76,6 @@ if ($.isNode() && allMessage) {
   .finally(() => {
     $.done();
   })
-
 
 
 
@@ -107,28 +120,7 @@ headers: {
             
             if (data.code == 0) {
                 console.log("荣耀币："+data.data.result.userInfo.userScore)
-
-                                 console.log("预约荣耀50系列")
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aY5jQICGD633hOkvZfIw','8','1') 
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aY5jQICGD633hOkvZfIw','8','0') 
-                                 await $.wait(500);
-                                 console.log("预约荣耀50系列")
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aZ5jQICGD633lDlALWwQ','9','1') 
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aZ5jQICGD633lDlALWwQ','9','0') 
-                                 await $.wait(500);
-                                 console.log("开通荣耀品牌会员")
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aR5jIOCGH81XRDkhw','1','1') 
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aR5jIOCGH81XRDkhw','1','0')
-                                 await $.wait(500);  
-                                 console.log("浏览并关注荣耀店铺")
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aS5jQICGD43XxDlY4','2','1') 
-                                 await dotask('P205KkcHF1YlCWjckOC6IJ0CjRWm4aS5jQICGD43XxDlY4','2','0')
-                                 await $.wait(500);
-                                 console.log("浏览并关注荣耀店铺")
-                                 await dotask('P225KkcRkpNpFGFKRKik_YMIgCjRWm4aX5jQ','7','1') 
-                                 await dotask('P225KkcRkpNpFGFKRKik_YMIgCjRWm4aX5jQ','7','0')
-                                 await $.wait(500);
-                                                              
+     
                           
                              let taskList4 = data.data.result.taskVos[5].shoppingActivityVos 
                               console.log("开始执行浏览并关注荣耀店铺员")
@@ -150,7 +142,7 @@ headers: {
                                
                                await dotask(taskToken,'4','1') 
                                await dotask(taskToken,'4','0') 
-                                 await $.wait(500);
+                                 //await $.wait(500);
                                    }
                                let taskList6 = data.data.result.taskVos[7].productInfoVos 
                               console.log("开始执行每成功浏览1页面4S可得50荣耀币")
@@ -161,7 +153,7 @@ headers: {
 
                                await dotask(taskToken,'5','1') 
                                await dotask(taskToken,'5','0')
-                                 await $.wait(500);
+                                 //await $.wait(500);
                                    }
  
             }
@@ -253,12 +245,19 @@ headers: {
                     console.log(`${$.name} API请求失败，请检查网路重试`);
                 } else {
                     console.log(data)
-                    data = JSON.parse(data);
-                    if (data.data.success == 'true') {
+                    $.Lottery = JSON.parse(data);
+                    if ($.Lottery.data.success == true) {
                          //console.log(data)
+                         if($.Lottery.data.result.userAwardsCacheDto.type == 2){
 
-allMessage += `京东账号${$.index}-${$.nickName || $.UserName}\n抽取京豆：${data.data.result.userAwardsCacheDto.jBeanAwardVo.prizeName}${$.index !== cookiesArr.length ? '\n\n' : '\n\n'}`;
+//allMessage += `京东账号${$.index}-${$.nickName || $.UserName}\n抽取京豆：${$.Lottery.data.result.userAwardsCacheDto.jBeanAwardVo.prizeName}${$.index !== cookiesArr.length ? '\n\n' : '\n\n'}`;
+
+        allMessage += `京东账号${$.index}-${$.nickName || $.UserName}\n抽取京豆：${$.Lottery.data.result.userAwardsCacheDto.jBeanAwardVo.prizeName}${$.index !== cookiesArr.length ? '\n\n' : '\n\n'}`;
+}else
+if($.Lottery.data.result.userAwardsCacheDto.type == 0){
+$.log("兄弟你号黑了")}
                     }
+                
 
                 }
             } catch (e) {
