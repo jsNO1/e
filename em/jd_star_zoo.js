@@ -491,49 +491,47 @@ async function zoo() {
             }
         }
         //======================================================怪兽大作战=================================================================================
-        if (new Date().getHours()>= 18 && new Date().getHours()<= 23 && !$.hotFlag) {//使用技能
-        $.pkHomeData = {};
-        await takePostRequest('zoo_pk_getHomeData');
-        if (JSON.stringify($.pkHomeData) === '{}') {
-            console.log(`获取PK信息异常`);
-            return;
-        }
-        await $.wait(1000);
-        $.pkTaskList = [];
-        if(!$.hotFlag) await takePostRequest('zoo_pk_getTaskDetail');
-        await $.wait(1000);
-        for (let i = 0; i < $.pkTaskList.length; i++) {
-            $.oneTask = $.pkTaskList[i];
-            if ($.oneTask.status === 1) {
-                $.activityInfoList = $.oneTask.shoppingActivityVos || $.oneTask.brandMemberVos || $.oneTask.followShopVo || $.oneTask.browseShopVo
-                for (let j = 0; j < $.activityInfoList.length; j++) {
-                    $.oneActivityInfo = $.activityInfoList[j];
-                    if ($.oneActivityInfo.status !== 1) {
-                        continue;
-                    }
-                    console.log(`做任务：${$.oneActivityInfo.title || $.oneActivityInfo.taskName || $.oneActivityInfo.shopName};等待完成`);
-                    await takePostRequest('zoo_pk_collectScore');
-                    await $.wait(2000);
-                    console.log(`任务完成`);
-                }
-            }
-        }
-        await $.wait(1000);
-        //await takePostRequest('zoo_pk_getTaskDetail');
-        let skillList = $.pkHomeData.result.groupInfo.skillList || [];
-        //activityStatus === 1未开始，2 已开始
-        $.doSkillFlag = true;
-        for (let i = 0; i < skillList.length && $.pkHomeData.result.activityStatus === 2 && $.doSkillFlag; i++) {
-            if (Number(skillList[i].num) > 0) {
-                $.skillCode = skillList[i].code;
-                for (let j = 0; j < Number(skillList[i].num) && $.doSkillFlag; j++) {
-                    console.log(`使用技能`);
-                    await takePostRequest('zoo_pk_doPkSkill');
-                    await $.wait(2000);
-                }
-            }
-        }
-        }
+        // $.pkHomeData = {};
+        // await takePostRequest('zoo_pk_getHomeData');
+        // if (JSON.stringify($.pkHomeData) === '{}') {
+        //     console.log(`获取PK信息异常`);
+        //     return;
+        // }
+        // await $.wait(1000);
+        // $.pkTaskList = [];
+        // if(!$.hotFlag) await takePostRequest('zoo_pk_getTaskDetail');
+        // await $.wait(1000);
+        // for (let i = 0; i < $.pkTaskList.length; i++) {
+        //     $.oneTask = $.pkTaskList[i];
+        //     if ($.oneTask.status === 1) {
+        //         $.activityInfoList = $.oneTask.shoppingActivityVos || $.oneTask.brandMemberVos || $.oneTask.followShopVo || $.oneTask.browseShopVo
+        //         for (let j = 0; j < $.activityInfoList.length; j++) {
+        //             $.oneActivityInfo = $.activityInfoList[j];
+        //             if ($.oneActivityInfo.status !== 1) {
+        //                 continue;
+        //             }
+        //             console.log(`做任务：${$.oneActivityInfo.title || $.oneActivityInfo.taskName || $.oneActivityInfo.shopName};等待完成`);
+        //             await takePostRequest('zoo_pk_collectScore');
+        //             await $.wait(2000);
+        //             console.log(`任务完成`);
+        //         }
+        //     }
+        // }
+        // await $.wait(1000);
+        // //await takePostRequest('zoo_pk_getTaskDetail');
+        // let skillList = $.pkHomeData.result.groupInfo.skillList || [];
+        // //activityStatus === 1未开始，2 已开始
+        // $.doSkillFlag = true;
+        // for (let i = 0; i < skillList.length && $.pkHomeData.result.activityStatus === 2 && $.doSkillFlag; i++) {
+        //     if (Number(skillList[i].num) > 0) {
+        //         $.skillCode = skillList[i].code;
+        //         for (let j = 0; j < Number(skillList[i].num) && $.doSkillFlag; j++) {
+        //             console.log(`使用技能`);
+        //             await takePostRequest('zoo_pk_doPkSkill');
+        //             await $.wait(2000);
+        //         }
+        //     }
+        // }
     } catch (e) {
         $.logErr(e)
     }
