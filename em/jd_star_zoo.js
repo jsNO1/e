@@ -491,6 +491,7 @@ async function zoo() {
             }
         }
         //======================================================怪兽大作战=================================================================================
+        if (new Date().getHours()>= 18 && new Date().getHours()<= 23 && !$.hotFlag) {//使用技能
         $.pkHomeData = {};
         await takePostRequest('zoo_pk_getHomeData');
         if (JSON.stringify($.pkHomeData) === '{}') {
@@ -531,6 +532,7 @@ async function zoo() {
                     await $.wait(2000);
                 }
             }
+        }
         }
     } catch (e) {
         $.logErr(e)
