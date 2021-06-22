@@ -10,12 +10,12 @@
 ============Quantumultx===============
 [task_local]
 #京喜阶梯红包
-15 9 * 5,6 * https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js, tag=京喜阶梯红包,  enabled=true
+0 0,3,6,7 * * * https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js, tag=京喜阶梯红包,  enabled=true
 ================Loon==============
 [Script]
-cron "15 9 * 5,6 *" script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js,tag=京喜阶梯红包
+cron "0 0,3,6,7 * * *" script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js,tag=京喜阶梯红包
 ===============Surge=================
-京喜阶梯红包 = type=cron,cronexp="15 9 * 5,6 *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js
+京喜阶梯红包 = type=cron,cronexp="0 0,3,6,7 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js
 ============小火箭=========
 京喜阶梯红包 = type=cron,script-path=https://raw.githubusercontent.com/monk-coder/dust/dust/normal/adolf_jxhb.js, cronexpr="15 9 * 5,6 *", timeout=3600, enable=true
 */
