@@ -7,6 +7,10 @@
 
  默认500
  export JD_JOY_REWARD_NAME = 500
+
+ [task_local]
+#宠汪汪兑换二代目
+0 0,8,16 * * * jd_joy_help.js, tag=宠汪汪兑换二代目, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
  */
 
 const $ = new Env("宠汪汪兑换二代目")
