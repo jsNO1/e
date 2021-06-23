@@ -13,6 +13,12 @@
 ②从京东APP宠汪汪->领狗粮->邀请好友助力，分享给你小号微信或者微信的文件传输助手。 自己再打开刚才的分享，助力成功后，返回到此小程序首页重新进去宠汪汪即可助力下一位好友
 ③如提示好友人气旺，说明此好友已满了三人助力，需重新进出小程序，重新进入来客有礼-宠汪汪。
 new Env('宠汪汪强制为别人助力');//此处忽略即可，为自动生成iOS端软件配置文件所需
+============Quantumultx===============
+[task_local]
+#宠汪汪强制为别人助力
+0 10 * * * jd_joy_help.js, tag=宠汪汪强制为别人助力, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
+
+
 [MITM]
 hostname = draw.jdfcloud.com
 ======================Surge=====================
