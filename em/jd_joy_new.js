@@ -7,6 +7,9 @@
  完成度 1%，要用的手动执行，先不加cron了
  默认80，10、20、40、80可选
  export feedNum = 80
+ [task_local]
+#宠汪汪
+20 0-23/3 * * * jd_joy_new.js, tag=宠汪汪, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
  */
 
 const $ = new Env("宠汪汪二代目")
