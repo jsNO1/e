@@ -1,4 +1,6 @@
 /*
+入口 极速版 赚金币 
+分享到QQ查看邀请码 packetId就是
 #自定义变量
 export tytpacketId=""
  [task_local]
