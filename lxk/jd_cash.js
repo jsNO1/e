@@ -29,10 +29,10 @@ let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭�
 let cookiesArr = [], cookie = '', message;
 let helpAuthor = false;
 const randomCount = $.isNode() ? 5 : 5;
-let cash_exchange = true;//是否消耗2元红包兑换200京豆，默认否
+let cash_exchange = false;//是否消耗2元红包兑换200京豆，默认否
 const inviteCodes = [
-  `Jx4zbOmxZPwj@Ihgwbumxb_Ul9Wm6iw@eU9YaOi7Y_t39j_TwyAW0Q@f0RxOYPuP6JyoAE@e1xkbe6wYw@f1F3ZeqxZ_Q@dEwwbOy1Zvw@eU9YabrhM_R09miDnyZChw@Jhg1auSzZfwhnjM@eU9YaurhYqolom_VzXZF0g@eU9Yaevgb_Uj82fcmXYV1A@eU9YO5ngLppioh23nylP@eU9YaOrnYakv82-BmCBB3w@IhgxZeW1Z_kv8Wy6iw@eU9Yar_mYPwj8W7cynNGgg@eU9YaOmxbvgl92bVwyUV0Q@Iho3bemxZvwm7GfXynEb0g@JRs2be2xZf4i@eU9Yab21Zvon8G2AmXoWgg@eU9YaungYq4h-W6Az3Aa0A@eU9YLq3OPqt8sgipgyxL@eU9Yarq2bvp1o2_SzyAThQ@Y05gMKntOrl5@eU9YaeS1bvl39WuDyyIW1Q@Z0ppP73rMKl4pmfR@Ih4-buy2Zf0l82-6iw@eU9YauvmY_5w8zvVziARhA@eU9Yar-2ZPok-WfQnnoW3w@eU9YDav6AaNxjy-PogR5`,
-  `Jx4zbOmxZPwj@Ihgwbumxb_Ul9Wm6iw@eU9YaOi7Y_t39j_TwyAW0Q@f0RxOYPuP6JyoAE@e1xkbe6wYw@f1F3ZeqxZ_Q@dEwwbOy1Zvw@eU9YabrhM_R09miDnyZChw@Jhg1auSzZfwhnjM@eU9YaurhYqolom_VzXZF0g@eU9Yaevgb_Uj82fcmXYV1A@eU9YO5ngLppioh23nylP@eU9YaOrnYakv82-BmCBB3w@IhgxZeW1Z_kv8Wy6iw@eU9Yar_mYPwj8W7cynNGgg@eU9YaOmxbvgl92bVwyUV0Q@Iho3bemxZvwm7GfXynEb0g@JRs2be2xZf4i@eU9Yab21Zvon8G2AmXoWgg@eU9YaungYq4h-W6Az3Aa0A@eU9YLq3OPqt8sgipgyxL@eU9Yarq2bvp1o2_SzyAThQ@Y05gMKntOrl5@eU9YaeS1bvl39WuDyyIW1Q@Z0ppP73rMKl4pmfR@Ih4-buy2Zf0l82-6iw@eU9YauvmY_5w8zvVziARhA@eU9Yar-2ZPok-WfQnnoW3w@eU9YDav6AaNxjy-PogR5`
+  `eU9YaurhYqolom_VzXZF0g@eU9YaungYq4h-W6Az3Aa0A@eU9YLq3OPqt8sgipgyxL@Jx4zbOmxZPwj@Ihgwbumxb_Ul9Wm6iw`,
+  `eU9YaurhYqolom_VzXZF0g@eU9YaungYq4h-W6Az3Aa0A@eU9YLq3OPqt8sgipgyxL@Jx4zbOmxZPwj@Ihgwbumxb_Ul9Wm6iw`
 ]
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
