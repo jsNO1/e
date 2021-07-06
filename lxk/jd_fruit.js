@@ -10,16 +10,16 @@
 ==========================Quantumultx=========================
 [task_local]
 #jd免费水果
-5 6-18/6 * * * jd_fruit.js, tag=东东农场, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png, enabled=true
+5 0-18/6 * * * jd_fruit.js, tag=东东农场, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png, enabled=true
 =========================Loon=============================
 [Script]
-cron "5 6-18/6 * * *" script-path=jd_fruit.js,tag=东东农场
+cron "5 0-18/6 * * *" script-path=jd_fruit.js,tag=东东农场
 
 =========================Surge============================
-东东农场 = type=cron,cronexp="5 6-18/6 * * *",wake-system=1,timeout=3600,script-path=jd_fruit.js
+东东农场 = type=cron,cronexp="5 0-18/6 * * *",wake-system=1,timeout=3600,script-path=jd_fruit.js
 
 =========================小火箭===========================
-东东农场 = type=cron,script-path=jd_fruit.js, cronexpr="5 6-18/6 * * *", timeout=3600, enable=true
+东东农场 = type=cron,script-path=jd_fruit.js, cronexpr="5 0-18/6 * * *", timeout=3600, enable=true
 
 jd免费水果 搬的https://github.com/liuxiaoyucc/jd-helper/blob/a6f275d9785748014fc6cca821e58427162e9336/fruit/fruit.js
 */
@@ -30,9 +30,9 @@ let cookiesArr = [], cookie = '', jdFruitShareArr = [], isBox = false, notify, n
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // 这个列表填入你要助力的好友的shareCode
    //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'f8f819f3f3dd4f5b8f1d35337da2c893@ef9b51fb77d644d3aaa0f15fcf1dc72f@a6c7291809d344b5871171a45ca0d9b9@2f8be95b3d2243b7965fb74f4295274b@c946b311966145bfa1fee58429655841@63a6a4e282ad4e9cbc6bc69760226f0d@e8a2a584b1424db4bd25a9e97cfaa40c@ff21c8f1b356464b9f68fe2110c4d1d4@af1f02e9c13f46828c9dae444ae81759@fef036bcd72b45d59750234231ada2fc@3df0143c96ad4ff2bfdcdcd0b1030c1a@bd81b1227ebf460b8d11586d206edd32@4b06f4c126ad4fd7ad86d90e5d844770@cd66ca5cbcfe4e85b3081c56933ce71a@3d0136d28a354c438fa1adea53a5b31d@48a060283b6043aebc73f4f5338945f1@79b17ff74a8041e2a4b6ef93afa79177@e50d5bbc5d7642d685e9519c38c4a2ec@57e84d0f03484dbe8c37a61ac7562a2d@d952142db6a441b09174f57a2a9d1e85@f63df0fcdde845a4a3102ccec4e83ce3@2a7f317cfdee4d4a844e830075f7d4b2@83f37a32b5b54590aa3a8d363ecb9f29@4fe5abec14524fd59a8ef6fbbd2b3ca7',
+  'f8f819f3f3dd4f5b8f1d35337da2c893@ef9b51fb77d644d3aaa0f15fcf1dc72f@a6c7291809d344b5871171a45ca0d9b9@2f8be95b3d2243b7965fb74f4295274b@c946b311966145bfa1fee58429655841@63a6a4e282ad4e9cbc6bc69760226f0d@e8a2a584b1424db4bd25a9e97cfaa40c@ff21c8f1b356464b9f68fe2110c4d1d4@af1f02e9c13f46828c9dae444ae81759@fef036bcd72b45d59750234231ada2fc@3df0143c96ad4ff2bfdcdcd0b1030c1a@0dcde45f82774f1d806d3cb79dbc88aa@e7d416234aed47c291732db2aab4fb40@bd81b1227ebf460b8d11586d206edd32@4b06f4c126ad4fd7ad86d90e5d844770@cd66ca5cbcfe4e85b3081c56933ce71a@63a6a4e282ad4e9cbc6bc69760226f0d@3d0136d28a354c438fa1adea53a5b31d@48a060283b6043aebc73f4f5338945f1@5fd4a21e670744f1a6c2d63062855e66@07ddff575eab48ef9f20ad0a124dc03c@d17a30aa95d44f479d60b88394f7c974@d952142db6a441b09174f57a2a9d1e85@57e84d0f03484dbe8c37a61ac7562a2d@4fe5abec14524fd59a8ef6fbbd2b3ca7@e50d5bbc5d7642d685e9519c38c4a2ec@f63df0fcdde845a4a3102ccec4e83ce3@2a7f317cfdee4d4a844e830075f7d4b2@83f37a32b5b54590aa3a8d363ecb9f29',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
-  'f8f819f3f3dd4f5b8f1d35337da2c893@ef9b51fb77d644d3aaa0f15fcf1dc72f@a6c7291809d344b5871171a45ca0d9b9@2f8be95b3d2243b7965fb74f4295274b@c946b311966145bfa1fee58429655841@63a6a4e282ad4e9cbc6bc69760226f0d@e8a2a584b1424db4bd25a9e97cfaa40c@ff21c8f1b356464b9f68fe2110c4d1d4@af1f02e9c13f46828c9dae444ae81759@fef036bcd72b45d59750234231ada2fc@3df0143c96ad4ff2bfdcdcd0b1030c1a@bd81b1227ebf460b8d11586d206edd32@4b06f4c126ad4fd7ad86d90e5d844770@cd66ca5cbcfe4e85b3081c56933ce71a@3d0136d28a354c438fa1adea53a5b31d@48a060283b6043aebc73f4f5338945f1@79b17ff74a8041e2a4b6ef93afa79177@e50d5bbc5d7642d685e9519c38c4a2ec@57e84d0f03484dbe8c37a61ac7562a2d@d952142db6a441b09174f57a2a9d1e85@f63df0fcdde845a4a3102ccec4e83ce3@2a7f317cfdee4d4a844e830075f7d4b2@83f37a32b5b54590aa3a8d363ecb9f29@4fe5abec14524fd59a8ef6fbbd2b3ca7',
+  'f8f819f3f3dd4f5b8f1d35337da2c893@ef9b51fb77d644d3aaa0f15fcf1dc72f@a6c7291809d344b5871171a45ca0d9b9@2f8be95b3d2243b7965fb74f4295274b@c946b311966145bfa1fee58429655841@63a6a4e282ad4e9cbc6bc69760226f0d@e8a2a584b1424db4bd25a9e97cfaa40c@ff21c8f1b356464b9f68fe2110c4d1d4@af1f02e9c13f46828c9dae444ae81759@fef036bcd72b45d59750234231ada2fc@3df0143c96ad4ff2bfdcdcd0b1030c1a@0dcde45f82774f1d806d3cb79dbc88aa@e7d416234aed47c291732db2aab4fb40@bd81b1227ebf460b8d11586d206edd32@4b06f4c126ad4fd7ad86d90e5d844770@cd66ca5cbcfe4e85b3081c56933ce71a@63a6a4e282ad4e9cbc6bc69760226f0d@3d0136d28a354c438fa1adea53a5b31d@48a060283b6043aebc73f4f5338945f1@5fd4a21e670744f1a6c2d63062855e66@07ddff575eab48ef9f20ad0a124dc03c@d17a30aa95d44f479d60b88394f7c974@d952142db6a441b09174f57a2a9d1e85@57e84d0f03484dbe8c37a61ac7562a2d@4fe5abec14524fd59a8ef6fbbd2b3ca7@e50d5bbc5d7642d685e9519c38c4a2ec@f63df0fcdde845a4a3102ccec4e83ce3@2a7f317cfdee4d4a844e830075f7d4b2@83f37a32b5b54590aa3a8d363ecb9f29',
 ]
 let message = '', subTitle = '', option = {}, isFruitFinished = false;
 const retainWater = 50000;//保留水滴大于多少g,默认100g;
