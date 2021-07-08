@@ -83,7 +83,7 @@ const UA = $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT :
   }
   // 助力
   let res = [];
-  if (new Date().getUTCHours() + 8 >= 17) res = await getAuthorShareCode() || [];
+  //if (new Date().getUTCHours() + 8 >= 17) res = await getAuthorShareCode() || [];
   // if (ShHelpAuthorFlag) {
   //   $.innerShInviteList = getRandomArrayElements([...$.innerShInviteList, ...res], [...$.innerShInviteList, ...res].length);
   //   $.ShInviteList.push(...$.innerShInviteList);
