@@ -245,7 +245,7 @@ async function movement() {
       }
     }
     // 店铺
-    if (new Date().getUTCHours() + 8 >= 14 && new Date().getUTCHours() + 8 <= 19){//为了避免代码执行太久，下午2点到7点才做店铺任务
+    if (new Date().getUTCHours() + 8 >= 14 && new Date().getUTCHours() + 8 <= 23){//为了避免代码执行太久，下午2点到7点才做店铺任务
       console.log(`去做店铺任务`);
       $.shopInfoList = [];
       await takePostRequest('qryCompositeMaterials');
