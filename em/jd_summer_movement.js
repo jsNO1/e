@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/smiek2221/scripts/master/MovementFaker.js
 
 */
 const $ = new Env('燃动夏季');
-const MovementFaker = require('./jsNO1_e_MovementFaker.js')
+const MovementFaker = require('./MovementFaker.js')
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
