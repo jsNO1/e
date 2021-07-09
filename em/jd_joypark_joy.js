@@ -39,8 +39,8 @@ if ($.isNode()) {
 }
 
 //最大化硬币收益模式
-$.JOY_COIN_MAXIMIZE = process.env.JOY_COIN_MAXIMIZE === '1'
-$.log(`最大化收益模式: 已${$.JOY_COIN_MAXIMIZE ? `默认已开启` : `关闭`}  `)
+$.JOY_COIN_MAXIMIZE = process.env.JOY_COIN_MAXIMIZE === '0'
+$.log(`最大化收益模式: 已${$.JOY_COIN_MAXIMIZE ? `默认已开启` : `开启`}  `)
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
