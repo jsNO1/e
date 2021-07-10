@@ -88,38 +88,38 @@ const UA = $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT :
   //   $.innerShInviteList = getRandomArrayElements([...$.innerShInviteList, ...res], [...$.innerShInviteList, ...res].length);
   //   $.ShInviteList.push(...$.innerShInviteList);
   // }
-  for (let i = 0; i < cookiesArr.length; i++) {
-    $.cookie = cookiesArr[i];
-    $.canHelp = true;
-    $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-    if (!$.secretpInfo[$.UserName]) {
-      continue;
-    }
-    // $.secretp = $.secretpInfo[$.UserName];
-    $.index = i + 1;
-    if (new Date().getUTCHours() + 8 >= 9) {
-      console.log(`\n******开始内部京东账号【百元守卫站SH】助力*********\n`);
-      for (let i = 0; i < $.ShInviteList.length && $.canHelp; i++) {
-        console.log(`${$.UserName} 去助力SH码 ${$.ShInviteList[i]}`);
-        $.inviteId = $.ShInviteList[i];
-        await takePostRequest('shHelp');
-        await $.wait(1000);
-      }
-      $.canHelp = true;
-    }
-    if ($.inviteList && $.inviteList.length) console.log(`\n******开始内部京东账号【邀请好友助力】*********\n`);
-    for (let j = 0; j < $.inviteList.length && $.canHelp; j++) {
-      $.oneInviteInfo = $.inviteList[j];
-      if ($.oneInviteInfo.ues === $.UserName || $.oneInviteInfo.max) {
-        continue;
-      }
-      //console.log($.oneInviteInfo);
-      $.inviteId = $.oneInviteInfo.inviteId;
-      console.log(`${$.UserName}去助力${$.oneInviteInfo.ues},助力码${$.inviteId}`);
-      //await takePostRequest('helpHomeData');
-      await takePostRequest('help');
-      await $.wait(2000);
-    }
+  // for (let i = 0; i < cookiesArr.length; i++) {
+  //   $.cookie = cookiesArr[i];
+  //   $.canHelp = true;
+  //   $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+  //   if (!$.secretpInfo[$.UserName]) {
+  //     continue;
+  //   }
+  //   // $.secretp = $.secretpInfo[$.UserName];
+  //   $.index = i + 1;
+  //   if (new Date().getUTCHours() + 8 >= 9) {
+  //     console.log(`\n******开始内部京东账号【百元守卫站SH】助力*********\n`);
+  //     for (let i = 0; i < $.ShInviteList.length && $.canHelp; i++) {
+  //       console.log(`${$.UserName} 去助力SH码 ${$.ShInviteList[i]}`);
+  //       $.inviteId = $.ShInviteList[i];
+  //       await takePostRequest('shHelp');
+  //       await $.wait(1000);
+  //     }
+  //     $.canHelp = true;
+  //   }
+  //   if ($.inviteList && $.inviteList.length) console.log(`\n******开始内部京东账号【邀请好友助力】*********\n`);
+  //   for (let j = 0; j < $.inviteList.length && $.canHelp; j++) {
+  //     $.oneInviteInfo = $.inviteList[j];
+  //     if ($.oneInviteInfo.ues === $.UserName || $.oneInviteInfo.max) {
+  //       continue;
+  //     }
+  //     //console.log($.oneInviteInfo);
+  //     $.inviteId = $.oneInviteInfo.inviteId;
+  //     console.log(`${$.UserName}去助力${$.oneInviteInfo.ues},助力码${$.inviteId}`);
+  //     //await takePostRequest('helpHomeData');
+  //     await takePostRequest('help');
+  //     await $.wait(2000);
+  //   }
   }
   
 
