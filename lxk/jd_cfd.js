@@ -1185,7 +1185,7 @@ function shareCodesFormat() {
       $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
     } else {
       console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
-      const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
+      //const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = [...$.strMyShareIds, "6839F020B5C79298A5CE3CE747A2D4909044663EFD1248677077BA7BF1237099","D5C4A9F1DC48C2660663DD46812CADED3AA9BC47B4F9AB3C74FAD2543D6CF1F1","C923B8C8A49670E6364C147B67A397B74EFF2C8E2758DF12A167098831F2E3CB","3DEFEAFC1641904B5713DE29A5399A6A1B2C385E2E42433D19529658472E8239","A73378D7E555D8F2C08E60F7F1C26C13CF541BF4024C472AFEB3069B7C41DD48","FE6701D80F66B11FBF8185A02A7547C057E0A9592ABB4A30943A9AB3B7423C79"];
     }
     const readShareCodeRes = await readShareCode();
