@@ -141,7 +141,7 @@ async function jdDreamFactory() {
     await taskList();
     await investElectric();
     await QueryHireReward();//收取招工电力
-    await PickUp();//收取自家的地下零件
+    //await PickUp();//收取自家的地下零件
     await stealFriend();
     //await tuanActivity();
     //await QueryAllTuan();
