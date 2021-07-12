@@ -7,8 +7,8 @@
 // 同一个京东账号的好友互助码用@符号隔开,不同京东账号之间用&符号或者换行隔开,下面给一个示例
 // 如: 京东账号1的shareCode1@京东账号1的shareCode2&京东账号2的shareCode1@京东账号2的shareCode2
 let shareCodes = [
-  'YZ259F2ittJ7JQYHI99xtA==@cbcymEdI0f7iSc9Sj15Mnw==@CDzUQDqvJV-WAQcYFwOtOA==@XZu2jFrhNzxJQMYqaijsXg==@UIa2yVe5TiKS83X55K4zNQ==@a347_1fUIhFO35jUlp9gCw==@UEAyIXJGL3omp3yvLLY_tA==@zLY9s9CzbTP5iUerxSxNGg==@_FbT1FQLNgbq_jka6gy2TQ==@k_AaPcSfBOjcKp2krRSf7Q==@DFJda2QL3kh1o-8vTxta6Q==@NGG0Vw1hr8bhbQXXO7wZ3w==@WQTSuQLROrpDDrV6VprkAA==@AVHWUlW9Ganp8OLSWMS-7g==@S4NRhGsd4I5niQyU1hQU-w==@m-ISQtQcWwNDsEGdEgdzag==@X9J_vCWGXOy0oX-QJRxQjQ==@SWKn51B8R-dFvyaKRKb1Gw==@Uc1ZhOKmwwWfY6tbj37QlQ==@TySDVO3FjiP_mVeRbo0qJQ==@YZ259F2ittJ7JQYHI99xtA==@cbcymEdI0f7iSc9Sj15Mnw==@CDzUQDqvJV-WAQcYFwOtOA==@XZu2jFrhNzxJQMYqaijsXg==@a347_1fUIhFO35jUlp9gCw==@UEAyIXJGL3omp3yvLLY_tA==@zLY9s9CzbTP5iUerxSxNGg==@UIa2yVe5TiKS83X55K4zNQ==@n-nE-khOPoCE86G7UgmXnw==@_FbT1FQLNgbq_jka6gy2TQ==@k_AaPcSfBOjcKp2krRSf7Q==@Oz-VSdJlkjPa1L7xsCqcbA==@iAOL8NKX-FjWitAjTv1m3w==@DFJda2QL3kh1o-8vTxta6Q==@T0O2iHJ6ijlHypXYLvHWgw==',//账号一的好友shareCode,不同好友中间用@符号隔开
-  'YZ259F2ittJ7JQYHI99xtA==@cbcymEdI0f7iSc9Sj15Mnw==@CDzUQDqvJV-WAQcYFwOtOA==@XZu2jFrhNzxJQMYqaijsXg==@UIa2yVe5TiKS83X55K4zNQ==@a347_1fUIhFO35jUlp9gCw==@UEAyIXJGL3omp3yvLLY_tA==@zLY9s9CzbTP5iUerxSxNGg==@_FbT1FQLNgbq_jka6gy2TQ==@k_AaPcSfBOjcKp2krRSf7Q==@DFJda2QL3kh1o-8vTxta6Q==@NGG0Vw1hr8bhbQXXO7wZ3w==@WQTSuQLROrpDDrV6VprkAA==@AVHWUlW9Ganp8OLSWMS-7g==@S4NRhGsd4I5niQyU1hQU-w==@m-ISQtQcWwNDsEGdEgdzag==@X9J_vCWGXOy0oX-QJRxQjQ==@SWKn51B8R-dFvyaKRKb1Gw==@Uc1ZhOKmwwWfY6tbj37QlQ==@TySDVO3FjiP_mVeRbo0qJQ==@YZ259F2ittJ7JQYHI99xtA==@cbcymEdI0f7iSc9Sj15Mnw==@CDzUQDqvJV-WAQcYFwOtOA==@XZu2jFrhNzxJQMYqaijsXg==@a347_1fUIhFO35jUlp9gCw==@UEAyIXJGL3omp3yvLLY_tA==@zLY9s9CzbTP5iUerxSxNGg==@UIa2yVe5TiKS83X55K4zNQ==@n-nE-khOPoCE86G7UgmXnw==@_FbT1FQLNgbq_jka6gy2TQ==@k_AaPcSfBOjcKp2krRSf7Q==@Oz-VSdJlkjPa1L7xsCqcbA==@iAOL8NKX-FjWitAjTv1m3w==@DFJda2QL3kh1o-8vTxta6Q==@T0O2iHJ6ijlHypXYLvHWgw==',//账号二的好友shareCode，不同好友中间用@符号隔开
+  '',//账号一的好友shareCode,不同好友中间用@符号隔开
+  '',//账号二的好友shareCode，不同好友中间用@符号隔开
 ]
 
 // 从日志获取互助码
