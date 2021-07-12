@@ -1,30 +1,4 @@
 /**
-
-jd宠汪汪 搬的https://github.com/uniqueque/QuantumultX/blob/4c1572d93d4d4f883f483f907120a75d925a693e/Script/jd_joy.js
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-IOS用户支持京东双账号,NodeJs用户支持N个京东账号
-更新时间：2021-6-6
-活动入口：京东APP我的-更多工具-宠汪汪
-建议先凌晨0点运行jd_joy.js脚本获取狗粮后，再运行此脚本(jd_joy_steal.js)可偷好友积分，6点运行可偷好友狗粮
-feedCount:自定义 每次喂养数量; 等级只和喂养次数有关，与数量无关
-推荐每次投喂10个，积累狗粮，然后去玩聚宝盆赌
-Combine from Zero-S1/JD_tools(https://github.com/Zero-S1/JD_tools)
-==========Quantumult X==========
-[task_local]
-#京东宠汪汪
-5 0-23/2 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_new.js, tag=京东宠汪汪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdcww.png, enabled=true
-
-============Loon===========
-[Script]
-cron "5 0-23/2 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_new.js,tag=京东宠汪汪
-
-============Surge==========
-[Script]
-京东宠汪汪 = type=cron,cronexp="5 0-23/2 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_new.js
-
-===============小火箭==========
-京东宠汪汪 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_joy_new.js, cronexpr="5 0-23/2 * * *", timeout=3600, enable=true
-
  脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
  IOS用户支持京东双账号,NodeJs用户支持N个京东账号
  更新时间：2021-06-21
@@ -32,7 +6,7 @@ cron "5 0-23/2 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/maste
 
  完成度 1%，要用的手动执行，先不加cron了
  默认80，10、20、40、80可选
- export feedNum = 10
+ export feedNum = 80
  默认双人跑
  export JD_JOY_teamLevel = 2
  */
@@ -584,6 +558,8 @@ $.post = injectToRequest($.post.bind($))
       message = '';
       subTitle = '';
 
+      await getFriends();
+
       await run('detail/v2');
       await run();
       await feed();
@@ -775,7 +751,7 @@ function doTask(body, fnId = 'scan') {
 }
 
 function feed() {
-  feedNum = process.env.feedNum ? process.env.feedNum : 10
+  feedNum = process.env.feedNum ? process.env.feedNum : 80
   return new Promise(resolve => {
     $.post({
       url: `https://jdjoy.jd.com/common/pet/enterRoom/h5?invitePin=&reqSource=h5&invokeKey=NRp8OPxZMFXmGkaE`,
@@ -902,6 +878,69 @@ function run(fn = 'match') {
       } finally {
         resolve();
       }
+    })
+  })
+}
+
+function getFriends() {
+  return new Promise((resolve) => {
+    $.post({
+      url: 'https://jdjoy.jd.com/common/pet/enterRoom/h5?invitePin=&reqSource=h5&invokeKey=NRp8OPxZMFXmGkaE',
+      headers: {
+        'Host': 'jdjoy.jd.com',
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'com.jingdong.app.mall',
+        'Referer': 'https://h5.m.jd.com/babelDiy/Zeus/2wuqXrZrhygTQzYA7VufBEpj4amH/index.html?babelChannel=ttt12&sid=445902658831621c5acf782ec27ce21w&un_area=12_904_3373_62101',
+        'Origin': 'https://h5.m.jd.com',
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+        'Cookie': cookie
+      },
+      body: JSON.stringify({})
+    }, async (err, resp, data) => {
+      await $.wait(1000)
+      $.get({
+        url: 'https://jdjoy.jd.com/common/pet/h5/getFriends?itemsPerPage=20&currentPage=1&reqSource=h5&invokeKey=NRp8OPxZMFXmGkaE',
+        headers: {
+          'Host': 'jdjoy.jd.com',
+          'Accept': '*/*',
+          'Referer': 'https://h5.m.jd.com/babelDiy/Zeus/2wuqXrZrhygTQzYA7VufBEpj4amH/index.html',
+          "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+          'cookie': cookie
+        }
+      }, async (err, resp, data) => {
+        data = JSON.parse(data)
+        for (let f of data.datas) {
+          if (f.stealStatus === 'can_steal') {
+            console.log('可偷:', f.friendPin)
+            $.get({
+              url: `https://jdjoy.jd.com/common/pet/enterFriendRoom?reqSource=h5&invokeKey=NRp8OPxZMFXmGkaE&friendPin=${encodeURIComponent(f.friendPin)}`,
+              headers: {
+                'Host': 'jdjoy.jd.com',
+                'Accept': '*/*',
+                'Referer': 'https://h5.m.jd.com/babelDiy/Zeus/2wuqXrZrhygTQzYA7VufBEpj4amH/index.html',
+                "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+                'cookie': cookie
+              }
+            }, (err, resp, data) => {
+              $.get({
+                url: `https://jdjoy.jd.com/common/pet/getRandomFood?reqSource=h5&invokeKey=NRp8OPxZMFXmGkaE&friendPin=${encodeURIComponent(f.friendPin)}`,
+                headers: {
+                  'Host': 'jdjoy.jd.com',
+                  'Accept': '*/*',
+                  'Referer': 'https://h5.m.jd.com/babelDiy/Zeus/2wuqXrZrhygTQzYA7VufBEpj4amH/index.html',
+                  "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
+                  'cookie': cookie
+                }
+              }, (err, resp, data) => {
+                data = JSON.parse(data)
+                console.log('偷狗粮:', data.errorCode, data.data)
+              })
+            })
+          }
+          await $.wait(1500)
+        }
+        resolve();
+      })
     })
   })
 }
