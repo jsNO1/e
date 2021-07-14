@@ -86,7 +86,7 @@ let allMessage = '';
     })
 async function jdCash() {
   $.signMoney = 0;
-  await index()
+  //await index()
   await shareCodesFormat()
   await helpFriends()
   //await getReward()
