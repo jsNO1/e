@@ -8,17 +8,17 @@
 ============Quantumultx===============
 [task_local]
 #燃动夏季
-0 * * * * jd_summer_movement.js, tag=燃动夏季, img-url=https://raw.githubusercontent.com/Former-Years/icon/master/jd618.png, enabled=true
+5 0,8 * * * jd_summer_movement.js, tag=燃动夏季, img-url=https://raw.githubusercontent.com/Former-Years/icon/master/jd618.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 * * * *" script-path=jd_summer_movement.js,tag=燃动夏季
+cron "5 0,8 * * *" script-path=jd_summer_movement.js,tag=燃动夏季
 
 ===============Surge=================
-燃动夏季 = type=cron,cronexp="0 * * * *",wake-system=1,timeout=3600,script-path=jd_summer_movement.js
+燃动夏季 = type=cron,cronexp="5 0,8 * * *",wake-system=1,timeout=3600,script-path=jd_summer_movement.js
 
 ============小火箭=========
-燃动夏季 = type=cron,script-path=jd_summer_movement.js, cronexpr="0 * * * *", timeout=3600, enable=true
+燃动夏季 = type=cron,script-path=jd_summer_movement.js, cronexpr="5 0,8 * * *", timeout=3600, enable=true
 
  * */
  const $ = new Env('燃动夏季');
