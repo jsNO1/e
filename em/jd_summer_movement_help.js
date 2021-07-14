@@ -3,17 +3,17 @@
 ============Quantumultx===============
 [task_local]
 #燃动夏季助力
-0 * * * * jd_summer_movement.js, tag=燃动夏季助力, img-url=https://raw.githubusercontent.com/Former-Years/icon/master/jd618.png, enabled=true
+0 0 * * * jd_summer_movement.js, tag=燃动夏季助力, img-url=https://raw.githubusercontent.com/Former-Years/icon/master/jd618.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 * * * *" script-path=jd_summer_movement.js,tag=燃动夏季助力
+cron "0 0 * * *" script-path=jd_summer_movement.js,tag=燃动夏季助力
 
 ===============Surge=================
-燃动夏季助力 = type=cron,cronexp="0 * * * *",wake-system=1,timeout=3600,script-path=jd_summer_movement.js
+燃动夏季助力 = type=cron,cronexp="0 0 * * *",wake-system=1,timeout=3600,script-path=jd_summer_movement.js
 
 ============小火箭=========
-燃动夏季助力 = type=cron,script-path=jd_summer_movement.js, cronexpr="0 * * * *", timeout=3600, enable=true
+燃动夏季助力 = type=cron,script-path=jd_summer_movement.js, cronexpr="0 0 * * *", timeout=3600, enable=true
 
 https://wbbny.m.jd.com/babelDiy/Zeus/2rtpffK8wqNyPBH6wyUDuBKoAbCt/index.html
 cron 12 0,6-23/2 * * * https://raw.githubusercontent.com/smiek2221/scripts/master/jd_summer_movement.js
