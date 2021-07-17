@@ -670,7 +670,7 @@ function helpdraw(dwUserId) {
           data = JSON.parse(data);
           if (data.iRet === 0 || data.sErrMsg === "success") {
             if (data.Data.StagePrizeInfo) {
-              console.log(`领取助力奖励成功：获得${data.Data.ddwCoin}金币 ${data.Data.StagePrizeInfo.ddwMoney}财富 ${data.Data.StagePrizeInfo.strPrizeName || `0元`}红包`)
+              console.log(`领取助力奖励成功：获得${data.Data.ddwCoin}金币 ${data.Data.StagePrizeInfo.ddwMoney}财富 ${(data.Data.StagePrizeInfo.strPrizeName && !data.Data.StagePrizeInfo.ddwMoney) ? data.Data.StagePrizeInfo.strPrizeName : `0元`}红包`)
             } else {
               console.log(`领取助力奖励成功：获得${data.Data.ddwCoin}金币`)
             }
@@ -1325,7 +1325,7 @@ function awardTask(taskType, taskinfo) {
               if (msg.indexOf('活动太火爆了') !== -1) {
                 str = '任务为成就任务或者未到任务时间';
               } else {
-                str = msg + prizeInfo ? ` 获得金币 ¥ ${JSON.parse(prizeInfo).ddwCoin}` : '';
+                str = msg + prizeInfo ? `获得金币 ¥ ${JSON.parse(prizeInfo).ddwCoin}` : '';
               }
               console.log(`【领日常奖励】${taskName} ${str}\n${$.showLog ? data : ''}`);
             }
@@ -1347,7 +1347,7 @@ function awardTask(taskType, taskinfo) {
               if(msg.indexOf('活动太火爆了') !== -1) {
                 console.log(`活动太火爆了`)
               } else {
-                console.log(`【领成就奖励】${taskName} 获得财富值：¥ ${JSON.parse(prizeInfo).ddwMoney}\n${$.showLog ? data : ''}`);
+                console.log(`【领成就奖励】${taskName} 获得财富值 ¥ ${JSON.parse(prizeInfo).ddwMoney}\n${$.showLog ? data : ''}`);
               }
             }
           } catch (e) {
@@ -1570,9 +1570,9 @@ function requireConfig() {
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
-      url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
+      url: "https://wq.jd.com/user_new/info/GetJDUserInfoUnion?sceneval=2",
       headers: {
-        Host: "me-api.jd.com",
+        Host: "wq.jd.com",
         Accept: "*/*",
         Connection: "keep-alive",
         Cookie: cookie,
@@ -1589,11 +1589,11 @@ function TotalBean() {
         } else {
           if (data) {
             data = JSON.parse(data);
-            if (data['retcode'] === "1001") {
+            if (data['retcode'] === 1001) {
               $.isLogin = false; //cookie过期
               return;
             }
-            if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
+            if (data['retcode'] === 0 && data.data && data.data.hasOwnProperty("userInfo")) {
               $.nickName = data.data.userInfo.baseInfo.nickname;
             }
           } else {
