@@ -32,12 +32,12 @@ var out = 0; //接口超时退出, 用于可能发生的网络不稳定, 0则关
 
 var $nobyda = nobyda();
 
-const zooFaker = require('./JDJRValidator_Pure')
 const Faker = require('./JDSignValidator')
+const zooFaker = require('./JDJRValidator_Pure')
 let fp = '', eid = ''
 
-$nobyda.get = zooFaker.injectToRequest2($nobyda.get.bind($nobyda), 'channelSign')
-$nobyda.post = zooFaker.injectToRequest2($nobyda.post.bind($nobyda), 'channelSign')
+//$nobyda.get = zooFaker.injectToRequest2($nobyda.get.bind($nobyda), 'channelSign')
+//$nobyda.post = zooFaker.injectToRequest2($nobyda.post.bind($nobyda), 'channelSign')
 
 async function all() {
   merge = {};
@@ -774,11 +774,11 @@ async function JDUserSign2(s, key, title, tid) {
           data = JSON.parse(data);
           if (data.success && data.data) {
             data = data.data
-            if (!data.hasSign) {
-              let ss = await Faker.getBody(`https://prodev.m.jd.com/mall/active/${tid}/index.html`)
-              fp = ss.fp
-              await getEid(ss, title)
-            }
+            // if (!data.hasSign) {
+            //   let ss = await Faker.getBody(`https://prodev.m.jd.com/mall/active/${tid}/index.html`)
+            //   fp = ss.fp
+            //   await getEid(ss, title)
+            // }
           }
         }
       } catch(eor) {
@@ -1501,7 +1501,7 @@ function TotalBean() {
   return new Promise(resolve => {
     if (disable("Qbear")) return resolve()
     $nobyda.get({
-      url: 'https://me-api.jd.com/user_new/info/GetJDUserInfoUnion',
+      url: 'https://wq.jd.com/user_new/info/GetJDUserInfoUnion?sceneval=2',
       headers: {
         Cookie: KEY
       }
