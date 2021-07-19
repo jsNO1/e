@@ -36,7 +36,7 @@ $.showLog = $.getdata("cfd_showLog") ? $.getdata("cfd_showLog") === "true" : fal
 $.notifyTime = $.getdata("cfd_notifyTime");
 $.result = [];
 $.shareCodes = [];
-let cookiesArr = [], cookie = '', token, res= [];
+let cookiesArr = [], cookie = '', res= [];
 
 const randomCount = $.isNode() ? 3 : 3;
 if ($.isNode()) {
@@ -57,7 +57,8 @@ $.appId = 10028;
   }
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requestAlgo();
-  let res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/cfd.json')
+  await $.wait(1000)
+  //let res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/cfd.json')
   // if (!res) {
   //   $.http.get({url: 'https://purge.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
   //   await $.wait(1000)
@@ -72,9 +73,8 @@ $.appId = 10028;
       $.index = i + 1;
       $.nickName = '';
       $.isLogin = true;
-      $.nickName = '';
       await TotalBean();
-      console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+      console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 
@@ -83,8 +83,6 @@ $.appId = 10028;
         }
         continue
       }
-      token = await getJxToken()
-      // console.log(`token：${JSON.stringify(token)}`)
       $.allTask = []
       $.info = {}
       //await shareCodesFormat()
@@ -214,7 +212,7 @@ async function cfd() {
         let vo = $.info.StoryInfo.StoryList[key]
         if (vo.Mermaid) {
           if (vo.Mermaid.dwIsToday === 1) {
-            console.log(`可怜的美人鱼困在沙滩上了，快去解救他吧~`)
+            console.log(`可怜的美人鱼困在沙滩上了，快去解救她吧~`)
             await mermaidOper(vo.strStoryId, '1', vo.ddwTriggerDay)
           } else if (vo.Mermaid.dwIsToday === 0) {
             await mermaidOper(vo.strStoryId, '4', vo.ddwTriggerDay)
@@ -718,6 +716,14 @@ async function queryRubbishInfo() {
                   console.log(`倒垃圾失败：${rubbishOperTwoRes.sErrMsg}\n`)
                 }
               } else {
+                console.log(`获取垃圾信息成功：本次不需要垃圾分类`)
+                if (rubbishOperRes.iRet === 0 || rubbishOperRes.sErrMsg === "success") {
+                  console.log(`倒垃圾成功：获得${rubbishOperRes.Data.ThrowRubbish.ddwCoin}金币\n`)
+                } else {
+                  console.log(`倒垃圾失败：${rubbishOperRes.sErrMsg}\n`)
+                }
+              }
+              } else {
                 console.log(`当前暂无垃圾\n`)
               }
             }
@@ -984,16 +990,15 @@ async function getBuildInfo(body, buildList, type = true) {
             await getUserInfo(false)
             console.log(`升级建筑`)
             console.log(`【${buildNmae}】当前等级：${buildList.dwLvl} 升级获得财富：${data.ddwLvlRich}`)
-            console.log(`【${buildNmae}】升级需要${data.ddwNextLvlCostCoin}金币，当前拥有${$.info.ddwCoinBalance}`)
-            if(data.dwCanLvlUp > 0 && $.info.ddwCoinBalance >= data.ddwNextLvlCostCoin) {
+            console.log(`【${buildNmae}】升级需要${data.ddwNextLvlCostCoin}金币，当前拥有${$.info.ddwCoinBalance}，保留三倍升级所需金币${data.ddwNextLvlCostCoin * 3}`)
+            if(data.dwCanLvlUp > 0 && $.info.ddwCoinBalance >= data.ddwNextLvlCostCoin * 3) {
               console.log(`【${buildNmae}】满足升级条件，开始升级`)
               const body = `ddwCostCoin=${data.ddwNextLvlCostCoin}&strBuildIndex=${data.strBuildIndex}`
               let buildLvlUpRes = await buildLvlUp(body)
               if (buildLvlUpRes.iRet === 0) {
                 console.log(`【${buildNmae}】升级成功\n`)
               } else {
-                console.log(`${buildLvlUpRes}\n`)
-                await $.wait(2000)
+                console.log(`【${buildNmae}】升级失败：${buildLvlUpRes.sErrMsg}\n`)
               }
             } else {
               console.log(`【${buildNmae}】不满足升级条件，跳过升级\n`)
