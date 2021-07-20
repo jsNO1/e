@@ -281,8 +281,9 @@ async function buildList(){
         let msg = `[${title}] 当前等级:${item.dwLvl} 接待收入:${item.ddwOneceVistorAddCoin}/人 座位人数:${item.dwContain}`
         if(GetBuildInfo) msg += ` 升级->需要金币:${GetBuildInfo.ddwNextLvlCostCoin} 获得财富:${GetBuildInfo.ddwLvlRich}`
         console.log(msg)
+
         await $.wait(1000)
-        if(GetBuildInfo.dwCanLvlUp > 0){
+        if(GetBuildInfo.dwCanLvlUp > 0 && $.HomeInfo.ddwRichBalance >= GetBuildInfo.ddwNextLvlCostCoin * 6){
           console.log(`${item.dwLvl == 0 && '开启' || '升级'}${title}`)
           if(item.dwLvl == 0){
             await taskGet(`user/createbuilding`, stk, additional)
