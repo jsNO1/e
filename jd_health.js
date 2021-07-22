@@ -87,6 +87,11 @@ async function main() {
     await helpFriends()
     await getTaskDetail(22);
     await getTaskDetail(-1)
+
+    if (reward) {
+      await getCommodities()
+    }
+
   } catch (e) {
     $.logErr(e)
   }
