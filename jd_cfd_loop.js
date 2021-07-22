@@ -76,8 +76,8 @@ $.appId = 10028;
         }
         $.info = {}
         await cfd();
-        let time = $.isNode() ? (process.env.CFD_LOOP_SLEEPTIME ? (process.env.CFD_LOOP_SLEEPTIME * 1 > 1000 ? process.env.CFD_LOOP_SLEEPTIME : process.env.CFD_LOOP_SLEEPTIME * 1000) : 5000) : ($.getdata("CFD_LOOP_SLEEPTIME") ? $.getdata("CFD_LOOP_SLEEPTIME") * 1000);
-        await $.wait(time)
+        let time = 15000;
+        await $.wait(15000)
       }
     }
   }
