@@ -289,7 +289,7 @@ async function composeGameState(type = true) {
                   console.log(`合成珍珠：模拟操作${num}次`)
                   for (let v = 0; v < num; v++) {
                     console.log(`模拟操作进度：${v + 1}/${num}`)
-                    await $.wait(5000)
+                    await $.wait(6000)
                     await realTmReport(data.strMyShareId)
                   }
                   let res = await composeGameAddProcess(data.strDT)
@@ -304,7 +304,7 @@ async function composeGameState(type = true) {
                 for (let key of Object.keys(composeGameStateRes.stagelist)) {
                   let vo = composeGameStateRes.stagelist[key]
                   if (vo.dwIsAward == 0 && composeGameStateRes.dwCurProgress >= vo.dwCurStageEndCnt) {
-                    await $.wait(2000)
+                    await $.wait(5000)
                     await composeGameAward(vo.dwCurStageEndCnt)
                   }
                 }
@@ -517,7 +517,7 @@ async function querystorageroom(dwSceneId) {
                 strTypeCnt += `${bags[j]}|`
               }
             }
-            await $.wait(1000)
+            await $.wait(5000)
             await sellgoods(`strTypeCnt=${strTypeCnt}&dwSceneId=${dwSceneId}`)
           } else {
             console.log(`背包是空的，快去捡贝壳吧\n`)
@@ -574,7 +574,7 @@ async function getTakeAggrPage(type) {
               if (vo.dwStatus !== 1) {
                 const body = `ddwCoin=${vo.ddwCoin}&ddwMoney=${vo.ddwMoney}&dwPrizeType=${vo.dwPrizeType}&strPrizePool=${vo.strPrizePool}&dwPrizeLv=${vo.dwBingoLevel}`
                 await rewardSign(body)
-                await $.wait(1000)
+                await $.wait(5000)
               } else {
                 console.log(`今日已签到\n`)
                 break
@@ -608,7 +608,7 @@ async function getTakeAggrPage(type) {
           if (helpNum.length !== 0) {
             for (let j = 0; j < helpNum.length; j++) {
               await helpdraw(helpNum[j])
-              await $.wait(2000)
+              await $.wait(5000)
             }
           } else {
             console.log(`暂无可领助力奖励`)
@@ -797,13 +797,13 @@ async function getActTask() {
             let vo = data.Data.TaskList[key]
             if (vo.dwCompleteNum >= vo.dwTargetNum && vo.dwAwardStatus !== 1) {
               await awardActTask('Award', vo)
-              await $.wait(2000)
+              await $.wait(5000)
             }
           }
           if (data.Data.dwCompleteTaskNum >= data.Data.dwTotalTaskNum && data.Data.dwStatus !== 4) {
             console.log(`【🐮牛牛任务】已做完，去开启宝箱`)
             await awardActTask('story/ActTaskAward')
-            await $.wait(2000)
+            await $.wait(5000)
           } else {
             console.log(`【🐮牛牛任务】已做完，宝箱已开启`)
           }
@@ -908,7 +908,7 @@ async function employTourGuideInfo() {
               }
               const body = `strBuildIndex=${vo.strBuildIndex}&dwIsFree=${dwIsFree}&ddwConsumeCoin=${vo.ddwCostCoin}`
               await employTourGuide(body, buildNmae)
-              await $.wait(1000)
+              await $.wait(5000)
             } else if (vo.strBuildIndex !== 'food') {
               console.log(`【${buildNmae}】无可雇佣导游`)
             }
@@ -1261,7 +1261,7 @@ function browserTask(taskType) {
             //做任务
             console.log(`【📆日常任务】${taskinfo.taskName} 进度：${i + 1}/${end}`)
             await doTask(taskinfo);
-            await $.wait(2000);
+            await $.wait(5000);
           }
           //领取奖励
           await awardTask(0, taskinfo);
@@ -1276,7 +1276,7 @@ function browserTask(taskType) {
           } else {
             //领奖励
             await awardTask(1, taskinfo);
-            await $.wait(1000);
+            await $.wait(5000);
           }
         }
         break;
