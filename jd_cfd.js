@@ -36,7 +36,7 @@ $.showLog = $.getdata("cfd_showLog") ? $.getdata("cfd_showLog") === "true" : fal
 $.notifyTime = $.getdata("cfd_notifyTime");
 $.result = [];
 $.shareCodes = [];
-let cookiesArr = [], cookie = '', res= [];
+let cookiesArr = [], cookie = '', token = '', res= [];
 
 const randomCount = $.isNode() ? 3 : 3;
 if ($.isNode()) {
@@ -85,6 +85,7 @@ $.appId = 10028;
       }
       $.allTask = []
       $.info = {}
+      token = await getJxToken()
       //await shareCodesFormat()
       await cfd();
       await $.wait(2000);
@@ -138,11 +139,11 @@ async function cfd() {
     }
 
     //每日签到
-    await $.wait(2000)
+    await $.wait(5000)
     await getTakeAggrPage('sign')
 
     //助力奖励
-    await $.wait(2000)
+    await $.wait(5000)
     await getTakeAggrPage('helpdraw')
 
     console.log('')
@@ -156,17 +157,17 @@ async function cfd() {
       let vo = $.info.buildInfo.buildList[key]
       let body = `strBuildIndex=${vo.strBuildIndex}`
       await getBuildInfo(body, vo)
-      await $.wait(1000)
+      await $.wait(5000)
     }
 
     //合成珍珠
-    await $.wait(2000)
+    await $.wait(5000)
     await composeGameState()
 
     //接待贵宾
     console.log(`接待贵宾`)
     if ($.info.StoryInfo.StoryList) {
-      await $.wait(2000)
+      await $.wait(5000)
       for (let key of Object.keys($.info.StoryInfo.StoryList)) {
         let vo = $.info.StoryInfo.StoryList[key]
         if (vo.Special) {
@@ -174,7 +175,7 @@ async function cfd() {
           await specialUserOper(vo.strStoryId, '2', vo.ddwTriggerDay, vo)
           await $.wait(vo.Special.dwWaitTime * 1000)
           await specialUserOper(vo.strStoryId, '3', vo.ddwTriggerDay, vo)
-          await $.wait(2000)
+          await $.wait(5000)
         } else {
           console.log(`当前暂无贵宾\n`)
         }
@@ -192,9 +193,9 @@ async function cfd() {
         if (vo.Collector) {
           console.log(`喜欢贝壳的收藏家来了，快去卖贝壳吧~`)
           await collectorOper(vo.strStoryId, '2', vo.ddwTriggerDay)
-          await $.wait(2000)
+          await $.wait(5000)
           await querystorageroom('2')
-          await $.wait(2000)
+          await $.wait(5000)
           await collectorOper(vo.strStoryId, '4', vo.ddwTriggerDay)
         } else {
           console.log(`当前暂无收藏家\n`)
@@ -207,7 +208,7 @@ async function cfd() {
     //美人鱼
     console.log(`美人鱼`)
     if ($.info.StoryInfo.StoryList) {
-      await $.wait(2000)
+      await $.wait(5000)
       for (let key of Object.keys($.info.StoryInfo.StoryList)) {
         let vo = $.info.StoryInfo.StoryList[key]
         if (vo.Mermaid) {
@@ -226,28 +227,28 @@ async function cfd() {
     }
 
     //倒垃圾
-    await $.wait(2000)
+    await $.wait(5000)
     await queryRubbishInfo()
 
     //雇导游
-    await $.wait(2000);
+    await $.wait(5000);
     await employTourGuideInfo();
 
     console.log(`\n做任务`)
     //牛牛任务
-    await $.wait(2000)
+    await $.wait(5000)
     await getActTask()
 
     //日常任务
-    await $.wait(2000);
+    await $.wait(5000);
     await getTaskList(0);
-    await $.wait(2000);
+    await $.wait(5000);
     await browserTask(0);
 
     //成就任务
-    await $.wait(2000);
+    await $.wait(5000);
     await getTaskList(1);
-    await $.wait(2000);
+    await $.wait(5000);
     await browserTask(1);
 
     await $.wait(2000);
@@ -560,71 +561,71 @@ async function getTakeAggrPage(type) {
   return new Promise(async (resolve) => {
     switch (type) {
       case 'sign':
-    $.get(taskUrl(`story/GetTakeAggrPage`), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} GetTakeAggrPage API请求失败，请检查网路重试`)
-        } else {
-          data = JSON.parse(data);
-          console.log(`每日签到`)
-          for (let key of Object.keys(data.Data.Sign.SignList)) {
-            let vo = data.Data.Sign.SignList[key]
-            if (vo.dwDayId === data.Data.Sign.dwTodayId) {
-              if (vo.dwStatus !== 1) {
-                const body = `ddwCoin=${vo.ddwCoin}&ddwMoney=${vo.ddwMoney}&dwPrizeType=${vo.dwPrizeType}&strPrizePool=${vo.strPrizePool}&dwPrizeLv=${vo.dwBingoLevel}`
-                await rewardSign(body)
-                await $.wait(5000)
-              } else {
-                console.log(`今日已签到\n`)
-                break
+        $.get(taskUrl(`story/GetTakeAggrPage`), async (err, resp, data) => {
+          try {
+            if (err) {
+              console.log(`${JSON.stringify(err)}`)
+              console.log(`${$.name} GetTakeAggrPage API请求失败，请检查网路重试`)
+            } else {
+              data = JSON.parse(data);
+              console.log(`每日签到`)
+              for (let key of Object.keys(data.Data.Sign.SignList)) {
+                let vo = data.Data.Sign.SignList[key]
+                if (vo.dwDayId === data.Data.Sign.dwTodayId) {
+                  if (vo.dwStatus !== 1) {
+                    const body = `ddwCoin=${vo.ddwCoin}&ddwMoney=${vo.ddwMoney}&dwPrizeType=${vo.dwPrizeType}&strPrizePool=${vo.strPrizePool}&dwPrizeLv=${vo.dwBingoLevel}`
+                    await rewardSign(body)
+                    await $.wait(2000)
+                  } else {
+                    console.log(`今日已签到\n`)
+                    break
+                  }
+                }
               }
             }
+          } catch (e) {
+            $.logErr(e, resp);
+          } finally {
+            resolve();
           }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve();
-      }
-    })
-    break
-  case 'helpdraw':
-    $.get(taskUrl(`story/GetTakeAggrPage`), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} GetTakeAggrPage API请求失败，请检查网路重试`)
-        } else {
-          data = JSON.parse(data);
-          console.log(`领助力奖励`)
-          let helpNum = []
-          for (let key of Object.keys(data.Data.Employee.EmployeeList)) {
-            let vo = data.Data.Employee.EmployeeList[key]
-            if (vo.dwStatus !== 1) {
-              helpNum.push(vo.dwId)
+        })
+        break
+      case 'helpdraw':
+        $.get(taskUrl(`story/GetTakeAggrPage`), async (err, resp, data) => {
+          try {
+            if (err) {
+              console.log(`${JSON.stringify(err)}`)
+              console.log(`${$.name} GetTakeAggrPage API请求失败，请检查网路重试`)
+            } else {
+              data = JSON.parse(data);
+              console.log(`领助力奖励`)
+              let helpNum = []
+              for (let key of Object.keys(data.Data.Employee.EmployeeList)) {
+                let vo = data.Data.Employee.EmployeeList[key]
+                if (vo.dwStatus !== 1) {
+                  helpNum.push(vo.dwId)
+                }
+              }
+              if (helpNum.length !== 0) {
+                for (let j = 0; j < helpNum.length; j++) {
+                  await helpdraw(helpNum[j])
+                  await $.wait(2000)
+                }
+              } else {
+                console.log(`暂无可领助力奖励`)
+              }
             }
+          } catch (e) {
+            $.logErr(e, resp);
+          } finally {
+            resolve();
           }
-          if (helpNum.length !== 0) {
-            for (let j = 0; j < helpNum.length; j++) {
-              await helpdraw(helpNum[j])
-              await $.wait(5000)
-            }
-          } else {
-            console.log(`暂无可领助力奖励`)
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve();
-      }
-    })
-    break
-  default:
-    break
-}
-})
+        })
+        break
+      default:
+        break
+    }
+  })
 }
 function rewardSign(body) {
   return new Promise((resolve) => {
@@ -739,7 +740,6 @@ async function queryRubbishInfo() {
     })
   })
 }
-
 function rubbishOper(dwType, body = '') {
   return new Promise((resolve) => {
     switch(dwType) {
@@ -908,10 +908,10 @@ async function employTourGuideInfo() {
               }
               const body = `strBuildIndex=${vo.strBuildIndex}&dwIsFree=${dwIsFree}&ddwConsumeCoin=${vo.ddwCostCoin}`
               await employTourGuide(body, buildNmae)
-              await $.wait(5000)
             } else if (vo.strBuildIndex !== 'food') {
               console.log(`【${buildNmae}】无可雇佣导游`)
             }
+            await $.wait(5000)
           }
         }
       } catch (e) {
@@ -1086,13 +1086,13 @@ function helpByStage(shareCodes) {
             console.log(data.sErrMsg)
             $.canHelp = false
           } else if (data.iRet === 9999 || data.sErrMsg === '您还没有登录，请先登录哦~') {
-            console.log(data.sErrMsg)
+            console.log(`助力失败：${data.sErrMsg}`)
             $.canHelp = false
           } else if (data.iRet === 2229 || data.sErrMsg === '助力失败啦~') {
-            console.log(data.sErrMsg)
+            console.log(`助力失败：您的账号或者被助力的账号可能已黑，请联系客服`data.sErrMsg)
             // $.canHelp = false
           } else {
-            console.log(data.sErrMsg)
+            console.log(`助力失败：${data.sErrMsg}`)
           }
         }
       } catch (e) {
@@ -1140,7 +1140,7 @@ function getAuthorShareCode(url) {
 // 获取用户信息
 function getUserInfo(showInvite = true) {
   return new Promise(async (resolve) => {
-    $.get(taskUrl(`user/QueryUserInfo`), (err, resp, data) => {
+    $.get(taskUrl(`user/QueryUserInfo`, `ddwTaskId=&strShareId=&strMarkList=${escape('guider_step,collect_coin_auth,guider_medal,guider_over_flag,build_food_full,build_sea_full,build_shop_full,build_fun_full,medal_guider_show,guide_guider_show,guide_receive_vistor,daily_task,guider_daily_task')}&strPgUUNum=${token['farm_jstoken']}&strPgtimestamp=${token['timestamp']}&strPhoneID=${token['phoneid']}`), (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -1155,11 +1155,12 @@ function getUserInfo(showInvite = true) {
             strMyShareId,
             dwLandLvl,
             Fund = {},
-            StoryInfo = {}
+            StoryInfo = {},
+            Business = {}
           } = data;
           if (showInvite) {
             console.log(`\n获取用户信息：${sErrMsg}\n${$.showLog ? data : ""}`);
-            console.log(`\n当前等级:${dwLandLvl},金币:${ddwCoinBalance},财富值:${ddwRichBalance}\n`)
+            console.log(`\n当前等级:${dwLandLvl},金币:${ddwCoinBalance},财富值:${ddwRichBalance},连续营业天数:${Business.dwBussDayNum},离线收益:${Business.ddwCoin}\n`)
           }
           if (showInvite && strMyShareId) {
             console.log(`财富岛好友互助码每次运行都变化,旧的可继续使用`);
