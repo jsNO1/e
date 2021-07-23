@@ -177,11 +177,11 @@ async function movement() {
         await $.wait(1000);
       }
       $.userInfo = $.homeData.result.userActBaseInfo;
-      if (Number($.userInfo.poolCurrency) >= Number($.userInfo.exchangeThreshold)) {
-        console.log(`满足升级条件，去升级`);
-        await takePostRequest('olympicgames_receiveCash');
-        await $.wait(1000);
-      }
+      // if (Number($.userInfo.poolCurrency) >= Number($.userInfo.exchangeThreshold)) {
+      //   console.log(`满足升级条件，去升级`);
+      //   await takePostRequest('olympicgames_receiveCash');
+      //   await $.wait(1000);
+      // }
       bubbleInfos = $.homeData.result.bubbleInfos;
       for(let item of bubbleInfos){
         if(item.type != 7){
