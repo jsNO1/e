@@ -91,8 +91,11 @@ Date.prototype.Format = function (fmt) { //author: meizz
       $.num = i
       $.info = {}
       $.money = 0
+      console.log(`脚本开始请求时间 ${(new Date()).Format("yyyy-MM-dd hh:mm:ss | S")}`);
+      console.log(`本地时间与京东服务器时间差(毫秒)：${await get_diff_time()}`);
       token = await getJxToken()
       await cfd();
+      console.log(`脚本结束请求时间 ${(new Date()).Format("yyyy-MM-dd hh:mm:ss | S")}`);
     }
   }
   if (allMessage) {
@@ -138,7 +141,40 @@ async function cfd() {
     $.logErr(e)
   }
 }
-
+function getJDServerTime() {
+  return new Promise(resolve => {
+    // console.log(Date.now())
+    $.get({url: "https://api.m.jd.com/client.action?functionId=queryMaterialProducts&client=wh5",headers:{
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }}, async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} 获取京东服务器时间失败，请检查网路重试`)
+        } else {
+          data = JSON.parse(data);
+          $.jdTime = data['currentTime2'];
+          // console.log(`获取京东服务器时间戳`)
+          // console.log(data['currentTime2']);
+          // console.log(`获取京东服务器时间`)
+          // console.log(data['currentTime']);
+          // console.log(`获取本地与京东服务器时间差`)
+          // console.log(data['currentTime2'] - Date.now())
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve($.jdTime);
+      }
+    })
+  })
+}
+//时间戳
+async function get_diff_time() {
+   console.log(`本机时间戳 ${Date.now()}`)
+   console.log(`京东服务器时间戳 ${await getJDServerTime()}`)
+  return Date.now() - await getJDServerTime();
+}
 // 提现
 function cashOutQuali() {
   return new Promise((resolve) => {
@@ -178,12 +214,12 @@ async function userCashOutState(type = true) {
                 nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000)
                 if (nowTimes.getHours() >= 0 && nowTimes.getHours() < 12) {
                   data.UsrCurrCashList = data.UsrCurrCashList.filter((x) => x.ddwMoney / 100 >= 1)
-                } else if (nowTimes.getHours() === 12 && nowTimes.getMinutes() <= 10) {
+                } else if (nowTimes.getHours() === 12 && nowTimes.getMinutes() <= 5) {
                   data.UsrCurrCashList = data.UsrCurrCashList.filter((x) => x.ddwMoney / 100 >= 0.5)
                 }
                 for (let key of Object.keys(data.UsrCurrCashList).reverse()) {
                   let vo = data.UsrCurrCashList[key]
-                  if (vo.dwDefault === 1) {
+                  if (vo.dwRemain > 0) {
                     let cashOutRes = await cashOut(vo.ddwMoney, vo.ddwPaperMoney)
                     if (cashOutRes.iRet === 0) {
                       $.money = vo.ddwMoney / 100
@@ -220,14 +256,14 @@ async function userCashOutState(type = true) {
                       break
                   }
                   console.log(`升级建筑`)
-                  console.log(`【${buildNmae}】当前等级：${vo.dwLvl} 升级获得财富：${getBuildInfoRes.ddwLvlRich}`)
+                  console.log(`【${buildNmae}】当前等级：${vo.dwLvl}`)
                   console.log(`【${buildNmae}】升级需要${getBuildInfoRes.ddwNextLvlCostCoin}金币，当前拥有${$.info.ddwCoinBalance}`)
                   if(getBuildInfoRes.dwCanLvlUp > 0 && $.info.ddwCoinBalance >= getBuildInfoRes.ddwNextLvlCostCoin) {
                     console.log(`【${buildNmae}】满足升级条件，开始升级`)
                     const body = `ddwCostCoin=${getBuildInfoRes.ddwNextLvlCostCoin}&strBuildIndex=${getBuildInfoRes.strBuildIndex}`
                     let buildLvlUpRes = await buildLvlUp(body)
                     if (buildLvlUpRes.iRet === 0) {
-                      console.log(`【${buildNmae}】升级成功\n`)
+                      console.log(`【${buildNmae}】升级成功：获得${getBuildInfoRes.ddwLvlRich}财富\n`)
                       break
                     } else {
                       console.log(`【${buildNmae}】升级失败：${buildLvlUpRes.sErrMsg}\n`)
