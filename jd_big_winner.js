@@ -80,7 +80,7 @@ async function main() {
       if ($.canOpenRed) {
         while (!$.canApCashWithDraw && $.changeReward) {
           await openRedReward();
-          await $.wait(500);
+          await $.wait(5000);
         }
         if ($.canApCashWithDraw) {
           //提现
