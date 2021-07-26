@@ -684,7 +684,7 @@ function invite2() {
     "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
     "on226vuYi7Q+ST7rHdHclg==",
     "7VazsgDkMBeOHSxmTTHksg=="
-  ][Math.floor((Math.random() * 8))]
+  ][Math.floor((Math.random() * 7))]
   let headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
@@ -718,7 +718,7 @@ function invite() {
     "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
     "on226vuYi7Q+ST7rHdHclg==",
     "7VazsgDkMBeOHSxmTTHksg=="
-  ][Math.floor((Math.random() * 8))]
+  ][Math.floor((Math.random() * 7))]
   var headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
