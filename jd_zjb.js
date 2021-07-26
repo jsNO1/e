@@ -16,12 +16,22 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-let InviterPin = 'a96OCbRRbeXixkMDj2uq6w=='; //
+//let InviterPin = 'a96OCbRRbeXixkMDj2uq6w=='; //
+let InviterPin = [
+  "a96OCbRRbeXixkMDj2uq6w==",
+  "MWvFNR+/AMsJ++oAkqu7oA==",
+  "mWqydRbzpFZXtQLW8sNi4w==",
+  "nXelBPJXOC7S+bpCanPwpg==",
+  "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
+  "on226vuYi7Q+ST7rHdHclg==",
+  "7VazsgDkMBeOHSxmTTHksg=="
+][Math.floor((Math.random() * 8))]
 
+//  "iELfGhWPN4+qk6W8+9XflLqZAvuw65Su03th2p8LZ3s=",
 
-if (process.env.InviterPin) {
-  InviterPin = process.env.InviterPin;
-}
+// if (process.env.InviterPin) {
+//   InviterPin = process.env.InviterPin;
+// }
 
 
 
@@ -135,7 +145,7 @@ headers: {
       
         $.post(options, async (err, resp, data) => {
             try {
-
+              $.log(`即将开始邀请：${InviterPin}\n邀请获得金币: `)
                     //data = data.match(/(\{[^()]+\}.+)/)[1]
 
                     //console.log(data)
