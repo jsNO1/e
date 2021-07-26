@@ -25,7 +25,7 @@ let InviterPin = [
   "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
   "on226vuYi7Q+ST7rHdHclg==",
   "7VazsgDkMBeOHSxmTTHksg=="
-][Math.floor((Math.random() * 8))]
+][Math.floor((Math.random() * 7))]
 
 //  "iELfGhWPN4+qk6W8+9XflLqZAvuw65Su03th2p8LZ3s=",
 
