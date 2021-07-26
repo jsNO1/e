@@ -89,8 +89,10 @@ async function jdGlobal() {
 
     await signInit()
     await sign()
-    //await invite()
-    //await invite2()
+    await invite()
+    await $.wait(1000)
+    await invite2()
+    await $.wait(1000)
     $.score = 0
     $.total = 0
     await taskList()
@@ -676,7 +678,13 @@ function invite2() {
   let t = +new Date()
   let inviterId = [
     "a96OCbRRbeXixkMDj2uq6w==",
-  ][Math.floor((Math.random() * 1))]
+    "MWvFNR+/AMsJ++oAkqu7oA==",
+    "mWqydRbzpFZXtQLW8sNi4w==",
+    "nXelBPJXOC7S+bpCanPwpg==",
+    "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
+    "on226vuYi7Q+ST7rHdHclg==",
+    "7VazsgDkMBeOHSxmTTHksg=="
+  ][Math.floor((Math.random() * 8))]
   let headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
@@ -696,7 +704,7 @@ function invite2() {
     body: dataString
   }
   $.post(options, (err, resp, data) => {
-    // console.log(data)
+     console.log(data)
   })
 }
 
@@ -704,7 +712,13 @@ function invite() {
   let t = +new Date()
   let inviterId = [
     "a96OCbRRbeXixkMDj2uq6w==",
-  ][Math.floor((Math.random() * 1))]
+    "MWvFNR+/AMsJ++oAkqu7oA==",
+    "mWqydRbzpFZXtQLW8sNi4w==",
+    "nXelBPJXOC7S+bpCanPwpg==",
+    "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
+    "on226vuYi7Q+ST7rHdHclg==",
+    "7VazsgDkMBeOHSxmTTHksg=="
+  ][Math.floor((Math.random() * 8))]
   var headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
@@ -723,7 +737,7 @@ function invite() {
     body: dataString
   };
   $.post(options, (err, resp, data) => {
-    // console.log(data)
+     console.log(data)
   })
 }
 
