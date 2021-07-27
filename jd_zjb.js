@@ -21,12 +21,9 @@ let InviterPin = [
   "a96OCbRRbeXixkMDj2uq6w==",
   "MWvFNR+/AMsJ++oAkqu7oA==",
   "mWqydRbzpFZXtQLW8sNi4w==",
-  "nXelBPJXOC7S+bpCanPwpg==",
-  "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
-  "7VazsgDkMBeOHSxmTTHksg=="
-][Math.floor((Math.random() * 6))]
-
-//  "iELfGhWPN4+qk6W8+9XflLqZAvuw65Su03th2p8LZ3s=",  "on226vuYi7Q+ST7rHdHclg==",
+  "JRApVe31I1a3pbY6PWR3Ug==",
+  "7hX64oby6aoRjobgL/LFKA==",
+][Math.floor((Math.random() * 5))]
 
 
 // if (process.env.InviterPin) {
