@@ -16,7 +16,7 @@ var tools = [];
 var maxTimes = 3;
 var finished = new Set();
 var init = [];
-var mode = $.isNode() ? (process.env.angryBeanMode ? process.env.angryBeanMode : "speed") : "priority";
+var mode = $.isNode() ? (process.env.angryBeanMode ? process.env.angryBeanMode : "priority") : "priority";
 
 !(async () => {
      if ($.isNode() && !pins) {
