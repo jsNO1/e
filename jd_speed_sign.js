@@ -10,17 +10,17 @@
 ============Quantumultx===============
 [task_local]
 #京东极速版
-0 7 * * * jd_speed_sign.js, tag=京东极速版, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
+0 3,6 * * * jd_speed_sign.js, tag=京东极速版, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 7 * * *" script-path=jd_speed_sign.js,tag=京东极速版
+cron "0 3,6 * * *" script-path=jd_speed_sign.js,tag=京东极速版
 
 ===============Surge=================
-京东极速版 = type=cron,cronexp="0 7 * * *",wake-system=1,timeout=33600,script-path=jd_speed_sign.js
+京东极速版 = type=cron,cronexp="0 3,6 * * *",wake-system=1,timeout=33600,script-path=jd_speed_sign.js
 
 ============小火箭=========
-京东极速版 = type=cron,script-path=jd_speed_sign.js, cronexpr="0 7 * * *", timeout=33600, enable=true
+京东极速版 = type=cron,script-path=jd_speed_sign.js, cronexpr="0 3,6 * * *", timeout=33600, enable=true
 */
 
 const $ = new Env('京东极速版');
@@ -676,14 +676,15 @@ function taskGetUrl(function_id, body) {
 
 function invite2() {
   let t = +new Date()
-  let inviterId = [
-    "a96OCbRRbeXixkMDj2uq6w==",
-    "MWvFNR+/AMsJ++oAkqu7oA==",
-    "mWqydRbzpFZXtQLW8sNi4w==",
-    "nXelBPJXOC7S+bpCanPwpg==",
-    "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
-    "7VazsgDkMBeOHSxmTTHksg=="
-  ][Math.floor((Math.random() * 6))]
+  let inviterId = ["a96OCbRRbeXixkMDj2uq6w=="][Math.floor((Math.random() * 1))]
+  // let inviterId = [
+  //   "a96OCbRRbeXixkMDj2uq6w==",
+  //   "MWvFNR+/AMsJ++oAkqu7oA==",
+  //   "mWqydRbzpFZXtQLW8sNi4w==",
+  //   "nXelBPJXOC7S+bpCanPwpg==",
+  //   "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
+  //   "7VazsgDkMBeOHSxmTTHksg=="
+  // ][Math.floor((Math.random() * 6))]
   let headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
@@ -709,14 +710,15 @@ function invite2() {
 
 function invite() {
   let t = +new Date()
-  let inviterId = [
-    "a96OCbRRbeXixkMDj2uq6w==",
-    "MWvFNR+/AMsJ++oAkqu7oA==",
-    "mWqydRbzpFZXtQLW8sNi4w==",
-    "nXelBPJXOC7S+bpCanPwpg==",
-    "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
-    "7VazsgDkMBeOHSxmTTHksg=="
-  ][Math.floor((Math.random() * 6))]
+  // let inviterId = [
+  //   "a96OCbRRbeXixkMDj2uq6w==",
+  //   "MWvFNR+/AMsJ++oAkqu7oA==",
+  //   "mWqydRbzpFZXtQLW8sNi4w==",
+  //   "nXelBPJXOC7S+bpCanPwpg==",
+  //   "Ewo/ktC5uuFEV6NRDjEOuGN+ih64VaN6pr7ElX2B7qQ=",
+  //   "7VazsgDkMBeOHSxmTTHksg=="
+  // ][Math.floor((Math.random() * 6))]
+  let inviterId = ["a96OCbRRbeXixkMDj2uq6w=="][Math.floor((Math.random() * 1))]
   var headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
