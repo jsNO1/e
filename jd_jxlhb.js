@@ -44,6 +44,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   console.log('京喜领88元红包\n' +
       '活动入口：京喜app-》我的-》京喜领88元红包\n' +
       '助力逻辑：先自己京东账号相互助力，如有剩余助力机会，则助力作者\n' +
+      '助力要求：为保证京东账号完成55次有效助力，减少接口调用次数，只获取前10个账号的助力码\n' +
       '温馨提示：如提示助力火爆，可尝试寻找京东客服')
   let res = []
   // res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jxhb.json')
@@ -71,7 +72,10 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       }
       continue
     }
+    if (i < 9){
+    console.log(i);
     await main();
+    }
   }
   //互助
   console.log(`\n\n自己京东账号助力码：\n${JSON.stringify($.packetIdArr)}\n\n`);
@@ -175,6 +179,8 @@ function getUserInfo() {
               $.grades.push(vo.dwGrade)
             }
             console.log(`获取助力码成功：${data.Data.strUserPin}\n`);
+            console.log(`当前红包助力数：${data.Data.dwHelpedTimes}\n`);
+            console.log(`正在开启：${data.Data.dwCurrentGrade}号红包\n`);
             if (data.Data['dwCurrentGrade'] >= $.grades[$.grades.length - 1]) {
               console.log(`${$.grades[$.grades.length - 1]}个阶梯红包已全部拆完\n`)
             } else {
@@ -183,6 +189,7 @@ function getUserInfo() {
                   strUserPin: data.Data.strUserPin,
                   userName: $.UserName
                 })
+                console.log(`成功将助力码放进助力池`);
               }
             }
           } else {
