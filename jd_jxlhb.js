@@ -181,8 +181,8 @@ function getUserInfo() {
             console.log(`获取助力码成功：${data.Data.strUserPin}\n`);
             console.log(`当前红包助力数：${data.Data.dwHelpedTimes}\n`);
             console.log(`正在开启：${data.Data.dwCurrentGrade}号红包\n`);
-            if (data.Data['dwCurrentGrade'] >= $.grades[$.grades.length - 1]) {
-              console.log(`${$.grades[$.grades.length - 1]}个阶梯红包已全部拆完\n`)
+            if (data.Data['dwCurrentGrade'] >= $.grades[$.grades.length]) {
+              console.log(`${$.grades[$.grades.length]}个阶梯红包已全部拆完\n`)
             } else {
               if (data.Data.strUserPin) {
                 $.packetIdArr.push({
