@@ -44,7 +44,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   console.log('京喜领88元红包\n' +
       '活动入口：京喜app-》我的-》京喜领88元红包\n' +
       '助力逻辑：先自己京东账号相互助力，如有剩余助力机会，则助力作者\n' +
-      '助力要求：为保证京东账号完成55次有效助力，减少接口调用次数，只获取前4个账号的助力码\n' +
+      '助力要求：每个账号只有三次助力机会，为保证完成55次有效助力，减少接口调用次数，只获取前6个账号的助力码\n' +
       '温馨提示：如提示助力火爆，可尝试寻找京东客服')
   let res = []
   // res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jxhb.json')
@@ -56,7 +56,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   //if (res && res.activeId) $.activeId = res.activeId;
   //$.authorMyShareIds = [...((res && res.codes) || [])];
   //开启红包,获取互助码
-  for (let i = 0; i < cookiesArr.length; i++) {
+  for (let i = 0; i < 6; i++) {
     cookie = cookiesArr[i];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     $.index = i + 1;
@@ -72,10 +72,8 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       }
       continue
     }
-    if (i < 3){
     //console.log(i);
     await main();
-    }
   }
   //互助
   console.log(`\n\n自己京东账号助力码：\n${JSON.stringify($.packetIdArr)}\n\n`);
@@ -90,7 +88,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       if ($.UserName === code['userName']) continue;
       console.log(`【${$.UserName}】去助力【${code['userName']}】邀请码：${code['strUserPin']}`);
       await enrollFriend(code['strUserPin']);
-      await $.wait(3000);
+      await $.wait(2500);
       if ($.max) continue
       if (!$.canHelp) break
     }
@@ -181,8 +179,8 @@ function getUserInfo() {
             console.log(`获取助力码成功：${data.Data.strUserPin}\n`);
             console.log(`当前红包助力数：${data.Data.dwHelpedTimes}\n`);
             console.log(`正在开启：${data.Data.dwCurrentGrade}号红包\n`);
-            if (data.Data['dwCurrentGrade'] >= $.grades[$.grades.length]) {
-              console.log(`${$.grades[$.grades.length]}个阶梯红包已全部拆完\n`)
+            if (data.Data['dwHelpedTimes'] >= 55) {
+              console.log(`${$.grades[$.grades.length -1]}个阶梯红包已全部拆完\n`)
             } else {
               if (data.Data.strUserPin) {
                 $.packetIdArr.push({
@@ -329,7 +327,7 @@ function taskurl(function_path, body = '', stk) {
           'Host': 'wq.jd.com',
           'Cookie': cookie,
           'accept': "*/*",
-          'user-agent': `jdpingou;iPhone;4.8.2;14.5.1;${deviceId};network/wifi;model/iPhone13,4;appBuild/100546;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/318;pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
+          'user-agent': `jdpingou;iPhone;4.8.2;14.5.1;${deviceId};network/wifi;model/iPhone13,2;appBuild/100365;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
           'accept-language': 'zh-cn',
           'referer': `https://wqactive.jd.com/cube/front/activePublish/step_reward/${$.activeId}.html?aid=${$.activeId}`
       }
