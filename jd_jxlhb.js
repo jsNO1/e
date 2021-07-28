@@ -73,7 +73,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       continue
     }
     if (i < 5){
-    console.log(i);
+    //console.log(i);
     await main();
     }
   }
