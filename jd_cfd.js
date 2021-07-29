@@ -36,7 +36,7 @@ $.showLog = $.getdata("cfd_showLog") ? $.getdata("cfd_showLog") === "true" : fal
 $.notifyTime = $.getdata("cfd_notifyTime");
 $.result = [];
 $.shareCodes = [];
-let cookiesArr = [], cookie = '', token = '', res= [];
+let cookiesArr = [], cookie = '', token = '';
 
 const randomCount = $.isNode() ? 3 : 3;
 if ($.isNode()) {
@@ -58,14 +58,13 @@ $.appId = 10028;
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requestAlgo();
   await $.wait(1000)
-  //let res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/cfd.json')
+  let res= [];
   // if (!res) {
   //   $.http.get({url: 'https://purge.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
   //   await $.wait(1000)
   //   res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json')
   // }
-  // $.strMyShareIds = [...(res && res.shareId || [])]
-  // $.strGroupIds = [...(res && res.strGroupIds || [])]
+  //$.strMyShareIds = [...(res && res.shareId || [])]
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -94,26 +93,24 @@ $.appId = 10028;
   for (let j = 0; j < cookiesArr.length; j++) {
     cookie = cookiesArr[j];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-    // token = await getJxToken();
-    // if (!token) continue
     $.canHelp = true
     if ($.shareCodes && $.shareCodes.length) {
       console.log(`\n自己账号内部循环互助\n`);
       for (let id of $.shareCodes) {
         console.log(`账号${$.UserName} 去助力 ${id}`)
         await helpByStage(id)
-        if (!$.canHelp) break
         await $.wait(3000)
+        if (!$.canHelp) break
       }
     }
-    // if (!$.canHelp) continue
+    if (!$.canHelp) continue
     // if ($.strMyShareIds && $.strMyShareIds.length) {
     //   console.log(`\n助力作者\n`);
-    //   for (let id of $.strGroupIds) {
+    //   for (let id of $.strMyShareIds) {
     //     console.log(`账号${$.UserName} 去助力 ${id}`)
     //     await helpByStage(id)
-    //     if (!$.canHelp) break
     //     await $.wait(3000)
+    //     if (!$.canHelp) break
     //   }
     // }
   }
@@ -139,11 +136,11 @@ async function cfd() {
     }
 
     //每日签到
-    await $.wait(5000)
+    await $.wait(2000)
     await getTakeAggrPage('sign')
 
     //助力奖励
-    await $.wait(5000)
+    await $.wait(2000)
     await getTakeAggrPage('helpdraw')
 
     console.log('')
@@ -157,17 +154,17 @@ async function cfd() {
       let vo = $.info.buildInfo.buildList[key]
       let body = `strBuildIndex=${vo.strBuildIndex}`
       await getBuildInfo(body, vo)
-      await $.wait(5000)
+      await $.wait(2000)
     }
 
     //合成珍珠
-    await $.wait(5000)
+    await $.wait(2000)
     await composeGameState()
 
     //接待贵宾
     console.log(`接待贵宾`)
     if ($.info.StoryInfo.StoryList) {
-      await $.wait(5000)
+      await $.wait(2000)
       for (let key of Object.keys($.info.StoryInfo.StoryList)) {
         let vo = $.info.StoryInfo.StoryList[key]
         if (vo.Special) {
@@ -175,7 +172,7 @@ async function cfd() {
           await specialUserOper(vo.strStoryId, '2', vo.ddwTriggerDay, vo)
           await $.wait(vo.Special.dwWaitTime * 1000)
           await specialUserOper(vo.strStoryId, '3', vo.ddwTriggerDay, vo)
-          await $.wait(5000)
+          await $.wait(2000)
         } else {
           console.log(`当前暂无贵宾\n`)
         }
@@ -193,9 +190,9 @@ async function cfd() {
         if (vo.Collector) {
           console.log(`喜欢贝壳的收藏家来了，快去卖贝壳吧~`)
           await collectorOper(vo.strStoryId, '2', vo.ddwTriggerDay)
-          await $.wait(5000)
+          await $.wait(2000)
           await querystorageroom('2')
-          await $.wait(5000)
+          await $.wait(2000)
           await collectorOper(vo.strStoryId, '4', vo.ddwTriggerDay)
         } else {
           console.log(`当前暂无收藏家\n`)
@@ -208,7 +205,7 @@ async function cfd() {
     //美人鱼
     console.log(`美人鱼`)
     if ($.info.StoryInfo.StoryList) {
-      await $.wait(5000)
+      await $.wait(2000)
       for (let key of Object.keys($.info.StoryInfo.StoryList)) {
         let vo = $.info.StoryInfo.StoryList[key]
         if (vo.Mermaid) {
@@ -227,28 +224,28 @@ async function cfd() {
     }
 
     //倒垃圾
-    await $.wait(5000)
+    await $.wait(2000)
     await queryRubbishInfo()
 
     //雇导游
-    await $.wait(5000);
+    await $.wait(2000);
     await employTourGuideInfo();
 
     console.log(`\n做任务`)
     //牛牛任务
-    await $.wait(5000)
+    await $.wait(2000)
     await getActTask()
 
     //日常任务
-    await $.wait(5000);
+    await $.wait(2000);
     await getTaskList(0);
-    await $.wait(5000);
+    await $.wait(2000);
     await browserTask(0);
 
     //成就任务
-    await $.wait(5000);
+    await $.wait(2000);
     await getTaskList(1);
-    await $.wait(5000);
+    await $.wait(2000);
     await browserTask(1);
 
     await $.wait(2000);
@@ -290,7 +287,7 @@ async function composeGameState(type = true) {
                   console.log(`合成珍珠：模拟操作${num}次`)
                   for (let v = 0; v < num; v++) {
                     console.log(`模拟操作进度：${v + 1}/${num}`)
-                    await $.wait(6000)
+                    await $.wait(2000)
                     await realTmReport(data.strMyShareId)
                   }
                   let res = await composeGameAddProcess(data.strDT)
@@ -305,7 +302,7 @@ async function composeGameState(type = true) {
                 for (let key of Object.keys(composeGameStateRes.stagelist)) {
                   let vo = composeGameStateRes.stagelist[key]
                   if (vo.dwIsAward == 0 && composeGameStateRes.dwCurProgress >= vo.dwCurStageEndCnt) {
-                    await $.wait(5000)
+                    await $.wait(2000)
                     await composeGameAward(vo.dwCurStageEndCnt)
                   }
                 }
@@ -518,7 +515,7 @@ async function querystorageroom(dwSceneId) {
                 strTypeCnt += `${bags[j]}|`
               }
             }
-            await $.wait(5000)
+            await $.wait(2000)
             await sellgoods(`strTypeCnt=${strTypeCnt}&dwSceneId=${dwSceneId}`)
           } else {
             console.log(`背包是空的，快去捡贝壳吧\n`)
@@ -751,7 +748,7 @@ function rubbishOper(dwType, body = '') {
               console.log(`${$.name} RubbishOper API请求失败，请检查网路重试`)
             } else {
               data = JSON.parse(data);
-              console.log(data)
+              //console.log(data)
             }
           } catch (e) {
             $.logErr(e, resp);
@@ -768,7 +765,7 @@ function rubbishOper(dwType, body = '') {
               console.log(`${$.name} RubbishOper API请求失败，请检查网路重试`)
             } else {
               data = JSON.parse(data);
-              console.log(data)
+              //console.log(data)
             }
           } catch (e) {
             $.logErr(e, resp);
@@ -900,6 +897,13 @@ async function employTourGuideInfo() {
         } else {
           data = JSON.parse(data);
           console.log(`雇导游`)
+          let minProductCoin = data.TourGuideList[0].ddwProductCoin
+          for(let key of Object.keys(data.TourGuideList)) {
+            let vo = data.TourGuideList[key]
+            if (vo.ddwProductCoin < minProductCoin) {
+              minProductCoin = vo.ddwProductCoin
+            }
+          }
           for(let key of Object.keys(data.TourGuideList)) {
             let vo = data.TourGuideList[key]
             let buildNmae;
@@ -918,19 +922,20 @@ async function employTourGuideInfo() {
               default:
                 break
             }
-            if(vo.ddwRemainTm === 0 && vo.strBuildIndex !== 'food') {
+            if(vo.ddwRemainTm === 0 && vo.ddwProductCoin !== minProductCoin) {
               let dwIsFree;
               if(vo.dwFreeMin !== 0) {
                 dwIsFree = 1
               } else {
                 dwIsFree = 0
               }
+              console.log(`【${buildNmae}】雇佣费用：${vo.ddwCostCoin}金币 增加收益：${vo.ddwProductCoin}金币`)
               const body = `strBuildIndex=${vo.strBuildIndex}&dwIsFree=${dwIsFree}&ddwConsumeCoin=${vo.ddwCostCoin}`
               await employTourGuide(body, buildNmae)
-            } else if (vo.strBuildIndex !== 'food') {
+            } else if (vo.ddwProductCoin !== minProductCoin) {
               console.log(`【${buildNmae}】无可雇佣导游`)
             }
-            await $.wait(5000)
+            await $.wait(2000)
           }
         }
       } catch (e) {
@@ -1099,15 +1104,15 @@ function helpByStage(shareCodes) {
         } else {
           data = JSON.parse(data);
           if (data.iRet === 0 || data.sErrMsg === 'success') {
-            console.log(`助力成功，帮助好友获得${data.Data.GuestPrizeInfo.strPrizeName}`)
+            console.log(`助力成功：获得${data.Data.GuestPrizeInfo.strPrizeName}`)
           } else if (data.iRet === 2232 || data.sErrMsg === '今日助力次数达到上限，明天再来帮忙吧~') {
-            console.log(data.sErrMsg)
+            console.log(`助力失败：${data.sErrMsg}`)
             $.canHelp = false
           } else if (data.iRet === 9999 || data.sErrMsg === '您还没有登录，请先登录哦~') {
             console.log(`助力失败：${data.sErrMsg}`)
             $.canHelp = false
           } else if (data.iRet === 2229 || data.sErrMsg === '助力失败啦~') {
-            console.log(`助力失败：您的账号或者被助力的账号可能已黑，请联系客服`data.sErrMsg)
+            console.log(`助力失败：您的账号或被助力的账号可能已黑，请联系客服`)
             // $.canHelp = false
           } else {
             console.log(`助力失败：${data.sErrMsg}`)
@@ -1209,8 +1214,8 @@ function getUserInfo(showInvite = true) {
       } finally {
         resolve();
       }
-    });
-  });
+    })
+  })
 }
 
 //任务
@@ -1295,7 +1300,7 @@ function browserTask(taskType) {
           } else {
             //领奖励
             await awardTask(1, taskinfo);
-            await $.wait(5000);
+            await $.wait(2000);
           }
         }
         break;
