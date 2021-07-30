@@ -1,6 +1,6 @@
 /**
  *  尝试领取红包，貌似不是每天都有
- *  cron 45 16,20 * * *
+ *  cron 45 16,20 * * * https://raw.githubusercontent.com/smiek2221/scripts/master/jd_summer_movement_red.js
  * */
 const $ = new Env('燃动夏季领红包');
 const notify = $.isNode() ? require('./sendNotify') : '';
