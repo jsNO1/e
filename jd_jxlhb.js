@@ -88,7 +88,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       if ($.UserName === code['userName']) continue;
       console.log(`【${$.UserName}】去助力【${code['userName']}】邀请码：${code['strUserPin']}`);
       await enrollFriend(code['strUserPin']);
-      await $.wait(1500);
+      await $.wait(2000);
       if ($.max) continue
       if (!$.canHelp) break
     }
