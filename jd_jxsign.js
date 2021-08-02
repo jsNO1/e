@@ -64,9 +64,13 @@ if ($.isNode()) {
       if (!$.isLogin) {
         continue
       }
-      if (i === 0) console.log(`\n正在收集助力码请等待\n`)
-      await signhb(1)
-      await $.wait(3000)
+      if (i < 30) {
+        console.log(`\n正在收集助力码请等待\n`)
+        await signhb(1)
+        await $.wait(3000)
+      }else{
+        console.log(`\n不收集收集助力码，请等待\n`)
+      }
     }
   }
   for (let i = 0; i < cookiesArr.length; i++) {
