@@ -53,7 +53,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000)
     if (nowTimes.getHours() === 23 && nowTimes.getMinutes() === 59) {
       let nowtime = new Date().Format("s.S")
-      let starttime = 59.9);
+      let starttime = 59.9;
       if(nowtime < 59) {
         let sleeptime = (starttime - nowtime) * 1000;
         console.log(`等待时间 ${sleeptime / 1000}\n`);
