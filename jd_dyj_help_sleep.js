@@ -101,7 +101,9 @@ function openRedEnvelopeInteract(body = {}) {
          })
      })
  }
-
+function sleep(timeout) {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+}
  function redEnvelopeInteractHome() {
      return new Promise(resolve => {
          $.get({
