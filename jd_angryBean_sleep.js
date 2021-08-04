@@ -157,7 +157,9 @@ async function getTuanInfo(cookie) {
           monitor_source: "bean_m_bean_index"
      });
 }
-
+function sleep(timeout) {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+}
 async function open(help) {
      var tool = tools.pop()
      if (!tool) {
