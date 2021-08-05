@@ -120,6 +120,9 @@ Date.prototype.Format = function (fmt) { //author: meizz
     $.done();
   })
 
+function sleep(timeout) {
+  return new Promise((resolve) => setTimeout(resolve, timeout));
+}
 function requestApi(functionId, cookie, body = {}) {
     return new Promise(resolve => {
         $.post({
