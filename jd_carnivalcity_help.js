@@ -111,7 +111,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
   if (allMessage) {
     //NODE端,默认每月一日运行进行推送通知一次
     if ($.isNode()) {
-      await notify.sendNotify($.name, allMessage, { url: JD_API_HOST });
+      await notify.sendNotify($.name, allMessage, { url: "https://carnivalcity.m.jd.com" });
       $.msg($.name, '', allMessage);
     }
   }
@@ -461,7 +461,7 @@ function check() {
             }
           }
           if (str.length > 0) {
-            const url = 'https://api.m.jd.com/api/#/integralDetail';
+            const url = 'https://carnivalcity.m.jd.com/#/integralDetail';
             $.msg($.name, '', `京东账号 ${$.index} ${$.nickName || $.UserName}\n积分抽奖获得：${str}\n兑换地址：${url}`, { 'open-url': url });
             if ($.isNode()) await notify.sendNotify($.name, `京东账号 ${$.index} ${$.nickName || $.UserName}\n积分抽奖获得：${str}\n兑换地址：${url}`);
           }
@@ -519,7 +519,7 @@ function myRank() {
 //领取往期奖励API
 function saveJbean(date) {
   return new Promise(resolve => {
-    const body = "date=" + date;
+    const body = {"date":`${date}`};
     const options = taskPostUrl('/khc/rank/getRankJingBean', body)
     $.post(options, (err, resp, data) => {
       try {
@@ -544,12 +544,31 @@ async function doHelp() {
     let item = $.newShareCodes[i]
     if (!item) continue;
     const helpRes = await toHelp(item.trim());
-    if (helpRes.data.status === 5) {
-      console.log(`助力机会已耗尽，跳出助力`);
-      break;
-    }else if (helpRes.data.status === 4){
-      console.log(`该助力码[${item}]已达上限`);
-      $.newShareCodes[i] = ''
+    if (typeof helpRes === 'object') {
+      if (helpRes.data.status === 5) {
+        console.log(`助力机会已耗尽，跳出助力`);
+        break;
+      }else if (helpRes.data.status === 4){
+        console.log(`该助力码[${item}]已达上限`);
+        $.newShareCodes[i] = ''
+      }else if (helpRes.data.status === 3){
+        console.log(`已经助力过`);
+      }else if (helpRes.data.status === 2){
+        console.log(`该助力码[${item}]过期`);
+        $.newShareCodes[i] = ''
+      }else if (helpRes.data.status === 1){
+        console.log(`不能助力自己`);
+      }else if (helpRes.msg.indexOf('请求参数不合规') > -1){
+        console.log(`该助力码[${item}]助力码有问题`)
+        $.newShareCodes[i] = ''
+      }else if (helpRes.msg.indexOf('未登录') > -1 || helpRes.msg.indexOf('火爆') > -1){
+        console.log(`${helpRes.msg}，跳出助力`)
+        break;
+      }else{
+        console.log(`该助力码[${item}]助力结果\n${$.toStr(helpRes)}`)
+      }
+    }else{
+      console.log(`该助力码[${item}]助力结果\n${$.toStr(helpRes)}`)
     }
   }
 }
@@ -596,7 +615,7 @@ function getHelp() {
             $.temp.push(data.data.shareId);
           } else {
             console.log(`获取邀请码失败：${JSON.stringify(data)}`);
-            if (data.code === 1002) $.blockAccount = true;
+            if (data.code === 1002 || data.code === 1001) $.blockAccount = true;
           }
         }
       } catch (e) {
@@ -762,9 +781,9 @@ function taskPostUrl(a,t = {}) {
 
 async function showMsg() {
   if ($.beans) {
-    allMessage += `京东账号${$.index} ${$.nickName || $.UserName}\n本次运行获得：${$.beans}京豆\n${message}活动地址：https://carnivalcity.m.jd.com/#/home?shareId=ddd345fb-57bb-4ece-968b-7bf4c92be7cc&t=${Date.now()}${$.index !== cookiesArr.length ? '\n\n' : ''}`
+    allMessage += `京东账号${$.index} ${$.nickName || $.UserName}\n本次运行获得：${$.beans}京豆\n${message}活动地址：https://carnivalcity.m.jd.com${$.index !== cookiesArr.length ? '\n\n' : ''}`
   }
-  $.msg($.name, `京东账号${$.index} ${$.nickName || $.UserName}`, `${message}具体详情点击弹窗跳转后即可查看`, {"open-url": "https://carnivalcity.m.jd.com/#/home?shareId=ddd345fb-57bb-4ece-968b-7bf4c92be7cc&t="+Date.now()});
+  $.msg($.name, `京东账号${$.index} ${$.nickName || $.UserName}`, `${message}具体详情点击弹窗跳转后即可查看`, {"open-url": "https://carnivalcity.m.jd.com"});
 }
 
 function getUA(){
