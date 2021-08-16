@@ -62,12 +62,13 @@ if ($.isNode()) {
 }
 !(async () => {
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
-  await requestAlgo();
   await requireConfig();
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
+  await requestAlgo();
+  await getActiveId();//自动获取每期拼团活动ID
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -95,27 +96,25 @@ if ($.isNode()) {
       await jdDreamFactory()
     }
   }
-  for (let i = 0; i < cookiesArr.length; i++) {
-    if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      $.isLogin = true;
-      $.canHelp = true;//能否参团
-      await TotalBean();
-      if (!$.isLogin) {
-        continue
+  if (tuanActiveId) {
+    for (let i = 0; i < cookiesArr.length; i++) {
+      if (cookiesArr[i]) {
+        cookie = cookiesArr[i];
+        $.isLogin = true;
+        $.canHelp = true;//能否参团
+        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+
+        if ((cookiesArr && cookiesArr.length >= ($.tuanNum || 5)) && $.canHelp) {
+          console.log(`\n账号${$.UserName} 内部相互进团\n`);
+          for (let item of $.tuanIds) {
+            console.log(`\n${$.UserName} 去参加团 ${item}`);
+            if (!$.canHelp) break;
+            await JoinTuan(item);
+            await $.wait(1000);
+          }
+        }
+        // if ($.canHelp) await joinLeaderTuan();//参团
       }
-      $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-      
-      // if ((cookiesArr && cookiesArr.length >= ($.tuanNum || 5)) && $.canHelp) {
-      //   console.log(`\n账号${$.UserName} 内部相互进团\n`);
-      //   for (let item of $.tuanIds) {
-      //     console.log(`\n${$.UserName} 去参加团 ${item}`);
-      //     if (!$.canHelp) break;
-      //     await JoinTuan(item);
-      //     await $.wait(1000);
-      //   }
-      // }
-      //if ($.canHelp) await joinLeaderTuan();//参团
     }
   }
   if ($.isNode() && allMessage) {
@@ -143,8 +142,8 @@ async function jdDreamFactory() {
     await QueryHireReward();//收取招工电力
     //await PickUp();//收取自家的地下零件
     //await stealFriend();
-    //await tuanActivity();
-    //await QueryAllTuan();
+    await tuanActivity();
+    await QueryAllTuan();
     await exchangeProNotify();
     await showMsg();
   } catch (e) {
@@ -152,7 +151,57 @@ async function jdDreamFactory() {
   }
 }
 
-
+function getActiveId(url = 'https://wqsd.jd.com/pingou/dream_factory/index.html') {
+  return new Promise(async resolve => {
+    const options = {
+      url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }
+    };
+    $.get(options, async (err, resp, data) => {
+      try {
+        if(err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          data = data && data.match(/window\._CONFIG = (.*) ;var __getImgUrl/)
+          if (data) {
+            data = JSON.parse(data[1]);
+            const tuanConfigs = (data[0].skinConfig[0].adConfig || []).filter(vo => !!vo && vo['channel'] === 'h5');
+            if (tuanConfigs && tuanConfigs.length) {
+              for (let item of tuanConfigs) {
+                const start = item.start;
+                const end = item.end;
+                const link = item.link;
+                if ((new Date(item.start).getTime() <= Date.now()) && (new Date(item.end).getTime() > Date.now())) {
+                  if (link && link.match(/activeId=(.*),/) && link.match(/activeId=(.*),/)[1]) {
+                    console.log(`\n团活动ID: ${link.match(/activeId=(.*),/)[1]}\n有效时间：${start} - ${end}`);
+                    tuanActiveId = link.match(/activeId=(.*),/)[1];
+                    break
+                  }
+                } else if ((new Date(item.start).getTime() > Date.now()) && (new Date(item.end).getTime() > Date.now())) {
+                  if (link && link.match(/activeId=(.*),/) && link.match(/activeId=(.*),/)[1]) {
+                    console.log(`\n团活动ID: ${link.match(/activeId=(.*),/)[1]}\n有效时间：${start} - ${end}\n团ID还未开始`);
+                    tuanActiveId = '';
+                  }
+                } else {
+                  if (link && link.match(/activeId=(.*),/) && link.match(/activeId=(.*),/)[1]) {
+                    console.log(`\n团活动ID: ${link.match(/activeId=(.*),/)[1]}\n有效时间：${start} - ${end}\n团ID已过期`);
+                    tuanActiveId = '';
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
 // 收取发电机的电力
 function collectElectricity(facId = $.factoryId, help = false, master) {
   return new Promise(async resolve => {
@@ -946,6 +995,7 @@ async function tuanActivity() {
         if ((tuanInfo && tuanInfo[0]['endTime']) <= QueryTuanRes['nowTime'] && surplusOpenTuanNum > 0) {
           $.log(`之前的团已过期，准备重新开团\n`)
           await CreateTuan();
+          return
         }
         for (let item of tuanInfo) {
           const { realTuanNum, tuanNum, userInfo } = item;
