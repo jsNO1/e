@@ -6,7 +6,7 @@
 const $ = new Env("发财大赢家助力")
 const ua = `jdltapp;iPhone;3.1.0;${Math.ceil(Math.random()*4+10)}.${Math.ceil(Math.random()*4)};${randomString(40)}`
 let cookiesArr = []
-let pins = process.env.dyjHelpPins ?? "454053205"
+let pins = process.env.dyjHelpPins ?? ""
 let cookie = ''
 let helps = []
 let tools = []
