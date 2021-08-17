@@ -53,6 +53,7 @@ let signFlag = false
 let successNum = 0
 let errorNum = 0
 let JD_API_HOST = 'https://jdjoy.jd.com'
+$.invokeKey = "ztmFUCxcPMNyUq0P"
 if(process.env.JOY_HOST){
   JD_API_HOST = process.env.JOY_HOST
 }
@@ -118,6 +119,7 @@ async function signRun() {
     }else{
       errorNum++;
     }
+    await $.wait(1000)
   }
 }
 
@@ -248,7 +250,7 @@ function getEid(arr) {
 }
 
 function taskUrl(turnTableId) {
-  const url = `${JD_API_HOST}/api/turncard/channel/detail?turnTableId=${turnTableId}&invokeKey=qRKHmL4sna8ZOP9F`
+  const url = `${JD_API_HOST}/api/turncard/channel/detail?turnTableId=${turnTableId}&invokeKey=${$.invokeKey}`
   return {
     url,
     headers: {
@@ -266,7 +268,7 @@ function taskUrl(turnTableId) {
 }
 
 function tasPostkUrl(turnTableId) {
-  const url = `${JD_API_HOST}/api/turncard/channel/sign?turnTableId=${turnTableId}&fp=${fp}&eid=${eid}&invokeKey=qRKHmL4sna8ZOP9F`
+  const url = `${JD_API_HOST}/api/turncard/channel/sign?turnTableId=${turnTableId}&fp=${fp}&eid=${eid}&invokeKey=${$.invokeKey}`
   return {
     url,
     headers: {
@@ -280,6 +282,18 @@ function tasPostkUrl(turnTableId) {
       "Origin": "https://prodev.m.jd.com",
       "Referer": "https://prodev.m.jd.com/",
       "User-Agent": $.UA,
+    }
+  }
+}
+
+function jsonParse(str) {
+  if (typeof str == "string") {
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      console.log(e);
+      $.msg($.name, '', '请勿随意在BoxJs输入框修改内容\n建议通过脚本去获取cookie')
+      return [];
     }
   }
 }
