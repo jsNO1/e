@@ -29,7 +29,7 @@ const inviteCodes = [
   `T012uvh3QBsa91TSCjVfnoaW5kRrbA@T018v_50Qhsa_F3UJB2b1ACjVfnoaW5kRrbA@T0225KkcRBoQ8FOGJ0vynKQPcwCjVfnoaW5kRrbA@T0154qI1FXFFrAqDcXUCjVfnoaW5kRrbA@T0105rogQRwb8ACjVfnoaW5kRrbA@T0114rczSRga9FwCjVfnoaW5kRrbA@T0116ap0QB4e9VQCjVfnoaW5kRrbA@T0225KkcRUhKoFyFJxyiwKJbJQCjVfnoaW5kRrbA@T015u_5xRhYY9lTQT0cCjVfnoaW5kRrbA@T0225KkcRhhK8QLUcxv0kvJccACjVfnoaW5kRrbA@T0225KkcRRlL_F3SIhP9xvIMdgCjVfnoaW5kRrbA@T0205KkcF2tLvTKTc2mWwK1WCjVfnoaW5kRrbA@T018v_51SRce9FHeIBib1ACjVfnoaW5kRrbA@T0225KkcRk1N81TSIBr9lfdfIACjVfnoaW5kRrbA@T0225KkcRBsa_VDUJhL0nKEMcwCjVfnoaW5kRrbA@T022v_xzQRsa9VTXPRP2lfUCcACjVfnoaW5kRrbA@T012uP1yQR8a9lbTCjVfnoaW5kRrbA@T0225KkcRU8e9VLWIRmhxv4PIACjVfnoaW5kRrbA@T0225KkcRhtL8QbQKBqhkPQDcgCjVfnoaW5kRrbA@T0205KkcAl9lrQONY3yI3KhSCjVfnoaW5kRrbA@T0225KkcRkgd_VKEchvzkKQKJwCjVfnoaW5kRrbA@T012_qgkHFtGqRGICjVfnoaW5kRrbA@T0225KkcRRYe_VGGJB-ilKYPdwCjVfnoaW5kRrbA@T016-qwtE09AowGJdxPwCjVfnoaW5kRrbA@T018v_h6Qh4d9lXUIhub1ACjVfnoaW5kRrbA@T0225KkcRhlN8FaBIk_0kaQIJgCjVfnoaW5kRrbA@T0225KkcRk0d91LVKBPxwf4PfQCjVfnoaW5kRrbA@T0205KkcIVlRkguAXluu_YBgCjVfnoaW5kRrbA`,
   `T012uvh3QBsa91TSCjVfnoaW5kRrbA@T018v_50Qhsa_F3UJB2b1ACjVfnoaW5kRrbA@T0225KkcRBoQ8FOGJ0vynKQPcwCjVfnoaW5kRrbA@T0154qI1FXFFrAqDcXUCjVfnoaW5kRrbA@T0105rogQRwb8ACjVfnoaW5kRrbA@T0114rczSRga9FwCjVfnoaW5kRrbA@T0116ap0QB4e9VQCjVfnoaW5kRrbA@T0225KkcRUhKoFyFJxyiwKJbJQCjVfnoaW5kRrbA@T015u_5xRhYY9lTQT0cCjVfnoaW5kRrbA@T0225KkcRhhK8QLUcxv0kvJccACjVfnoaW5kRrbA@T0225KkcRRlL_F3SIhP9xvIMdgCjVfnoaW5kRrbA@T0205KkcF2tLvTKTc2mWwK1WCjVfnoaW5kRrbA@T018v_51SRce9FHeIBib1ACjVfnoaW5kRrbA@T0225KkcRk1N81TSIBr9lfdfIACjVfnoaW5kRrbA@T0225KkcRBsa_VDUJhL0nKEMcwCjVfnoaW5kRrbA@T022v_xzQRsa9VTXPRP2lfUCcACjVfnoaW5kRrbA@T012uP1yQR8a9lbTCjVfnoaW5kRrbA@T0225KkcRU8e9VLWIRmhxv4PIACjVfnoaW5kRrbA@T0225KkcRhtL8QbQKBqhkPQDcgCjVfnoaW5kRrbA@T0205KkcAl9lrQONY3yI3KhSCjVfnoaW5kRrbA@T0225KkcRkgd_VKEchvzkKQKJwCjVfnoaW5kRrbA@T012_qgkHFtGqRGICjVfnoaW5kRrbA@T0225KkcRRYe_VGGJB-ilKYPdwCjVfnoaW5kRrbA@T016-qwtE09AowGJdxPwCjVfnoaW5kRrbA@T018v_h6Qh4d9lXUIhub1ACjVfnoaW5kRrbA@T0225KkcRhlN8FaBIk_0kaQIJgCjVfnoaW5kRrbA@T0225KkcRk0d91LVKBPxwf4PfQCjVfnoaW5kRrbA@T0205KkcIVlRkguAXluu_YBgCjVfnoaW5kRrbA`
 ]
-let reward = process.env.JD_HEALTH_REWARD_NAME ? process.env.JD_HEALTH_REWARD_NAME : ''
+let reward = $.isNode() ? (process.env.JD_HEALTH_REWARD_NAME ? process.env.JD_HEALTH_REWARD_NAME : '') : ($.getdata('JD_HEALTH_REWARD_NAME') ? $.getdata('JD_HEALTH_REWARD_NAME') : '');
 const randomCount = $.isNode() ? 20 : 5;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -194,7 +194,7 @@ async function getCommodities() {
       try {
         if (safeGet(data)) {
           data = $.toObj(data)
-          let beans = data.data.result.jBeans.filter(x => x.status !== 0 && x.status !== 1)
+          let beans = data.data.result.jBeans.filter(x => x.status !== 1)
           if (beans.length !== 0) {
             for (let key of Object.keys(beans)) {
               let vo = beans[key]
