@@ -244,7 +244,7 @@ async function pasture() {
         await takeGetRequest('GetHomePageInfo');
         await $.wait(2000);
       }else{
-        console.log(`现有白菜${materialNumber},大于400颗,不进行购买`);
+        console.log(`现有白菜${materialNumber},大于100颗,不进行购买`);
       }
     }else{
       console.log(`\n共有金币${$.homeInfo.coins}`);
