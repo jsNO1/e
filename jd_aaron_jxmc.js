@@ -235,7 +235,7 @@ async function pasture() {
     if (Number($.homeInfo.coins) > 5000) {
       let canBuyTimes = Math.floor(Number($.homeInfo.coins) / 5000);
       console.log(`\n共有金币${$.homeInfo.coins},可以购买${canBuyTimes}次白菜`);
-      if(Number(materialNumber) < 400){
+      if(Number(materialNumber) < 100){
         for (let j = 0; j < canBuyTimes && j < 4; j++) {
           console.log(`第${j + 1}次购买白菜`);
           await takeGetRequest('buy');
