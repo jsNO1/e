@@ -76,8 +76,8 @@ let shareCodes = []
     })
 async function jdSuperMarket() {
   try {
-    await receiveGoldCoin();//收金币
-    await businessCircleActivity();//商圈活动
+    //await receiveGoldCoin();//收金币
+    //await businessCircleActivity();//商圈活动
     await receiveBlueCoin();//收蓝币（小费）
     // await receiveLimitProductBlueCoin();//收限时商品的蓝币
     await daySign();//每日签到
@@ -1482,9 +1482,9 @@ function requireConfig() {
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
-      url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
+      url: "https://wq.jd.com/user_new/info/GetJDUserInfoUnion?sceneval=2",
       headers: {
-        Host: "me-api.jd.com",
+        Host: "wq.jd.com",
         Accept: "*/*",
         Connection: "keep-alive",
         Cookie: cookie,
@@ -1501,15 +1501,15 @@ function TotalBean() {
         } else {
           if (data) {
             data = JSON.parse(data);
-            if (data['retcode'] === "1001") {
+            if (data['retcode'] === 1001) {
               $.isLogin = false; //cookie过期
               return;
             }
-            if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
+            if (data['retcode'] === 0 && data.data && data.data.hasOwnProperty("userInfo")) {
               $.nickName = data.data.userInfo.baseInfo.nickname;
             }
           } else {
-            $.log('京东服务器返回空数据');
+            console.log('京东服务器返回空数据');
           }
         }
       } catch (e) {
