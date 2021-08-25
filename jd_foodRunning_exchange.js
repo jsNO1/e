@@ -2,7 +2,7 @@
 * 路径：京东APP-》美食馆-》右侧瓜分京豆
 * cron 1 0 * * *
 * */
-const $ = new Env('零食街');
+const $ = new Env('零食街兑换');
 const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
