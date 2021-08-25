@@ -47,23 +47,23 @@ if ($.isNode()) {
     await $.wait(2000);
   }
 
-  // console.log(`\n开始账号内互助\n`);
-  // for (let i = 0; i < cookiesArr.length; i++) {
-  //   $.cookie = cookiesArr[i];
-  //   $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-  //   if(!$.useInfo[$.UserName]) continue;
-  //   $.thisNick = $.useInfo[$.UserName];
-  //   $.canHelp = true;
-  //   for (let j = 0; j < $.helpCodes.length && $.canHelp; j++) {
-  //     $.oneCodeInfo = $.helpCodes[j];
-  //     if($.UserName === $.oneCodeInfo.usr || $.oneCodeInfo.max){
-  //       continue;
-  //     }
-  //     console.log(`${$.UserName}去助力${$.oneCodeInfo.usr}`);
-  //     await takePostRequest('help');
-  //     await $.wait(5000)
-  //   }
-  // }
+  console.log(`\n开始账号内互助\n`);
+  for (let i = 0; i < cookiesArr.length; i++) {
+    $.cookie = cookiesArr[i];
+    $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+    if(!$.useInfo[$.UserName]) continue;
+    $.thisNick = $.useInfo[$.UserName];
+    $.canHelp = true;
+    for (let j = 0; j < $.helpCodes.length && $.canHelp; j++) {
+      $.oneCodeInfo = $.helpCodes[j];
+      if($.UserName === $.oneCodeInfo.usr || $.oneCodeInfo.max){
+        continue;
+      }
+      console.log(`${$.UserName}去助力${$.oneCodeInfo.usr}`);
+      await takePostRequest('help');
+      await $.wait(5000)
+    }
+  }
 })().catch((e) => {$.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')}).finally(() => {$.done();});
 
 async function main() {
