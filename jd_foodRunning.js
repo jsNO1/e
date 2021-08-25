@@ -89,19 +89,19 @@ async function main() {
     console.log(`获取活动详情失败`);
     return;
   }
-  // let todayString = new Date(new Date().toLocaleDateString()).getTime();
-  // $.myInviteList = [];
-  // await takePostRequest('MyInviteList');
-  // let needHelpTime = 3;
-  // for ( i = 0; i < $.myInviteList.length; i++) {
-  //   if(Number($.myInviteList[i].created) > Number(todayString)){
-  //     needHelpTime--;
-  //   }
-  // }
-  // if(Number(needHelpTime)>0){
-  //   console.log(`还需要3次助力`)
-  //   $.helpCodes.push({'usr':$.UserName, 'code':$.thisNick, 'max':false,'needHelpTime':needHelpTime});
-  // }
+  let todayString = new Date(new Date().toLocaleDateString()).getTime();
+  $.myInviteList = [];
+  await takePostRequest('MyInviteList');
+  let needHelpTime = 3;
+  for ( i = 0; i < $.myInviteList.length; i++) {
+    if(Number($.myInviteList[i].created) > Number(todayString)){
+      needHelpTime--;
+    }
+  }
+  if(Number(needHelpTime)>0){
+    console.log(`还需要3次助力`)
+    $.helpCodes.push({'usr':$.UserName, 'code':$.thisNick, 'max':false,'needHelpTime':needHelpTime});
+  }
   await $.wait(3000);
   $.taskList = [];
   await takePostRequest('DailyTask');
