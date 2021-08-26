@@ -7,17 +7,17 @@
 ==============Quantumult X==============
 [task_local]
 #京喜领88元红包
-1 0,10 * * * https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js, tag=京喜领88元红包, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+4 2,10 * * * https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js, tag=京喜领88元红包, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ==============Loon==============
 [Script]
-cron "1 0,10 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js,tag=京喜领88元红包
+cron "4 2,10 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js,tag=京喜领88元红包
 
 ================Surge===============
-京喜领88元红包 = type=cron,cronexp="1 0,10 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js
+京喜领88元红包 = type=cron,cronexp="4 2,10 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js
 
 ===============小火箭==========
-京喜领88元红包 = type=cron,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js, cronexpr="1 0,10 * * *", timeout=3600, enable=true
+京喜领88元红包 = type=cron,script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_jxlhb.js, cronexpr="4 2,10 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京喜领88元红包');
 const notify = $.isNode() ? require('./sendNotify') : {};
@@ -45,7 +45,6 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   console.log('京喜领88元红包\n' +
       '活动入口：京喜app-》我的-》京喜领88元红包\n' +
       '助力逻辑：先自己京东账号相互助力，如有剩余助力机会，则助力作者\n' +
-      '助力要求：每个账号只有三次助力机会，为保证完成足够的有效助力，减少接口调用次数，只获取前3个账号的助力码\n' +
       '温馨提示：如提示助力火爆，可尝试寻找京东客服')
   let res = []
   // res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jxhb.json')
@@ -54,10 +53,10 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   //   await $.wait(1000)
   //   res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/jxhb.json')
   // }
-  //if (res && res.activeId) $.activeId = res.activeId;
-  //$.authorMyShareIds = [...((res && res.codes) || [])];
-  //开启红包,获取互助码
-  for (let i = 0; i < 3; i++) {
+  // if (res && res.activeId) $.activeId = res.activeId;
+  // $.authorMyShareIds = [...((res && res.codes) || [])];
+  //生成UA
+  for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     $.index = i + 1;
@@ -74,8 +73,17 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       continue
     }
     UA = `jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
-    await main();
+    //await main();
     UAInfo[$.UserName] = UA
+  }
+  //开启红包,获取互助码
+  for (let i = 0; i < 3; i++) {
+    cookie = cookiesArr[i];
+    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+    $.index = i + 1;
+    $.isLogin = true
+    $.nickName = ''
+    await main();
   }
   //互助
   console.log(`\n\n自己京东账号助力码：\n${JSON.stringify($.packetIdArr)}\n\n`);
@@ -91,21 +99,21 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       if ($.UserName === code['userName']) continue;
       console.log(`【${$.UserName}】去助力【${code['userName']}】邀请码：${code['strUserPin']}`);
       await enrollFriend(code['strUserPin']);
-      await $.wait(2000);
+      await $.wait(5000);
       if ($.max) continue
       if (!$.canHelp) break
     }
-    // if ($.canHelp) {
-    //   console.log(`\n【${$.UserName}】有剩余助力机会，开始助力作者\n`)
-    //   for (let item of $.authorMyShareIds) {
-    //     if (!item) continue;
-    //     console.log(`【${$.UserName}】去助力作者的邀请码：${item}`);
-    //     await enrollFriend(item);
-    //     await $.wait(3000);
-    //     if ($.max) continue
-    //     if (!$.canHelp) break
-    //   }
-    // }
+    if ($.canHelp) {
+      console.log(`\n【${$.UserName}】有剩余助力机会，开始助力作者\n`)
+      for (let item of $.authorMyShareIds) {
+        if (!item) continue;
+        console.log(`【${$.UserName}】去助力作者的邀请码：${item}`);
+        await enrollFriend(item);
+        await $.wait(2000);
+        if ($.max) continue
+        if (!$.canHelp) break
+      }
+    }
   }
   //拆红包
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -181,8 +189,6 @@ function getUserInfo() {
               $.grades.push(vo.dwGrade)
               $.helpNum = vo.dwHelpTimes
             }
-            console.log(`当前红包助力数：${data.Data.dwHelpedTimes}\n`);
-            console.log(`正在开启：${data.Data.dwCurrentGrade}号红包\n`);
             if (data.Data.dwHelpedTimes === $.helpNum) {
               console.log(`${$.grades[$.grades.length - 1]}个阶梯红包已全部拆完\n`)
             } else {
@@ -192,7 +198,6 @@ function getUserInfo() {
                   strUserPin: data.Data.strUserPin,
                   userName: $.UserName
                 })
-                console.log(`成功将助力码放进助力池`);
               }
             }
           } else {
