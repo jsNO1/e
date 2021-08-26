@@ -23,6 +23,7 @@ const $ = new Env('京喜领88元红包');
 const notify = $.isNode() ? require('./sendNotify') : {};
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 let cookiesArr = [], cookie = '';
+let UA, UAInfo = {}
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -44,7 +45,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   console.log('京喜领88元红包\n' +
       '活动入口：京喜app-》我的-》京喜领88元红包\n' +
       '助力逻辑：先自己京东账号相互助力，如有剩余助力机会，则助力作者\n' +
-      '助力要求：每个账号只有三次助力机会，为保证完成55次有效助力，减少接口调用次数，只获取前6个账号的助力码\n' +
+      '助力要求：每个账号只有三次助力机会，为保证完成足够的有效助力，减少接口调用次数，只获取前3个账号的助力码\n' +
       '温馨提示：如提示助力火爆，可尝试寻找京东客服')
   let res = []
   // res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jxhb.json')
@@ -72,8 +73,9 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
       }
       continue
     }
-    //console.log(i);
+    UA = `jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
     await main();
+    UAInfo[$.UserName] = UA
   }
   //互助
   console.log(`\n\n自己京东账号助力码：\n${JSON.stringify($.packetIdArr)}\n\n`);
@@ -83,6 +85,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
     $.canHelp = true;
     $.max = false;
+    UA = UAInfo[$.UserName]
     for (let code of $.packetIdArr) {
       if (!code) continue;
       if ($.UserName === code['userName']) continue;
@@ -106,9 +109,10 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
   }
   //拆红包
   for (let i = 0; i < cookiesArr.length; i++) {
-    cookie = cookiesArr[i];
+    cookie = cookiesArr.pop();;
     $.canOpenGrade = true;
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+    UA = UAInfo[$.UserName]
     for (let grade of $.grades) {
       if (!$.packetIdArr[i]) continue;
       console.log(`\n【${$.UserName}】去拆第${grade}个红包`);
@@ -127,7 +131,6 @@ async function main() {
   await joinActive();
   await $.wait(2000)
   await getUserInfo()
-  await $.wait(2000)
 }
 //参与活动
 function joinActive() {
@@ -170,18 +173,20 @@ function getUserInfo() {
           // console.log('获取助力码', data)
           data = JSON.parse(data)
           if (data.iRet === 0) {
-            $.grades = [];
+            $.grades = []
+            $.helpNum = ''
             let grades = data.Data.gradeConfig
             for(let key of Object.keys(grades)){
               let vo = grades[key]
               $.grades.push(vo.dwGrade)
+              $.helpNum = vo.dwHelpTimes
             }
-            console.log(`获取助力码成功：${data.Data.strUserPin}\n`);
             console.log(`当前红包助力数：${data.Data.dwHelpedTimes}\n`);
             console.log(`正在开启：${data.Data.dwCurrentGrade}号红包\n`);
-            if (data.Data['dwHelpedTimes'] >= 55) {
-              console.log(`${$.grades[$.grades.length -1]}个阶梯红包已全部拆完\n`)
+            if (data.Data.dwHelpedTimes === $.helpNum) {
+              console.log(`${$.grades[$.grades.length - 1]}个阶梯红包已全部拆完\n`)
             } else {
+              console.log(`获取助力码成功：${data.Data.strUserPin}\n`);
               if (data.Data.strUserPin) {
                 $.packetIdArr.push({
                   strUserPin: data.Data.strUserPin,
@@ -304,13 +309,7 @@ function getAuthorShareCode(url) {
 
 function taskurl(function_path, body = '', stk) {
   let url = `${BASE_URL}/${function_path}?activeId=${$.activeId}&publishFlag=1&channel=7&${body}&sceneval=2&g_login_type=1&timestamp=${Date.now()}&_=${Date.now() + 2}&_ste=1`
-  const deviceId = `${
-    Math.random().toString(36).slice(2, 10) +
-    Math.random().toString(36).slice(2, 10) +
-    Math.random().toString(36).slice(2, 10) +
-    Math.random().toString(36).slice(2, 10) +
-    Math.random().toString(36).slice(2, 10)
-  }`
+  const deviceId = UA.split(';') && UA.split(';')[4] || ''
   url += `&phoneid=${deviceId}`
   url += `&stepreward_jstoken=${
     Math.random().toString(36).slice(2, 10) +
@@ -319,27 +318,34 @@ function taskurl(function_path, body = '', stk) {
     Math.random().toString(36).slice(2, 10)
   }`
   if (stk) {
-      url += '&_stk=' + encodeURIComponent(stk)
+    url += '&_stk=' + encodeURIComponent(stk)
   }
   return {
-      'url': url,
-      'headers': {
-          'Host': 'wq.jd.com',
-          'Cookie': cookie,
-          'accept': "*/*",
-          'user-agent': `jdpingou;iPhone;4.8.2;14.5.1;${deviceId};network/wifi;model/iPhone13,2;appBuild/100365;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/0;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2015_311210;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`,
-          'accept-language': 'zh-cn',
-          'referer': `https://wqactive.jd.com/cube/front/activePublish/step_reward/${$.activeId}.html?aid=${$.activeId}`
-      }
+    'url': url,
+    'headers': {
+    'Host': 'wq.jd.com',
+    'Cookie': cookie,
+    'accept': "*/*",
+    'user-agent': UA,
+    'accept-language': 'zh-cn',
+    'referer': `https://wqactive.jd.com/cube/front/activePublish/step_reward/${$.activeId}.html?aid=${$.activeId}`
+    }
   }
+}
+function randomString(e) {
+  e = e || 32;
+  let t = "0123456789abcdef", a = t.length, n = "";
+  for (let i = 0; i < e; i++)
+    n += t.charAt(Math.floor(Math.random() * a));
+  return n
 }
 
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
-      url: "https://wq.jd.com/user_new/info/GetJDUserInfoUnion?sceneval=2",
+      url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
       headers: {
-        Host: "wq.jd.com",
+        Host: "me-api.jd.com",
         Accept: "*/*",
         Connection: "keep-alive",
         Cookie: cookie,
@@ -356,11 +362,11 @@ function TotalBean() {
         } else {
           if (data) {
             data = JSON.parse(data);
-            if (data['retcode'] === 1001) {
+            if (data['retcode'] === "1001") {
               $.isLogin = false; //cookie过期
               return;
             }
-            if (data['retcode'] === 0 && data.data && data.data.hasOwnProperty("userInfo")) {
+            if (data['retcode'] === "0" && data.data && data.data.hasOwnProperty("userInfo")) {
               $.nickName = data.data.userInfo.baseInfo.nickname;
             }
           } else {
