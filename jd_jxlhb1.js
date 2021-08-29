@@ -77,7 +77,7 @@ const BASE_URL = 'https://wq.jd.com/cubeactive/steprewardv3'
     UAInfo[$.UserName] = UA
   }
   //开启红包,获取互助码
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 4; i++) {
     cookie = cookiesArr[i];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     $.index = i + 1;
