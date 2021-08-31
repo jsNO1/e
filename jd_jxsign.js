@@ -227,7 +227,7 @@ function signhb(type = 1) {
 // 签到 助力
 function helpSignhb(smp = '') {
   return new Promise((resolve) => {
-    $.get(taskUrl("fanxiantask/signhb/query", `signhb_source=1000&smp=${smp}&type=1`, "signhb_source,smp,type"), async (err, resp, data) => {
+    $.get(taskUrl("fanxiantask/signhb/query", `signhb_source=5&smp=${smp}&type=1`, "signhb_source,smp,type"), async (err, resp, data) => {
       try {
         if (err) {
           console.log(JSON.stringify(err))
@@ -261,7 +261,7 @@ function helpSignhb(smp = '') {
 // 任务
 function dotask(task) {
   return new Promise((resolve) => {
-    $.get(taskUrl("fanxiantask/signhb/dotask", `signhb_source=1000&task=${task}`, "signhb_source,task"), async (err, resp, data) => {
+    $.get(taskUrl("fanxiantask/signhb/dotask", `signhb_source=5&task=${task}`, "signhb_source,task"), async (err, resp, data) => {
         try {
           if (err) {
             console.log(JSON.stringify(err));
@@ -357,7 +357,7 @@ function taskUrl(functionId, body = '', stk) {
       Connection: "keep-alive",
       "User-Agent": UA,
       "Accept-Language": "zh-cn",
-      Referer: "https://wqsd.jd.com/pingou/dream_factory/index.html",
+      Referer: "https://st.jingxi.com/202106/29/signinhb_new/index.html",
       "Accept-Encoding": "gzip, deflate, br",
     }
   }
