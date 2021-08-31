@@ -50,11 +50,11 @@ const JD_BASE_API = `https://draw.jdfcloud.com//pet`;
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 //下面给出好友邀请助力的示例填写规则
-let invite_pins = ['zhaosen2580,jd_47ee22449e303,jd_6c5e39478ec3b,jd_4346918b58d6e,liuz9988,88489948,jd_61f1269fd3236'];
+let invite_pins = ['454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ'];
 //下面给出好友赛跑助力的示例填写规则
-let run_pins = ['zhaosen2580,jd_47ee22449e303,jd_6c5e39478ec3b,jd_4346918b58d6e,liuz9988,88489948,jd_61f1269fd3236'];
+let run_pins = ['454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ'];
 //friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
-let friendsArr = ["zhaosen2580", "jd_47ee22449e303", "jd_6c5e39478ec3b", "jd_4346918b58d6e", "liuz9988", "88489948", "jd_61f1269fd3236"]
+let friendsArr = ["454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ"]
 
 
 //IOS等用户直接用NobyDa的jd cookie
@@ -133,24 +133,24 @@ async function main() {
       // const zooFaker = require('./utils/JDJRValidator_Pure');
       // $.validate = await zooFaker.injectToRequest()
       if ($.isNode()) {
-        if (process.env.JOY_RUN_HELP_MYSELF) {
-          console.log(`\n赛跑会先给账号内部助力,如您当前账户有剩下助力机会则为lx0301作者助力\n`)
-          let my_run_pins = [];
-          Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => my_run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
-          run_pins = [...new Set(my_run_pins), [...getRandomArrayElements([...run_pins[0].split(',')], [...run_pins[0].split(',')].length)]];
-          run_pins = [[...run_pins].join(',')];
-          invite_pins = run_pins;
-        } else {
+        // if (process.env.JOY_RUN_HELP_MYSELF) {
+        //   console.log(`\n赛跑会先给账号内部助力,如您当前账户有剩下助力机会则为lx0301作者助力\n`)
+        //   let my_run_pins = [];
+        //   Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => my_run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
+        //   run_pins = [...new Set(my_run_pins), [...getRandomArrayElements([...run_pins[0].split(',')], [...run_pins[0].split(',')].length)]];
+        //   run_pins = [[...run_pins].join(',')];
+        //   invite_pins = run_pins;
+        // } else {
           console.log(`\n赛跑先给作者两个固定的pin进行助力,然后从账号内部与剩下的固定位置合并后随机抽取进行助力\n如需自己账号内部互助,设置环境变量 JOY_RUN_HELP_MYSELF 为true,则开启账号内部互助\n`)
           run_pins = run_pins[0].split(',')
           Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
           run_pins = [...new Set(run_pins)];
-          let fixPins = run_pins.splice(run_pins.indexOf('zhaosen2580'), 1);
-          fixPins.push(...run_pins.splice(run_pins.indexOf('jd_61f1269fd3236'), 1));
+          let fixPins = run_pins.splice(run_pins.indexOf('454053205'), 1);
+          fixPins.push(...run_pins.splice(run_pins.indexOf('13725399347_p'), 1));
           const randomPins = getRandomArrayElements(run_pins, run_pins.length);
           run_pins = [[...fixPins, ...randomPins].join(',')];
           invite_pins = run_pins;
-        }
+        //}
       }
       cookie = cookiesArr[i];
       UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
