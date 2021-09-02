@@ -88,36 +88,45 @@ $.appId = 10028;
       $.info = {}
       UA = `jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
       token = await getJxToken()
-      //await shareCodesFormat()
+      await shareCodesFormat()
       await cfd();
       await $.wait(2000);
       UAInfo[$.UserName] = UA
     }
   }
-  for (let j = 0; j < cookiesArr.length; j++) {
-    cookie = cookiesArr[j];
+  for (let i = 0; i < cookiesArr.length; i++) {
+    cookie = cookiesArr[i];
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     $.canHelp = true
     UA = UAInfo[$.UserName]
     if ($.shareCodes && $.shareCodes.length) {
       console.log(`\n自己账号内部循环互助\n`);
-      for (let id of $.shareCodes) {
-        console.log(`账号${$.UserName} 去助力 ${id}`)
-        await helpByStage(id)
-        await $.wait(3000)
-        if (!$.canHelp) break
+      for (let j = 0; j < $.shareCodes.length && $.canHelp; j++) {
+        console.log(`账号${$.UserName} 去助力 ${$.shareCodes[j]}`)
+        $.delcode = false
+        await helpByStage($.shareCodes[j])
+        await $.wait(2000)
+        if ($.delcode) {
+          $.shareCodes.splice(j, 1)
+          j--
+          continue
+        }
       }
     }
-    if (!$.canHelp) continue
-    if ($.strMyShareIds && $.strMyShareIds.length) {
-      console.log(`\n助力作者\n`);
-      for (let id of $.strMyShareIds) {
-        console.log(`账号${$.UserName} 去助力 ${id}`)
-        await helpByStage(id)
-        await $.wait(3000)
-        if (!$.canHelp) break
-      }
-    }
+    // if ($.strMyShareIds && $.strMyShareIds.length && $.canHelp) {
+    //   console.log(`\n助力作者\n`);
+    //   for (let j = 0; j < $.strMyShareIds.length && $.canHelp; j++) {
+    //     console.log(`账号${$.UserName} 去助力 ${$.strMyShareIds[j]}`)
+    //     $.delcode = false
+    //     await helpByStage($.strMyShareIds[j])
+    //     await $.wait(2000)
+    //     if ($.delcode) {
+    //       $.strMyShareIds.splice(j, 1)
+    //       j--
+    //       continue
+    //     }
+    //   }
+    // }
   }
   await showMsg();
 })()
