@@ -50,12 +50,11 @@ const JD_BASE_API = `https://draw.jdfcloud.com//pet`;
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 //下面给出好友邀请助力的示例填写规则
-let invite_pins = ['zhaosen2580,jd_47ee22449e303,jd_6c5e39478ec3b,jd_4346918b58d6e,liuz9988,88489948,jd_61f1269fd3236'];
+let invite_pins = ['454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ'];
 //下面给出好友赛跑助力的示例填写规则
-let run_pins = ['zhaosen2580,jd_47ee22449e303,jd_6c5e39478ec3b,jd_4346918b58d6e,liuz9988,88489948,jd_61f1269fd3236'];
+let run_pins = ['454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ'];
 //friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
-let friendsArr = ["zhaosen2580", "jd_47ee22449e303", "jd_6c5e39478ec3b", "jd_4346918b58d6e", "liuz9988", "88489948", "jd_61f1269fd3236"]
-
+let friendsArr = ["454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ"]
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -256,7 +255,7 @@ async function getToken() {
 }
 function readToken() {
   return new Promise(resolve => {
-    $.get({url: `https://cdn.jdsign.cf/gettoken`,headers:{'Host':'jdsign.cf'}, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://cdn.nz.lu/gettoken`,headers:{'Host':'jdsign.cf'}, timeout: 15000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
