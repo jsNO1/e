@@ -251,7 +251,7 @@ async function takePostRequest(type){
       break;
       case 'exchangeGoods':
         url = `https://jinggengjcq-isv.isvjcloud.com/dm/front/foodRunning/${type}?open_id=&mix_nick=&bizExtString=&user_id=10299171`;
-        body =  {"buyerNick":$.thisNick,"method":"/foodRunning/"+type,"pushWay":1,"awardId":"jdAward2","actId":"jd_food_running","userId":"10299171"};
+        body =  {"buyerNick":$.thisNick,"method":"/foodRunning/"+type,"pushWay":1,"awardId":"jdAward4","actId":"jd_food_running","userId":"10299171"};
         break;
     default:
       console.log(`错误${type}`);
