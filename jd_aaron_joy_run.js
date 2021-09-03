@@ -56,7 +56,6 @@ let run_pins = ['454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,g
 //friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
 let friendsArr = ["454053205,13725399347_p,jd_44957a7a68c57,love_linda_,lzp96318,gg700700,jd_6ddd58d7537c5,jd_57b995299b562,jd_gEbxVtcCRdjl,jd_46e7e921dccb9,13699715902_p,jd_6cd60500910ed,jd_6f486cb174c0c,jd_4538436808f67,601113324,jd_5a706113eb95d,jd_65b4b780e4396,jd_rqLhgjsVLxoh,pegluoluo,jd_58785a45f0a53,tancaifeng94,15920431321_p,jd_67d52f2e05c2b,jd_6c4262895e959,jd_QwxWogNqjYGZ"]
 
-
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 let nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000);
@@ -114,8 +113,7 @@ async function main() {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
-  const readTokenRes = ''
-  // const readTokenRes = await readToken();
+  const readTokenRes = await readToken();
   if (readTokenRes && readTokenRes.code === 200) {
     $.LKYLToken = readTokenRes.data[0] || ($.isNode() ? (process.env.JOY_RUN_TOKEN ? process.env.JOY_RUN_TOKEN : jdJoyRunToken) : ($.getdata('jdJoyRunToken') || jdJoyRunToken));
   } else {
@@ -126,31 +124,31 @@ async function main() {
     $.msg($.name, '【提示】请先获取来客有礼宠汪汪token', "iOS用户微信搜索'来客有礼'小程序\n点击底部的'发现'Tab\n即可获取Token");
     // return;
   }
-  //await getFriendPins();
+  await getFriendPins();
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       $.validate = '';
       // const zooFaker = require('./utils/JDJRValidator_Pure');
       // $.validate = await zooFaker.injectToRequest()
       if ($.isNode()) {
-        // if (process.env.JOY_RUN_HELP_MYSELF) {
-        //   console.log(`\n赛跑会先给账号内部助力,如您当前账户有剩下助力机会则为lx0301作者助力\n`)
-        //   let my_run_pins = [];
-        //   Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => my_run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
-        //   run_pins = [...new Set(my_run_pins), [...getRandomArrayElements([...run_pins[0].split(',')], [...run_pins[0].split(',')].length)]];
-        //   run_pins = [[...run_pins].join(',')];
-        //   invite_pins = run_pins;
-        // } else {
+        if (process.env.JOY_RUN_HELP_MYSELF) {
+          console.log(`\n赛跑会先给账号内部助力,如您当前账户有剩下助力机会则为lx0301作者助力\n`)
+          let my_run_pins = [];
+          Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => my_run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
+          run_pins = [...new Set(my_run_pins), [...getRandomArrayElements([...run_pins[0].split(',')], [...run_pins[0].split(',')].length)]];
+          run_pins = [[...run_pins].join(',')];
+          invite_pins = run_pins;
+        } else {
           console.log(`\n赛跑先给作者两个固定的pin进行助力,然后从账号内部与剩下的固定位置合并后随机抽取进行助力\n如需自己账号内部互助,设置环境变量 JOY_RUN_HELP_MYSELF 为true,则开启账号内部互助\n`)
           run_pins = run_pins[0].split(',')
-          //Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
+          Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
           run_pins = [...new Set(run_pins)];
-          let fixPins = run_pins.splice(run_pins.indexOf('454053205'), 1);
-          fixPins.push(...run_pins.splice(run_pins.indexOf('13725399347_p'), 1));
+          let fixPins = run_pins.splice(run_pins.indexOf('zhaosen2580'), 1);
+          fixPins.push(...run_pins.splice(run_pins.indexOf('jd_61f1269fd3236'), 1));
           const randomPins = getRandomArrayElements(run_pins, run_pins.length);
           run_pins = [[...fixPins, ...randomPins].join(',')];
           invite_pins = run_pins;
-        //}
+        }
       }
       cookie = cookiesArr[i];
       UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
@@ -257,7 +255,7 @@ async function getToken() {
 }
 function readToken() {
   return new Promise(resolve => {
-    $.get({url: `http://share.turinglabs.net/api/v3/joy/query/1/`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://cdn.nz.lu/gettoken`,headers:{'Host':'jdsign.cf'}, timeout: 15000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -355,7 +353,7 @@ function enterRoom(invitePin) {
     headers['Content-Type'] = "application/json";
     let opt = {
       // url: "//jdjoy.jd.com/common/pet/getPetTaskConfig?reqSource=h5",
-      url: `//draw.jdfcloud.com//common/pet/enterRoom/h5?reqSource=h5&invitePin=${encodeURI(invitePin)}&inviteSource=task_invite&shareSource=weapp&inviteTimeStamp=${Date.now()}&invokeKey=RtKLB8euDo7KwsO0`,
+      url: `//draw.jdfcloud.com/common/pet/enterRoom/h5?reqSource=h5&invitePin=${encodeURI(invitePin)}&inviteSource=task_invite&shareSource=weapp&inviteTimeStamp=${Date.now()}&invokeKey=RtKLB8euDo7KwsO0`,
       method: "GET",
       data: {},
       credentials: "include",
@@ -394,7 +392,7 @@ function helpInviteFriend(friendPin) {
     headers.LKYLToken = $.LKYLToken;
     let opt = {
       // url: "//jdjoy.jd.com/common/pet/getPetTaskConfig?reqSource=h5",
-      url: `//draw.jdfcloud.com//common/pet/helpFriend?friendPin=${encodeURI(friendPin)}&reqSource=h5&invokeKey=RtKLB8euDo7KwsO0`,
+      url: `//draw.jdfcloud.com/common/pet/helpFriend?friendPin=${encodeURI(friendPin)}&reqSource=h5&invokeKey=RtKLB8euDo7KwsO0`,
       method: "GET",
       data: {},
       credentials: "include",
@@ -512,7 +510,7 @@ function combatDetail(invitePin) {
     headers.LKYLToken = $.LKYLToken;
     let opt = {
       // url: "//jdjoy.jd.com/common/pet/getPetTaskConfig?reqSource=h5",
-      url: `//draw.jdfcloud.com//common/pet/combat/detail/v2?help=true&inviterPin=${encodeURI(invitePin)}&reqSource=h5&invokeKey=RtKLB8euDo7KwsO0`,
+      url: `//draw.jdfcloud.com/common/pet/combat/detail/v2?help=true&inviterPin=${encodeURI(invitePin)}&reqSource=h5&invokeKey=RtKLB8euDo7KwsO0`,
       method: "GET",
       data: {},
       credentials: "include",
