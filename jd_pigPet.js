@@ -1,29 +1,24 @@
 /*
-Last Modified time: 2021-5-19 12:27:16
-活动入口：京东金融养猪猪
-一键开完所有的宝箱功能。耗时70秒
-大转盘抽奖
-喂食
-每日签到
-完成分享任务得猪粮
+*
+京东金融养猪猪
+活动入口：京东金融养猪猪，
+脚本更新地址：https://github.com/zero205/JD_tencent_scf
+加了个邀新助力，不过应该没啥用。邀请码变量：PIGPETSHARECODES
 已支持IOS双京东账号,Node.js支持N个京东账号
-脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
-===============Quantumultx===============
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+============Quantumultx===============
 [task_local]
-#京东金融养猪猪
-12 0-23/6 * * * jd_pigPet.js, tag=京东金融养猪猪, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdyz.png, enabled=true
-
+#摇钱树助力
+12 0-23/6 * * * https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_pigPet.js, tag=京东金融养猪猪, enabled=true
 ================Loon==============
 [Script]
-cron "12 0-23/6 * * *" script-path=jd_pigPet.js, tag=京东金融养猪猪
-
+cron "12 0-23/6 * * *" script-path=https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_pigPet.js,tag=摇钱树助力
 ===============Surge=================
-京东金融养猪猪 = type=cron,cronexp="12 0-23/6 * * *",wake-system=1,timeout=3600,script-path=jd_pigPet.js
-
+京东金融养猪猪 = type=cron,cronexp="12 0-23/6 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_pigPet.js
 ============小火箭=========
-京东金融养猪猪 = type=cron,script-path=jd_pigPet.js, cronexpr="12 0-23/6 * * *", timeout=3600, enable=true
- */
-
+京东金融养猪猪 = type=cron,script-path=https://raw.githubusercontent.com/zero205/JD_tencent_scf/main/jd_pigPet.js, cronexpr="12 0-23/6 * * *", timeout=3600, enable=true
+*
+*/
 const $ = new Env('金融养猪');
 const url = require('url');
 let cookiesArr = [], cookie = '', allMessage = '';
@@ -32,11 +27,13 @@ const MISSION_BASE_API = `https://ms.jr.jd.com/gw/generic/mission/h5/m`;
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+let shareId = ["t_7LVGP8mopofh8AG0Q7E8AdoUJQ3Dik","0IzWPVQGlmepafqlqgOSXw"][Math.floor((Math.random() * 2))];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
+  if (process.env.PIGPETSHARECODES) { shareId = process.env.PIGPETSHARECODES };
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
@@ -231,6 +228,7 @@ function pigPetAddFood(skuId) {
 function pigPetLogin() {
   return new Promise(async resolve => {
     const body = {
+      "shareId":shareId,
       "source":2,
       "channelLV":"juheye",
       "riskDeviceParam":"{}",
@@ -247,7 +245,7 @@ function pigPetLogin() {
               if (data.resultData.resultCode === 0) {
                 $.hasPig = data.resultData.resultData.hasPig;
                 if (!$.hasPig) {
-                  console.log(`\n京东账号${$.index} ${$.nickName} 未开启养猪活动,请手动去京东金融APP开启此活动\n`)
+                  console.log(`\n京东账号${$.index} ${$.nickName} 未开启养猪活动,请手动去京东金融APP开启此活动或复制口令直达：\n29.0复制整段话 Https:/JWHOjEv6wgo0BQ 我的5斤百香果能领取啦，来养猪，一起赚#0E4EfAMIKuyDlW%打kai>【ぺ京倲金融ぺ App】～\n`)
                   return
                 }
                 if (data.resultData.resultData.wished) {
@@ -255,6 +253,7 @@ function pigPetLogin() {
                     allMessage += `京东账号${$.index} ${$.nickName || $.UserName}\n${data.resultData.resultData.wishAward.name}已可兑换${$.index !== cookiesArr.length ? '\n\n' : ''}`
                   }
                 }
+                console.log(`\n【京东账号${$.index} ${$.nickName} 的邀请码】${data.resultData.resultData.user.shareId}\n`)
               } else {
                 console.log(`Login其他情况：${JSON.stringify(data)}`)
               }
