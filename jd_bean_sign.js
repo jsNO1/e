@@ -135,7 +135,7 @@ async function execSign() {
     }
     //运行完成后，删除下载的文件
     await deleteFile(resultPath);//删除result.txt
-    await deleteFile('./CookieSet.json')
+    //await deleteFile('./CookieSet.json')
     console.log(`\n\n*****************${new Date(new Date().getTime()).toLocaleString('zh', {hour12: false})} 京东账号${$.index} ${$.nickName || $.UserName} ${$.name}完成*******************\n\n`);
   } catch (e) {
     console.log("京东签到脚本执行异常:" + e);
