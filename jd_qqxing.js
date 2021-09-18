@@ -18,7 +18,7 @@ https://lzdz-isv.isvjcloud.com/dingzhi/qqxing/pasture/activity?activityId=901210
 ============Quantumultx===============
 [task_local]
 #星系牧场
-45 0,6-23/4 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_qqxing.js, tag=星系牧场, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+45 0,6-23/2 * * * https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_qqxing.js, tag=星系牧场, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 */
 const $ = new Env('QQ星系牧场');
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -113,11 +113,12 @@ $.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6
                 let th = $.isNode() ? (process.env.CowKeep ? process.env.CowKeep : 100) : ($.getdata("CowKeep") ? $.getdata("CowKeep") : 100)
                 th = Math.max(100,th)
                 console.log(`【准备喂食,当前设置食物>${th}则喂食物,可通过设置环境变量CowKeep进行更改,需要大于100】`)
-                while($.foodNum >= th) {
+                let boundry = 100
+                while($.foodNum >= th && boundry--) {
                     await feed()
                     await $.wait(3000)
-                    await getinfo2()
-                    await $.wait(3000)
+                    // await getinfo2()
+                    // await $.wait(3000)
                 }
                 for (k = 0; k < $.drawchance; k++) {
                     await draw()
@@ -450,35 +451,6 @@ function getinfo() {
 
 }
 
-
-function getinfo2() {
-    let config = taskPostUrl("/dingzhi/qqxing/pasture/myInfo", `activityId=90121061401&pin=${encodeURIComponent($.pin)}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${$.shareuuid}`)
-    return new Promise(resolve => {
-        $.post(config, async (err, resp, data) => {
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} getinfo API请求失败，请检查网路重试`)
-                } else {
-                    data = JSON.parse(data);
-                    if (data.result) {
-                        $.food = data.data.bags.filter(x => x.bagId == 'food')[0]
-                        $.foodNum = $.food.totalNum - $.food.useNum
-                        console.log(`当前剩余饲料：${$.foodNum}`)
-                    } else {
-                        console.log(data.errorMessage)
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-
-}
-
 // 获取浏览商品
 function getproduct() {
     return new Promise(resolve => {
@@ -537,6 +509,7 @@ function feed() {
                     data = JSON.parse(data);
                     if (data.data && data.result) {
                         console.log(`喂食成功`)
+                        $.foodNum -= 100
                     }
                 }
             } catch (e) {
