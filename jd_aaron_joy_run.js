@@ -143,8 +143,8 @@ async function main() {
           run_pins = run_pins[0].split(',')
           Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
           run_pins = [...new Set(run_pins)];
-          let fixPins = run_pins.splice(run_pins.indexOf('zhaosen2580'), 1);
-          fixPins.push(...run_pins.splice(run_pins.indexOf('jd_61f1269fd3236'), 1));
+          let fixPins = run_pins.splice(run_pins.indexOf('454053205'), 1);
+          //fixPins.push(...run_pins.splice(run_pins.indexOf('jd_61f1269fd3236'), 1));
           const randomPins = getRandomArrayElements(run_pins, run_pins.length);
           run_pins = [[...fixPins, ...randomPins].join(',')];
           invite_pins = run_pins;
@@ -255,7 +255,14 @@ async function getToken() {
 }
 function readToken() {
   return new Promise(resolve => {
-    $.get({url: `https://cdn.nz.lu/gettoken`,headers:{'Host':'jdsign.cf'}, timeout: 15000}, (err, resp, data) => {
+    $.get({
+      url: `https://cdn.nz.lu/gettoken`,
+      headers: {
+        'Host': 'jdsign.cf',
+        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88'
+      },
+      timeout: 30 * 1000
+    }, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
