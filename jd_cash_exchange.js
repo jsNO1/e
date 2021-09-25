@@ -14,7 +14,7 @@ var exchangeAccounts = process.env.exchangeAccounts ?? ""
         exchangeAccounts = {}
         for(var i of v){
             j = i.split("@")
-            exchangeAccounts[j[0]]=j[1] ? +j[1] : 10
+            exchangeAccounts[j[0]]=j[1] ? +j[1] : 8
         }
     }
     await requireConfig()
