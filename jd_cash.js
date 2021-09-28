@@ -75,6 +75,7 @@ let allMessage = '';
         continue
       }
       await jdCash()
+      await $.wait(20000)
     }
   }
   if (allMessage) {
