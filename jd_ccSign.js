@@ -64,7 +64,7 @@ let allMessage = '';
         continue
       }
       await jdSign()
-      await $.wait(2000)
+      await $.wait(20000)
     }
   }
 })()
