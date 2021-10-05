@@ -6,15 +6,12 @@
  19.0复制整段话 http:/J7ldD7ToqMhRJI星系牧场养牛牛，可获得DHA专属奶！%VAjYb8me2b!→去猄倲←
  
 https://lzdz-isv.isvjcloud.com/dingzhi/qqxing/pasture/activity?activityId=90121061401&lng=107.146935&lat=33.255252&sid=cad74d1c843bd47422ae20cadf6fe5aw&un_area=8_573_6627_52446
-更新地址：https://raw.githubusercontent.com/Wenmoux/scripts/wen/jd/jd_ddnc_farmpark.js
-
-【原作者 @Wenmoux】
-
-【二次修改 @zero205】
 
 添加：自动喂食；
-修改：默认不做加购物车任务，优化黑号处理。By:zero205
-
+修改：默认不做加购物车任务，优化黑号处理。
+需要加购FS_LEVEL=car (或者card=开卡+加购,car=只加购)
+环境变量:
+CowKeep:保留食物的数量(低于这个才喂食物)
 ============Quantumultx===============
 [task_local]
 #星系牧场
@@ -42,7 +39,7 @@ if ($.isNode()) {
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
-$.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6216f","2d4ce1b209d7442aaf1a114752277e85"][Math.floor((Math.random() * 3))];
+$.shareuuid = ["e107e7a545b74b65b9d19648a238c9cb", "0808fdb4051149659c6ed0c538973c63", "17dcb4f4d8e748fe8649ba5212b31365", "4356066301ff4fb09d71eb5acb811eef", "3b006e823a0b4148b9c2a5e44587643f", "569541f9142148949d134616512d33e8", "8e54451d29f9436089fdcb656abefb79"][Math.floor((Math.random() * 7))];
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
@@ -50,8 +47,7 @@ $.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6
         });
         return;
     }
-    console.log(`\n【原作者 @Wenmoux】\nBy:zero205\n添加：自动喂食\n修改：跳过加购物车任务，优化黑号处理\n`);
-    console.log(`\n活动入口口令：29.0复制整段话 Https:/JXBGWf46qWgzLa 星系牧场养牛牛，可获得DHA专属奶！￥23d9a0N4FTyGv2%祛→【猄〤崬】\n\n【注意】Response code 493 (undefined)报错是正常情况，活动抽风而已，请勿反馈！！！\n`)
+    console.log(`\n活动入口口令：29.0复制整段话 Https:/JXBGWf46qWgzLa 星系牧场养牛牛，可获得DHA专属奶！￥23d9a0N4FTyGv2%祛→【猄〤崬】\n`)
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
@@ -95,34 +91,38 @@ $.shareuuid = ["8cec00a4917e4af6ae49f8f4f9e7b58d", "f9e36b5518074c85a59abc6451d6
                     if (task.taskid == "interact") {
                         for (l = 0; l < 20 - task.curNum; l++) {
                             await dotask(task.taskid, task.params)
-                            await $.wait(5000)
+                            await $.wait(8000)
                         }
                     } else if (task.taskid == "scansku") {
                         await getproduct()
                         await writePersonInfo($.vid)
                         await dotask(task.taskid, $.pparam)
                     } else if (task.taskid == "add2cart") {
-                        console.log(`跳过加购物车任务`)
+                        if(['card','car'].includes(process.env.FS_LEVEL)){
+                            await dotask(task.taskid, $.pparam)
+                        }else{
+                            console.log(`跳过加购物车任务`)
+                        }
                     } else {
                         await dotask(task.taskid, task.params)
-                        await $.wait(5000)
+                        await $.wait(8000)
                     }
                 }
                 await getinfo()
-                await $.wait(3000)
-                let th = $.isNode() ? (process.env.CowKeep ? process.env.CowKeep : 100) : ($.getdata("CowKeep") ? $.getdata("CowKeep") : 100)
+                await $.wait(5000)
+                let th = $.isNode() ? (process.env.CowKeep ? process.env.CowKeep : 1000000) : ($.getdata("CowKeep") ? $.getdata("CowKeep") : 1000000)
                 th = Math.max(100,th)
                 console.log(`【准备喂食,当前设置食物>${th}则喂食物,可通过设置环境变量CowKeep进行更改,需要大于100】`)
                 let boundry = 100
                 while($.foodNum >= th && boundry--) {
                     await feed()
-                    await $.wait(3000)
+                    await $.wait(5000)
                     // await getinfo2()
                     // await $.wait(3000)
                 }
                 for (k = 0; k < $.drawchance; k++) {
                     await draw()
-                    await $.wait(2000)
+                    await $.wait(10000)
                 }
                 let exchanges = Math.floor($.foodNum / 3000)
                 console.log(`可兑换 ${exchanges} 次 50京🐶`)
