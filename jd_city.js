@@ -134,6 +134,14 @@ function taskPostUrl(functionId,body) {
     }
   }
 }
+function randomString(e) {
+  e = e || 32;
+  let t = "abcdef0123456789", a = t.length, n = "";
+  for (let i = 0; i < e; i++)
+    n += t.charAt(Math.floor(Math.random() * a));
+  return n
+}
+
 function getInfo(inviteId, flag = false) {
   let body = {"lbsCity":"19","realLbsCity":"1601","inviteId":inviteId,"headImg":"","userName":""}
   return new Promise((resolve) => {
