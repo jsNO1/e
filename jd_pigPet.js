@@ -28,7 +28,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let shareId = ["O8czJZso1_O8grq4zlU0fw", "jbvRHwoAO-kDmw2VSf5sVA", "NS2wHUAqUQMsShJOj71dE8AdoUJQ3Dik", "FfcC4OtXeJG4DUqYgxYdyQ", "xrkkrbOiwP_AHaFCUNw4pA", "g6l5OliAM9H4X3pgrjx4XsAdoUJQ3Dik", "-zVIHyOstwWlSS88qeWq1g", "J8QWoz01JkPJHI4v3NUSQsAdoUJQ3Dik", "dZl0XwEh5Fdk_-oLa6iFrsAdoUJQ3Dik", "XncjljSy8R5vlX8UYZP018AdoUJQ3Dik", "RaKG734YDaciXJTqvxJy3A", "qvFGzI2PCB8U3NezHGu9xcAdoUJQ3Dik"][Math.floor((Math.random() * 12))];
-let helpId = ["0e7c67a9-f510-4f77-8973-1df6fc3601f2"];
+//let helpId = ["0e7c67a9-f510-4f77-8973-1df6fc3601f2"];
 $.shareCodes = [];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -66,7 +66,7 @@ if ($.isNode()) {
     }
   }
   console.log(`\n======开始大转盘助力======\n`);
-  $.shareCodes = [...$.shareCodes, ...helpId]
+  $.shareCodes = [...$.shareCodes, ...$.helpId]
   for (let j = 0; j < cookiesArr.length; j++) {
     cookie = cookiesArr[j];
     if ($.shareCodes && $.shareCodes.length) {
@@ -99,7 +99,7 @@ async function jdPigPet() {
     await pigPetLotteryIndex();
     await pigPetLottery();
     if (process.env.JD_PIGPET_PK && process.env.JD_PIGPET_PK === 'true') {
-    await pigPetRank();
+      await pigPetRank();
     }
     await pigPetMissionList();
     await missions();
@@ -195,6 +195,7 @@ function pigPetUserBag() {
                         item.count = item.count - 20
                         i--
                       } while (item.count >= 20 && i > 0)
+                      if ($.finish) break
                     }
                   }
                 } else {
