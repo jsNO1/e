@@ -70,7 +70,6 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return
   }
 
-await requireConfig();
 nowTimes = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60 * 1000 + 8 * 60 * 60 * 1000)
 if (nowTimes.getHours() === 23 && nowTimes.getMinutes() === 59) {
   let nowtime = new Date().Format("s.S")
