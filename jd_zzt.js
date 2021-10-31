@@ -133,38 +133,39 @@ async function main() {
             await $.wait(1000);
         }
     }
-    user = await taskUrl("get_user_info", "")
-    let time = Math.floor(user.coins / 30);
-    console.log(`当前积分：${user.coins},可以摇骰子：${time}次`);
-    for (let i = 0; i < time; i++) {
-        console.log(`\n进行第${i+1}次摇骰子`);
-        let dice = await taskUrl("dice", "")
-        if (dice.prize_info && JSON.stringify(dice.prize_info) !== '[]'){
-            if(dice.prize_info.type === 1){
-                console.log(`获得：${dice.prize_info.beans || 0}京豆`);
-            }
-            if(dice.prize_info.type === 2){
-                console.log(`获得：${dice.prize_info.prize.name || '未知'}`);
-            }
-            if(dice.prize_info.type === 3){
-                let linInfo = await taskPostUrl("link", `id=${dice.prize_info.id}&token=${dice.prize_info.token}&link=${dice.prize_info.link}`);
-                console.log(`点击跳转`);
-                console.log(`获得：${linInfo.beans || 0}京豆`);
-            }
-        }else if(JSON.stringify(dice.prize_info) === '[]' || dice.prize_info === false){
-            if(dice.one_map_beans){
-                console.log(`获得：${dice.one_map_beans || 0}京豆`);
-            }else{
-                console.log("恭喜您获得了空气")
-            }
-        }
-        console.log(JSON.stringify(dice));
-        await $.wait(3000);
-        if(dice.step === 18 && dice.next_map_id === 0){
-            console.log(`已到达终点`);
-            break;
-        }
-    }
+    //关闭摇骰子
+    // user = await taskUrl("get_user_info", "")
+    // let time = Math.floor(user.coins / 30);
+    // console.log(`当前积分：${user.coins},可以摇骰子：${time}次`);
+    // for (let i = 0; i < time; i++) {
+    //     console.log(`\n进行第${i+1}次摇骰子`);
+    //     let dice = await taskUrl("dice", "")
+    //     if (dice.prize_info && JSON.stringify(dice.prize_info) !== '[]'){
+    //         if(dice.prize_info.type === 1){
+    //             console.log(`获得：${dice.prize_info.beans || 0}京豆`);
+    //         }
+    //         if(dice.prize_info.type === 2){
+    //             console.log(`获得：${dice.prize_info.prize.name || '未知'}`);
+    //         }
+    //         if(dice.prize_info.type === 3){
+    //             let linInfo = await taskPostUrl("link", `id=${dice.prize_info.id}&token=${dice.prize_info.token}&link=${dice.prize_info.link}`);
+    //             console.log(`点击跳转`);
+    //             console.log(`获得：${linInfo.beans || 0}京豆`);
+    //         }
+    //     }else if(JSON.stringify(dice.prize_info) === '[]' || dice.prize_info === false){
+    //         if(dice.one_map_beans){
+    //             console.log(`获得：${dice.one_map_beans || 0}京豆`);
+    //         }else{
+    //             console.log("恭喜您获得了空气")
+    //         }
+    //     }
+    //     console.log(JSON.stringify(dice));
+    //     await $.wait(3000);
+    //     if(dice.step === 18 && dice.next_map_id === 0){
+    //         console.log(`已到达终点`);
+    //         break;
+    //     }
+    // }
 }
 //genToken
 function genToken() {
