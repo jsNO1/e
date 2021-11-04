@@ -1,7 +1,7 @@
 /*
 双11特务
 APP首页下滑,任务，互助
-cron 10 9,13,16,19,20 2-8 11 * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_superBrand.js
+cron 10 9,13,15,16,19,20 2-8 11 * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_superBrand.js
 * */
 const $ = new Env('双11特务');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -60,8 +60,6 @@ let shareList = [];
             }
         }
     }
-    await getShareCode('tewu.json')
-    allShareList = [...new Set([...allShareList, ...($.shareCode || [])])]
     console.log(`\n-----------------------互助----------------------\n`)
     for (let i = 0; i < cookiesArr.length; i++) {
         let cookie = cookiesArr[i];
@@ -92,31 +90,6 @@ let shareList = [];
 }).finally(() => {
     $.done();
 });
-
-function getShareCode(name) {
-  return new Promise(resolve => {
-    $.get({
-      url: "https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/"+name,
-      headers: {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }
-    }, async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`);
-          console.log(`${$.name} API请求失败，请检查网路重试`);
-        } else {
-          console.log(`优先账号内部互助，有剩余助力次数再帮【zero205】助力`);
-          $.shareCode = JSON.parse(data);
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
-    })
-  })
-}
 
 async function main(cookie) {
     let userName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
@@ -202,13 +175,28 @@ async function main(cookie) {
             if(signList.length === 0){
                 console.log(`任务：${oneTask.assignmentName},信息异常`);
             }
-            for (let j = 0; j < signList.length; j++) {
-                if(signList[j].status === 1){
-                    console.log(`任务：${oneTask.assignmentName},去执行,请稍稍`);
-                    let itemId = signList[j].itemId;
-                    let doInfo = await takeRequest(cookie,'superBrandDoTask',`{"source":"card","activityId":${activityId},"encryptProjectId":"${encryptProjectId}","encryptAssignmentId":"${oneTask.encryptAssignmentId}","assignmentType":${oneTask.assignmentType},"itemId":"${itemId}","actionType":0,"dropDownChannel":1}`);
-                    console.log(`执行结果：${JSON.stringify(doInfo)}`);
-                    await $.wait(3000);
+            if(oneTask.assignmentName === '首页限时下拉'){
+                for (let j = 0; j < signList.length; j++) {
+                    if(signList[j].status === 1){
+                        console.log(`任务：${oneTask.assignmentName},去执行,请稍稍`);
+                        let itemId = signList[j].itemId;
+                        let doInfo = await takeRequest(cookie,'superBrandDoTask',`{"source":"card","activityId":${activityId},"encryptProjectId":"${encryptProjectId}","encryptAssignmentId":"${oneTask.encryptAssignmentId}","assignmentType":${oneTask.assignmentType},"itemId":"${itemId}","actionType":0,"dropDownChannel":1}`);
+                        console.log(`执行结果：${JSON.stringify(doInfo)}`);
+                        await $.wait(3000);
+                    }
+                }
+            }else if(oneTask.assignmentName === '去首页下拉参与小游戏'){
+                for (let j = 0; j < signList.length; j++) {
+                    if(signList[j].status === 1){
+                        console.log(`任务：${oneTask.assignmentName},去执行,请稍稍`);
+                        let gameInfo = await takeRequest(cookie,'showSecondFloorGameInfo',`{"source":"card"}`);
+                        let secCode = gameInfo.result.activityGameInfo.gameCurrentRewardInfo.secCode;
+                        let gameEncryptAssignmentId = gameInfo.result.activityGameInfo.gameCurrentRewardInfo.encryptAssignmentId;
+                        await $.wait(3000);
+                        let doInfo = await takeRequest(cookie,'superBrandTaskLottery',`{"source":"card","activityId":${activityId},"encryptProjectId":"${encryptProjectId}","encryptAssignmentId":"${gameEncryptAssignmentId}","secCode":"${secCode}"}`);
+                        console.log(`执行结果：${JSON.stringify(doInfo)}`);
+                        await $.wait(3000);
+                    }
                 }
             }
         }
