@@ -5,7 +5,51 @@ const $ = new Env('超级无线店铺签到');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
-let activityIdList = []
+let activityIdList = [
+    "c6a0f643e2c34ceda0ba3636549f0679",
+    "122d380a95c54fd2bb269f57747b9e07",
+    "9b93f94b8a0d460ba1447c628ae5444e",
+    "39839dcd2e0843be8cdc075b42da4811",
+    "684cffa66c2041faa0d9b8719b06d4c1",
+    "7e9a5290db1743b68f569140ecdb72f1",
+    "c2560ac2bcc94894ae41bb66e5921640",
+    "bfd34c1ebe8e4aaeb9d8e5261857353c",
+    "61aea225c2f943acbfec0c1df953ede7",
+    "5189ba2597264e278132f5a3d95d4d38",
+    "581c63fadd11415dbd474ccca27bad64",
+    "14c9b5a372e847529c1997ca09f6f415",
+    "cf07d2b1201946209aca819f62b5fe0b",
+    "fc13ebe0a2ad4c9991faba8d3ff06989",
+    "1923ad517ea944aaa56570919aa55d2b",
+    "f822a5f4655d4e58adda40e3925dce95",
+    "de21b94e8fd24abe896515fe55a01308",
+    "d289e55dbad84dea9b3a47d0eba98450",
+    "0d5b84f97a34431fb87cbbd59f57881f",
+    "1878a6ef942c48e8bdcbbf3ffae35bef",
+    "908b5ed388ea40968b5e4e1e5ffb7241",
+    "fd0e702dfdd84368b4945d72b4489498",
+    "289a5faead804ba581d9a7e10f0db23f",
+    "4d9dbddfe10c486da90bdeea6cc9568e",
+    "8ba2420c8e884e72a902aab560754224",
+    "a5b562f78ac745218a3f809d694d4325",
+    "cdc6f4e4d7bd4cc88cf35f7547c9210c",
+    "2eb3f4b78901415783f372c554484ff6",
+    "57e51f3c897e484d8238aab179c7d652",
+    "c98320ea223d43bb8210ac17f4df3cad",
+    "7e5ce588bee945dfb399179c18ae5d6a",
+    "02579712a9234f7692bf1bb23f37a50c",
+    "c4415b2b45a34d219821dba08c334512",
+    "e73808c65b994cd680526d2084a1b985",
+    "1873e11800f04742b32f00455471795d",
+    "b11b765abe6d4147ba0c992805e9affd",
+    "4d1284f94b594443aa9a4c71f9ad7ae0",
+    "c201c9cca4c24a6c9e47f01a29f92ae0",
+    "6deecc08bc1c4c9287a5817b3b332726",
+    "d3f2972671594d338634266f6511bba7",
+    "40f69fdc701247aa9cd2178309b63a7f",
+    "13126645fcb2477fa1090a94cb7f3ca2",
+    "f3207d49ac8e4fcfbd542befc1338916",
+]
 let lz_cookie = {}
 
 if (process.env.RUSH_SEVENDAY_LIST && process.env.RUSH_SEVENDAY_LIST != "") {
