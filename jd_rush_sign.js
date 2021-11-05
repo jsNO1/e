@@ -5,7 +5,26 @@ const $ = new Env('超级无线店铺签到');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
-let activityIdList = []
+let activityIdList = [
+    "39839dcd2e0843be8cdc075b42da4811",
+    "c6be5c66ccf24619a5560318b33519ee",
+    "c4415b2b45a34d219821dba08c334512",
+    "1873e11800f04742b32f00455471795d",
+    "581c63fadd11415dbd474ccca27bad64",
+    "a2112cb10775428198061c3b26262fd8",
+    "c939b748eb024f4fab504606dffdbf5f",
+    "ad6dde1825204a2c8cc4bb5b9c4a40f9",
+    "61aea225c2f943acbfec0c1df953ede7",
+    "1923ad517ea944aaa56570919aa55d2b",
+    "0d5b84f97a34431fb87cbbd59f57881f",
+    "4d1284f94b594443aa9a4c71f9ad7ae0",
+    "2d2fd46459e842269544317fa6c207c6",
+    "2eb3f4b78901415783f372c554484ff6",
+    "6deecc08bc1c4c9287a5817b3b332726",
+    "17887517300f4684b16ffcb4620c3177",
+    "8cdff620190948a38a2cc62fe1e3afa2",
+    "d3f2972671594d338634266f6511bba7",
+]
 let lz_cookie = {}
 
 if (process.env.RUSH_SHOP_SIGN_LIST && process.env.RUSH_SHOP_SIGN_LIST != "") {
