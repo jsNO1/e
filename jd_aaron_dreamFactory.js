@@ -36,8 +36,8 @@ cron "10 * * * *" script-path=jd_dreamFactory.js,tag=京喜工厂
 const $ = new Env('京喜工厂');
 const JD_API_HOST = 'https://m.jingxi.com';
 const notify = $.isNode() ? require('./sendNotify') : '';
-//通知级别 1=生产完毕可兑换通知;2=可兑换通知+生产超时通知+兑换超时通知;3=可兑换通知+生产超时通知+兑换超时通知+未选择商品生产通知(前提：已开通京喜工厂活动);默认第2种通知
-let notifyLevel = $.isNode() ? process.env.JXGC_NOTIFY_LEVEL || 2 : 2;
+//通知级别 1=生产完毕可兑换通知;2=可兑换通知+生产超时通知+兑换超时通知;3=可兑换通知+生产超时通知+兑换超时通知+未选择商品生产通知(前提：已开通京喜工厂活动);默认第1种通知
+let notifyLevel = $.isNode() ? process.env.JXGC_NOTIFY_LEVEL || 1 : 1;
 const randomCount = $.isNode() ? 20 : 5;
 let tuanActiveId = ``, hasSend = false;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
@@ -96,27 +96,27 @@ if ($.isNode()) {
       await jdDreamFactory()
     }
   }
-  if (tuanActiveId) {
-    for (let i = 0; i < cookiesArr.length; i++) {
-      if (cookiesArr[i]) {
-        cookie = cookiesArr[i];
-        $.isLogin = true;
-        $.canHelp = true;//能否参团
-        $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+  // if (tuanActiveId) {
+  //   for (let i = 0; i < cookiesArr.length; i++) {
+  //     if (cookiesArr[i]) {
+  //       cookie = cookiesArr[i];
+  //       $.isLogin = true;
+  //       $.canHelp = true;//能否参团
+  //       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
 
-        if ((cookiesArr && cookiesArr.length >= ($.tuanNum || 5)) && $.canHelp) {
-          console.log(`\n账号${$.UserName} 内部相互进团\n`);
-          for (let item of $.tuanIds) {
-            console.log(`\n${$.UserName} 去参加团 ${item}`);
-            if (!$.canHelp) break;
-            await JoinTuan(item);
-            await $.wait(1000);
-          }
-        }
-        if ($.canHelp) await joinLeaderTuan();//参团
-      }
-    }
-  }
+  //       if ((cookiesArr && cookiesArr.length >= ($.tuanNum || 5)) && $.canHelp) {
+  //         console.log(`\n账号${$.UserName} 内部相互进团\n`);
+  //         for (let item of $.tuanIds) {
+  //           console.log(`\n${$.UserName} 去参加团 ${item}`);
+  //           if (!$.canHelp) break;
+  //           await JoinTuan(item);
+  //           await $.wait(1000);
+  //         }
+  //       }
+  //       if ($.canHelp) await joinLeaderTuan();//参团
+  //     }
+  //   }
+  // }
   if ($.isNode() && allMessage) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: jxOpenUrl })
   }
@@ -142,10 +142,10 @@ async function jdDreamFactory() {
     await QueryHireReward();//收取招工电力
     await PickUp();//收取自家的地下零件
     await stealFriend();
-    if (tuanActiveId) {
-      await tuanActivity();
-      await QueryAllTuan();
-    }
+    // if (tuanActiveId) {
+    //   await tuanActivity();
+    //   await QueryAllTuan();
+    // }
     await exchangeProNotify();
     await showMsg();
   } catch (e) {
@@ -1409,10 +1409,10 @@ function shareCodesFormat() {
       const tempIndex = $.index > inviteCodes.length ? (inviteCodes.length - 1) : ($.index - 1);
       $.newShareCodes = inviteCodes[tempIndex].split('@');
     }
-    const readShareCodeRes = await readShareCode();
-    if (readShareCodeRes && readShareCodeRes.code === 200) {
-      $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
-    }
+    // const readShareCodeRes = await readShareCode();
+    // if (readShareCodeRes && readShareCodeRes.code === 200) {
+    //   $.newShareCodes = [...new Set([...$.newShareCodes, ...(readShareCodeRes.data || [])])];
+    // }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify($.newShareCodes)}`)
     resolve();
   })
