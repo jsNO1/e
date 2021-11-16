@@ -116,8 +116,8 @@ if ($.isNode() && process.env.BEANCHANGE_ALLNOTIFY) {
 	strAllNotify = `【✨✨✨✨公告✨✨✨✨】\n`+strAllNotify;
 	console.log(strAllNotify);
 }
-//月统计if (EnableMonth == "true" && Today.getDate() == 1 && Today.getHours() > 17)
-if (EnableMonth == "true")
+
+if (EnableMonth == "true" && Today.getDate() == 1 && Today.getHours() > 17)
 	llShowMonth = true;
 
 let userIndex2 = -1;
@@ -1534,7 +1534,10 @@ function cash() {
 				} else {
 					if (safeGet(data)) {
 						data = JSON.parse(data);
-						$.JDtotalcash = data.data.goldBalance;
+						if (data.data.goldBalance)
+							$.JDtotalcash = data.data.goldBalance;
+						else
+							console.log(`领现金查询失败，服务器没有返回具体值.`)
 					}
 				}
 			} catch (e) {
