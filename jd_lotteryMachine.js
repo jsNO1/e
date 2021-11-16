@@ -15,7 +15,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const STRSPLIT = "|";
 const needSum = false;            //是否需要显示汇总
 const printDetail = false;        //是否显示出参详情
-const appIdArr =['1EFRRxA','1EFRQwA','1EFRXxg','1E1NXxq0', '1ElBTx6o','1FV1VwKc','1FFRWxaY','1FFVQyqw','1FFRWwqg','1FV1ZwKY','1FFRWxaY']
+const appIdArr =['1EFRRxA','1EFRQwA','1EFRXxg','1E1NXxq0', '1ElBTx6o','1FFRWxaY','1FFVQyqw','1FFRWwqg','1FFRWxaY','1FFdSxqw']
 const shareCodeArr = ['T018v_VxQxkZ_FXVJBqb1ACjVWmIaW5kRrbA','T018v_VxQxkZ_FXVJBqb1ACjVXnIaW5kRrbA','T018v_VxQxkZ_FXVJBqb1ACjVQmoaT5kRrbA']
 const homeDataFunPrefixArr = ['interact_template','interact_template','interact_template','interact_template','interact_template','interact_template']
 const collectScoreFunPrefixArr = ['','','','','','','','','','','','','interact_template','interact_template']
@@ -60,6 +60,7 @@ if ($.isNode()) {
         lotteryResultFunPrefix = lotteryResultFunPrefixArr[j]||'interact_template'
         browseTime = 6
         if (parseInt(j)) console.log(`\n开始第${parseInt(j) + 1}个抽奖活动`)
+        console.log(`\n当前活动ID:`+appId)
         await interact_template_getHomeData();
         //break
       }
