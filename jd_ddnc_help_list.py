@@ -271,6 +271,24 @@ def buildHeaders(ck):
         'User-Agent': userAgent()
     }
     return headers
+def farmA(ck):
+    url1 = 'https://api.m.jd.com/client.action?functionId=farmAssistInit&body=%7B%22version%22%3A14%2C%22channel%22%3A1%2C%22babelChannel%22%3A%22120%22%7D&appid=wh5'
+    resp = requests.get(url1, headers=buildHeaders(ck), timeout=10).json()
+    if resp['status'] == 2:
+        return True
+    else:
+        return False
+def getSuccess(ck, user):
+    global count
+    url = 'https://api.m.jd.com/client.action?functionId=receiveStageEnergy&body=%7B%22version%22%3A14%2C%22channel%22%3A1%2C%22babelChannel%22%3A%22120%22%7D&appid=wh5'
+    resp = requests.get(url,  headers=buildHeaders(ck), timeout=10).json()
+    if resp['code'] == '0':
+        print(f"☺️{user}, 收货水滴【{resp['amount']}g】")
+        try:
+            count[user] += resp['amount']
+        except:
+            count[user] = resp['amount']
+    # print(resp)
 
 def awardInviteFriendForFarm(ck):
     url = f'https://api.m.jd.com/client.action?functionId=awardInviteFriendForFarm&body=%7B%7D&appid=wh5'
@@ -296,6 +314,7 @@ def ddnc_help(ck, nickname, shareCode, masterName):
         elif help_result == "8":
             print(f"\t└😆{nickname} 已没有助力机会~  ")
         elif help_result == "10":
+            print(f"\t└☺️ {masterName} 今天好友助力已满～")
             msg(f"\t└☺️ {masterName} 今天好友助力已满～")
             # awardInviteFriendForFarm(ck)
             return True
@@ -326,7 +345,13 @@ def start():
                         print(f"\t└😓{user} 不能助力自己，跳过~")
                         continue
                     result = ddnc_help(ck, nickname, shareCode, user)
+                    if farmA(m_ck):
+                        getSuccess(m_ck, user)
                     if result:
+                        for n in range(4):
+                            if farmA(m_ck):
+                                time.sleep(2)
+                                getSuccess(m_ck, user)
                         break
         elif ddnc_isOrder == "false":
             if not ddnc_help_list:
@@ -349,10 +374,21 @@ def start():
                         print(f"\t└😓{masterName} 不能助力自己，跳过~")
                         continue
                     result = ddnc_help(ck, nickname, shareCode, masterName)
+                    if farmA(cookiesList[ckNum]):
+                        getSuccess(cookiesList[ckNum], masterName)
                     if result:
+                        for n in range(4):
+                            if farmA(cookiesList[ckNum]):
+                                time.sleep(2)
+                                getSuccess(cookiesList[ckNum], masterName)
                         break
+
         else:
-            print("请检查ddnc_isOrder 变量参数是否正确填写。")
+            print("😓请检查ddnc_isOrder 变量参数是否正确填写。")
+        print("*"*30)
+        for i in count:
+            msg(f"💧账号【{i}】本次助力收获水滴:{count[i]}g 💧")
+        print("*" * 30)
         if isNotice:
             send(scriptName, msg_info)
     except Exception as e:
