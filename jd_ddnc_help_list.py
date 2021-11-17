@@ -351,7 +351,7 @@ def start():
                     if result:
                         for n in range(4):
                             if farmA(m_ck):
-                                time.sleep(2)
+                                time.sleep(4)
                                 getSuccess(m_ck, user)
                         break
         elif ddnc_isOrder == "false":
