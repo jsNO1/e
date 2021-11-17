@@ -14,6 +14,7 @@ new Env('东东农场-助力');
 ddnc_isOrder="true"
 # 东东农场助力名单(当ddnc_isOrder="false" 才生效), ENV 环境设置 export ddnc_help_list="Curtinlv&用户2&用户3"
 ddnc_help_list = ["Curtinlv", "用户2", "用户3"]
+
 #是否开启通知，Ture：发送通知，False：不发送
 isNotice=True
 # UA 可自定义你的, 默认随机生成UA。
@@ -311,7 +312,7 @@ def start():
         scriptName = '### 东东农场-助力 ###'
         print(scriptName)
         global cookiesList, userNameList, pinNameList, ckNum
-        cookiesList, userNameList = getCk.iscookie()
+        cookiesList, userNameList, pinNameList = getCk.iscookie()
         if ddnc_isOrder == "true":
             for ck,user in zip(cookiesList,userNameList):
                 msg(f"开始助力 {user}")
