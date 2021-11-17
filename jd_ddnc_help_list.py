@@ -334,7 +334,8 @@ def start():
         cookiesList, userNameList, pinNameList = getCk.iscookie()
         if ddnc_isOrder == "true":
             for ck,user in zip(cookiesList,userNameList):
-                msg(f"开始助力 {user}")
+                m_ck = ck
+                print(f"开始助力 {user}")
                 try:
                     shareCode = getShareCode(ck)
                 except Exception as e:
