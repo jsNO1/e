@@ -380,7 +380,7 @@ def start():
                     if result:
                         for n in range(4):
                             if farmA(cookiesList[ckNum]):
-                                time.sleep(2)
+                                time.sleep(4)
                                 getSuccess(cookiesList[ckNum], masterName)
                         break
 
