@@ -27,6 +27,8 @@ try:
 except Exception as e:
     print(e, "\n缺少requests 模块，请执行命令安装：pip3 install requests")
     exit(3)
+# 获取当前工作目录
+pwd = os.path.dirname(os.path.abspath(__file__)) + os.sep
 class getJDCookie(object):
     # 适配各种平台环境ck
     def getckfile(self):
