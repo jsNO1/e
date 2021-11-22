@@ -5,56 +5,12 @@ const $ = new Env('加购物车抽奖');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
-let activityIdList = ["9d561aaf60f24115b3aa03f9e06dfca6",
-"613875fed9d047ba8d3ac218f83a9697",
-"33951aa85e374e3fbce656b767137b46",
-"75c866ced901431ea8394cf6035c274f",
-"ecf679fd851443a88763ea8aed7fc0b8",
-"93d7cd84f8ed433994ee6e7adbd08983",
-"1ea5ce9afdd645f29682824a52599e8d",
-"cca7cc264a2b496d84414e4101f217a1",
-"ce366f39b46141ebada1910126df452d",
-"599823de50b64a7d822b4401e107b1b0",
-"af4d1626157f40dfaef2ba91a86563ca",
-"dd92842eec6b4f24b93f58fe0edaccb0",
-"b18bec7121da406c9ce479ab17f5b51e",
-"428a2327b75b4133ae324ff4c33d38a0",
-"c8fb05044d6d497eb668c3060c49a2e4",
-"4c7d52a8bc58407baf34e78dd562ff5f",
-"3182b10e7a554dba83e6eb62902625a9",
-"1f55a47cf2a744fb9609ee147cb5c701",
-"efd0bf182a2a4853a84a9f84daa01dd4",
-"80c648f06bec4969a3d7d64f40d23969",
-"65e31a4fb56f471f8cf84570f86b1477",
-"4a932ae7a7eb46479cd046b25e29fd20",
-"b5219073dcea4d57932541e1d8561cb0",
-"023dbffc1ff447f385b413637213b65e",
-"eaea8875e8e84749be1dbde3db60ed48",
-"c69b062803854751b8b208975b6405e7",
-"2219c0b6253d4283ab61ff153988efbf",
-"acbcae7ee2204e82b498fdfd0d01a409",
-"937d78cec74f4e45ae18e023705fd851",
-"66f87d0f04f04138a6e64425852e70cd",
-"43533adf68e844d4923a7753a56d2f9b",
-"531f465727e74b5292ab7e4b84c4b810",
-"e12730cdc2e24b73a7de2d38fcd45590",
-"af10fbd3ec0c4a1088de23839b74efb0",
-"b11117b47507449c9d794caa1c50e667",
-"223af331a66a4408a959a04145355cc6",
-"ce4f4cea125b41468f71803e73063278",
-"32d50875787a4180bb75a7905518de87",
-"fb33e46e0c8543308c8248077c8560e9",
-"61d58bb0bc58408dba8cb50002b9d64d",
-"7439e98244e44a38a67e769d6e31913f",
-"a4cea15e12e74b7c8fc96adc17725772",
-"5b3a236b5c6e4d998adfdafa5ef5c897",
-"420fe344948c4912affa5d4c94e84a95",
-"09ae40074f9b4c378a1f8d2a51cef279",
-"b8465594feea4b18b1b83cf2bdebe8d3",
-"28c9a31635eb47fa81b9f9d2a4ba01f3",
-"0adf7ca8dc854a1cbb4c82573645796c",
-"5dc9fcc62c724599a9d76f8e33f753c1",
-"709c00328f544b5baf6e8c2f52c5d66b"
+let activityIdList = [
+    'a39eca744f604aeea030d4b3fc022f11',
+    'be78234b03294ef4a56df820bb88a554',
+    'c8ae3304db0e4277901933c5fe92fb06',
+    'fc071a14fc884244bdc1943965b2983f',
+    'c40105ba403e4b2cbde742ab11fc38c3',
 ]
 let lz_cookie = {}
 
@@ -85,7 +41,7 @@ $.keywordsNum = 0;
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    //activityIdList = await getActivityIdList('https://raw.githubusercontent.com/FKPYW/dongge/master/code/wxCollectionActivity.json')
+    // activityIdList = await getActivityIdList('https://raw.githubusercontent.com/FKPYW/dongge/master/code/wxCollectionActivity.json')
     for(let a in activityIdList){
         activityId = activityIdList[a];
         console.log("开起第 "+ a +" 个活动，活动id："+activityId)
