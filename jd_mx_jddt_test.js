@@ -183,6 +183,7 @@ async function operation() {
             }
         };
         await redeemHomePage(`id=${$.id}&activeid=A_8943039_R_6_D_20211015&activeId=A_8943039_R_6_D_20211015&authcode=${$.authcode}&token=${$.taskToken}`);
+        if ($.coin < 149400){break}
         //let condition = [2000, 4900, 62700, 149400]
         let condition = [149400]
         for (let k = $.exchangeList.length-1; k >= 0; k--){
