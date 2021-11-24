@@ -3,8 +3,9 @@
 活动入口：京东APP-》搜索 玩一玩-》瓜分20亿
 活动时间：2021-10-21至2021-12-31
 脚本更新时间：2021-11-23 17:00
-cron 2 * * * *
+cron 2 * * * * jd_mx_jddt_test.js
 无限答题模式，只兑换最大奖励
+答题10次
  */
 
 const $ = new Env('京东答题领金豆');
@@ -137,6 +138,7 @@ async function operation() {
                 await doLottery(`{"id":"${$.id}","activeid":"A_8943039_R_6_D_20211015","activeId":"A_8943039_R_6_D_20211015","authcode":"${$.authcode}","token":"${$.taskToken}"}`)
                 await $.wait(sleep * 1000);
             };
+            for (k = 0; kk < 10; k++){
             if (["匹配挑战"].includes($.allTaskList[i].res.sName)){
                 $.taskName = $.allTaskList[i].res.sName;
                 console.log(`去做${$.taskName}\t等待答题完成`)
@@ -163,7 +165,8 @@ async function operation() {
                     }
                     await $.wait(10000)
                 }
-            };
+            }
+        };
         }
         await $.wait(500)
         //领取任务奖励
