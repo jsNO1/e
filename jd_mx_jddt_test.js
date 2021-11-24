@@ -138,7 +138,7 @@ async function operation() {
                 await doLottery(`{"id":"${$.id}","activeid":"A_8943039_R_6_D_20211015","activeId":"A_8943039_R_6_D_20211015","authcode":"${$.authcode}","token":"${$.taskToken}"}`)
                 await $.wait(sleep * 1000);
             };
-            for (k = 0; kk < 10; k++){
+            for (kk = 0; kk < 10; kk++){
             if (["匹配挑战"].includes($.allTaskList[i].res.sName)){
                 $.taskName = $.allTaskList[i].res.sName;
                 console.log(`去做${$.taskName}\t等待答题完成`)
