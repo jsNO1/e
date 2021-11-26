@@ -327,15 +327,15 @@ def inviteCode(cookie):
         msg(f"错误\n{res}\n")
 
 # 助力
-def happyDigHelp(cookie,fcwbinviter,fcwbinviteCode):
-    msg(f"账号 {get_pin(cookie)} 去助力{fcwbinviteCode}")
-    xueliang(cookie)
-    body={"linkId":linkId,"inviter":fcwbinviter,"inviteCode":fcwbinviteCode}
-    res=taskGetUrl("happyDigHelp", body, cookie)
-    if res['success']:
-        msg('助力成功')
-    else:
-        msg(res['errMsg'])
+# def happyDigHelp(cookie,fcwbinviter,fcwbinviteCode):
+#     msg(f"账号 {get_pin(cookie)} 去助力{fcwbinviteCode}")
+#     xueliang(cookie)
+#     body={"linkId":linkId,"inviter":fcwbinviter,"inviteCode":fcwbinviteCode}
+#     res=taskGetUrl("happyDigHelp", body, cookie)
+#     if res['success']:
+#         msg('助力成功')
+#     else:
+#         msg(res['errMsg'])
 
 # 领取奖励
 def happyDigExchange(cookie):
@@ -433,12 +433,12 @@ def main():
     for cookie in cookie_list:
        inviteCode(cookie) 
 
-    msg('互助\n')
-    inviteCode_2_list=inviteCode_2_list[:2]
-    for e,fcwbinviter in enumerate(inviteCode_2_list):
-        fcwbinviteCode=inviteCode_1_list[e]
-        for cookie in cookie_list:
-            happyDigHelp(cookie,fcwbinviter,fcwbinviteCode)
+    # msg('互助\n')
+    # inviteCode_2_list=inviteCode_2_list[:2]
+    # for e,fcwbinviter in enumerate(inviteCode_2_list):
+    #     fcwbinviteCode=inviteCode_1_list[e]
+    #     for cookie in cookie_list:
+    #         happyDigHelp(cookie,fcwbinviter,fcwbinviteCode)
 
     msg(f'====================共{len(cookie_list)}京东个账号Cookie=========\n')
 
