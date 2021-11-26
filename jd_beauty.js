@@ -475,37 +475,39 @@ async function mr() {
         //     client.send(`{"msg":{"type":"action","args":{"task_id":${vo.data.id}},"action":"complete_task"}}`)
         //   }
         //   break
-        case 'get_benefit':
-          for (let benefit of vo.data) {
-            if (benefit.type === 1) { //type 1 是京豆
-              console.log(`benefit:${JSON.stringify(benefit)}`);
-              if(benefit.description === "1 京豆" &&   //500颗京豆打包兑换
-                  parseInt(benefit.day_exchange_count) < 10 &&
-                  $.total > benefit.coins){
-                for (let i = benefit.day_exchange_count; i < 10; i++){
-                  // console.log(`开始兑换`)
-                  client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`);
-                  await $.wait(10000);
-                }
-              }
-              // console.log(`物品【${benefit.description}】需要${benefit.coins}美妆币，库存${benefit.stock}份`)
-              // if (parseInt(benefit.setting.beans_count) === bean && //兑换多少豆 bean500就500豆
-              //   $.total > benefit.coins &&
-              //   parseInt(benefit.day_exchange_count) < benefit.day_limit) {
-              //   console.log(`满足条件，去兑换`)
-              //   client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`)
-              //   await $.wait(1000)
-              // }
-            }
-          }
-          break
-        case "to_exchange":
-          if (vo?.data) {
-            console.log(`兑换${vo?.data?.coins/-1000}京豆成功;${JSON.stringify(vo)}`)
-          } else {
-            console.log(`兑换京豆失败：${JSON.stringify(vo)}`)
-          }
-          break
+        //关闭兑换
+        // case 'get_benefit':
+        //   for (let benefit of vo.data) {
+        //     if (benefit.type === 1) { //type 1 是京豆
+        //       console.log(`benefit:${JSON.stringify(benefit)}`);
+        //       if(benefit.description === "1 京豆" &&   //500颗京豆打包兑换
+        //           parseInt(benefit.day_exchange_count) < 10 &&
+        //           $.total > benefit.coins){
+        //         for (let i = benefit.day_exchange_count; i < 10; i++){
+        //           // console.log(`开始兑换`)
+        //           client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`);
+        //           await $.wait(10000);
+        //         }
+        //       }
+        //       // console.log(`物品【${benefit.description}】需要${benefit.coins}美妆币，库存${benefit.stock}份`)
+        //       // if (parseInt(benefit.setting.beans_count) === bean && //兑换多少豆 bean500就500豆
+        //       //   $.total > benefit.coins &&
+        //       //   parseInt(benefit.day_exchange_count) < benefit.day_limit) {
+        //       //   console.log(`满足条件，去兑换`)
+        //       //   client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`)
+        //       //   await $.wait(1000)
+        //       // }
+        //     }
+        //   }
+        //   break
+        // case "to_exchange":
+        //   if (vo?.data) {
+        //     console.log(`兑换${vo?.data?.coins/-1000}京豆成功;${JSON.stringify(vo)}`)
+        //   } else {
+        //     console.log(`兑换京豆失败：${JSON.stringify(vo)}`)
+        //   }
+        //   break
+        //关闭兑换
         case "get_produce_material":
           console.log('get_produce_material', vo?.msg);
           $.material = vo.data
