@@ -168,8 +168,9 @@ async function mr() {
       client.send(help);
     }
     await $.wait(1000)
+    client.send(`{"msg":{"type":"action","args":{},"action":"check_up"}}`)
     // 不做日常任务
-    // client.send(`{"msg":{"type":"action","args":{},"action":"shop_products"}}`)
+    client.send(`{"msg":{"type":"action","args":{},"action":"shop_products"}}`)
     // 获得可生产的原料列表
     client.send(`{"msg":{"type":"action","args":{},"action":"get_produce_material"}}`)
     await $.wait(1000)
