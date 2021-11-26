@@ -55,7 +55,7 @@ if ($.isNode()) {
       }
       if ($.accountCheck) {
         await jdBeauty();
-        await $.wait(5000)
+        await $.wait(25000)
       }
     }
   }
