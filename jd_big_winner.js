@@ -81,7 +81,7 @@ async function main() {
         let num = 0;
         do {
           await openRedReward();
-          await $.wait(500);
+          await $.wait(12000);
           num++
         } while (!$.canApCashWithDraw && $.changeReward && num < 20)
         if ($.canApCashWithDraw) {
