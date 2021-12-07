@@ -65,7 +65,8 @@ $.shareCodes = [];
       await jdSplit()
     }
   }
-  let res =[]
+  let res =["T012uvh3QBsa91TSCjRQmoaX5kRrbA","T018v_50Qhsa_F3UJB2b1ACjRQmoaX5kRrbA","T0225KkcRBoQ8FOGJ0vynKQPcwCjRQmoaX5kRrbA","T0225KkcRhhK8QLUcxv0kvJccACjRQmoaX5kRrbA","T0205KkcAl9lrQONY3yI3KhSCjRQmoaX5kRrbA","T0205KkcH3pakzSTQE2KwoJDCjRQmoaX5kRrbA","T0154qI1FXFFrAqDcXUCjRQmoaX5kRrbA","T0105rogQRwb8ACjRQmoaX5kRrbA"]
+
   // let res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/split.json')
   // if (!res) {
   //   $.http.get({url: 'https://purge.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/split.json'}).then((resp) => {}).catch((e) => console.log('刷新CDN异常', e));
