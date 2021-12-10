@@ -14,7 +14,7 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
-let codeLsit = ['vMMtij1']
+let codeLsit = ['vKM6ihT']
 $.code = codeLsit[random(0, codeLsit.length)];
 !(async () => {
   if (!cookiesArr[0]) {
@@ -102,7 +102,7 @@ function getcouponUrl() {
           console.log(`${$.name} getcouponUrl API请求失败，请检查网路重试`);
         } else {
           if (data) {
-            if ($.code === "vMMtij1" ) {
+            if ($.code === "vKM6ihT" ) {
               $.couponUrl = (data.match(/"value":"(.*)"\}'/) && data.match(/"value":"(.*)"\}'/)[1]) || ''
             } else {
               $.couponUrl = ''
