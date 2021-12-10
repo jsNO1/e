@@ -89,16 +89,16 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
           await $.wait(200)
         }
       }
-      if ($.canHelp) {
-        $.authorTuanList = [...$.authorTuanList, ...($.body1 || [])];
-        if ($.authorTuanList.length) console.log(`开始账号内部互助 赚京豆-瓜分京豆 活动，如有剩余则给作者和随机团助力`)
-        for (let j = 0; j < $.authorTuanList.length; ++j) {
-          console.log(`账号 ${$.UserName} 开始给作者和随机团 ${$.authorTuanList[j]['assistedPinEncrypted']}助力`)
-          await helpFriendTuan($.authorTuanList[j])
-          if(!$.canHelp) break
-          await $.wait(200)
-        }
-      }
+      // if ($.canHelp) {
+      //   $.authorTuanList = [...$.authorTuanList, ...($.body1 || [])];
+      //   if ($.authorTuanList.length) console.log(`开始账号内部互助 赚京豆-瓜分京豆 活动，如有剩余则给作者和随机团助力`)
+      //   for (let j = 0; j < $.authorTuanList.length; ++j) {
+      //     console.log(`账号 ${$.UserName} 开始给作者和随机团 ${$.authorTuanList[j]['assistedPinEncrypted']}助力`)
+      //     await helpFriendTuan($.authorTuanList[j])
+      //     if(!$.canHelp) break
+      //     await $.wait(200)
+      //   }
+      // }
     }
   }
 })()
