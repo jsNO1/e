@@ -1,6 +1,8 @@
 
 /*
 京东饭粒
+长期活动，结束时间未知！
+活动入口：https://u.jd.com/ytWx4w0
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
@@ -24,7 +26,8 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '', personMessage = '';
 
-let lz_cookie = {};
+let lz_cookie = {}
+
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -51,12 +54,12 @@ if ($.isNode()) {
         if (cookiesArr[i]) {
             if ($.runOut)
                 break;
-            $.hasGet = 0;
-            cookie = cookiesArr[i];
-            originCookie = cookiesArr[i];
-            newCookie = '';
-            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1]);
-            $.index = i + 1;
+            $.hasGet = 0
+                cookie = cookiesArr[i]
+                originCookie = cookiesArr[i]
+                newCookie = ''
+                $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+                $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
             await checkCookie();
@@ -73,34 +76,29 @@ if ($.isNode()) {
             await getTaskFinishCount(cookiesArr[i])
             await $.wait(2000)
             if ($.count.finishCount < $.count.maxTaskCount) {
+                let range = $.count.maxTaskCount - $.count.finishCount
+                    for (let j = 0; j < range; j++) {
+                        console.log(`开始第${$.count.finishCount+j+1}次`)
 
-                let range = $.count.maxTaskCount - $.count.finishCount;
-                await getTaskList(cookie)
-                await $.wait(2000)
-                var CountDoTask =0;
+                        await getTaskList(cookie)
+                        await $.wait(2000)
+                        for (let k in $.taskList) {
+                            if ($.taskList[k].taskId !== null && $.taskList[k].status == 1) {
+                                console.log(`开始尝试活动:` + $.taskList[k].taskName);
+                                await saveTaskRecord(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType)
+                                if ($.sendBody) {
+                                    await $.wait(Number($.taskList[k].watchTime) * 1300)
+                                    await saveTaskRecord1(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType, $.sendBody.uid, $.sendBody.tt)
+                                } else {
+                                    continue;
+                                }
+                                if ($.count.finishCount == $.count.maxTaskCount) {
+                                    console.log(`任务全部完成!`);
+                                }
+                            }
 
-                for (let k in $.taskList) {
-                    if ($.taskList[k].taskId !== null && $.taskList[k].statusName != "活动结束" && $.taskList[k].statusName != "明日再来") {
-                        CountDoTask+=0;
-                        console.log(`开始尝试活动:` + $.taskList[k].taskName);
-                        await saveTaskRecord(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType);
-                        if ($.sendBody) {
-                            await $.wait(Number($.taskList[k].watchTime) * 1300);
-                            await saveTaskRecord1(cookie, $.taskList[k].taskId, $.taskList[k].businessId, $.taskList[k].taskType, $.sendBody.uid, $.sendBody.tt);
-                        } else {
-                            continue;
-                        }
-                        if ($.count.finishCount == $.count.maxTaskCount) {
-                            console.log(`任务全部完成!`);
-                            break;
                         }
                     }
-
-                }
-                if (CountDoTask==0 && $.count.finishCount < $.count.maxTaskCount){
-                    console.log("活动已经结束，明天请早.");
-                }
-
 
             } else {
                 console.log("任务已做完")
@@ -110,12 +108,12 @@ if ($.isNode()) {
     }
 
 })()
-    .catch((e) => {
-        $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
-    })
-    .finally(() => {
-        $.done();
-    })
+.catch((e) => {
+    $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
+})
+.finally(() => {
+    $.done();
+})
 
 function saveTaskRecord(ck, taskId, businessId, taskType) {
     let opt = {
@@ -209,7 +207,7 @@ function saveTaskRecord1(ck, taskId, businessId, taskType, uid, tt) {
                     if (data) {
                         data = JSON.parse(data);
                         if (data.content) {
-                            if (data.content.status == 1 && data.content.beans > 0)
+                            if (data.content.status = 1)
                                 $.count.finishCount += 1;
                             console.log("浏览结果", data.content.msg);
                         } else
@@ -256,9 +254,9 @@ function getTaskFinishCount(ck) {
                 } else {
                     if (data) {
                         data = JSON.parse(data)
-                        // console.log(data)
-                        console.log("已完成次数：" + data.content.finishCount + "  总任务次数：" + data.content.maxTaskCount)
-                        $.count = data.content
+                            // console.log(data)
+                            console.log("已完成次数：" + data.content.finishCount + "  总任务次数：" + data.content.maxTaskCount)
+                            $.count = data.content
                     }
                 }
             } catch (e) {
@@ -298,12 +296,12 @@ function getTaskList(ck) {
                 } else {
                     if (data) {
                         data = JSON.parse(data)
-                        // console.log(data,"活动列表")
-                        if (data.content) {
-                            $.taskList = data.content
-                        } else {
-                            console.log("未获取到活动列表，请检查活动")
-                        }
+                            // console.log(data,"活动列表")
+                            if (data.content) {
+                                $.taskList = data.content
+                            } else {
+                                console.log("未获取到活动列表，请检查活动")
+                            }
 
                     }
                 }
@@ -386,31 +384,31 @@ function checkCookie() {
     }
     function i(n, r) {
         n[r >> 5] |= 128 << r % 32,
-            n[14 + (r + 64 >>> 9 << 4)] = r;
+        n[14 + (r + 64 >>> 9 << 4)] = r;
         var e,
-            i,
-            a,
-            d,
-            h,
-            l = 1732584193,
-            g = -271733879,
-            v = -1732584194,
-            m = 271733878;
+        i,
+        a,
+        d,
+        h,
+        l = 1732584193,
+        g = -271733879,
+        v = -1732584194,
+        m = 271733878;
         for (e = 0; e < n.length; e += 16)
             i = l, a = g, d = v, h = m, g = f(g = f(g = f(g = f(g = c(g = c(g = c(g = c(g = u(g = u(g = u(g = u(g = o(g = o(g = o(g = o(g, v = o(v, m = o(m, l = o(l, g, v, m, n[e], 7, -680876936), g, v, n[e + 1], 12, -389564586), l, g, n[e + 2], 17, 606105819), m, l, n[e + 3], 22, -1044525330), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 4], 7, -176418897), g, v, n[e + 5], 12, 1200080426), l, g, n[e + 6], 17, -1473231341), m, l, n[e + 7], 22, -45705983), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 8], 7, 1770035416), g, v, n[e + 9], 12, -1958414417), l, g, n[e + 10], 17, -42063), m, l, n[e + 11], 22, -1990404162), v = o(v, m = o(m, l = o(l, g, v, m, n[e + 12], 7, 1804603682), g, v, n[e + 13], 12, -40341101), l, g, n[e + 14], 17, -1502002290), m, l, n[e + 15], 22, 1236535329), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 1], 5, -165796510), g, v, n[e + 6], 9, -1069501632), l, g, n[e + 11], 14, 643717713), m, l, n[e], 20, -373897302), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 5], 5, -701558691), g, v, n[e + 10], 9, 38016083), l, g, n[e + 15], 14, -660478335), m, l, n[e + 4], 20, -405537848), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 9], 5, 568446438), g, v, n[e + 14], 9, -1019803690), l, g, n[e + 3], 14, -187363961), m, l, n[e + 8], 20, 1163531501), v = u(v, m = u(m, l = u(l, g, v, m, n[e + 13], 5, -1444681467), g, v, n[e + 2], 9, -51403784), l, g, n[e + 7], 14, 1735328473), m, l, n[e + 12], 20, -1926607734), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 5], 4, -378558), g, v, n[e + 8], 11, -2022574463), l, g, n[e + 11], 16, 1839030562), m, l, n[e + 14], 23, -35309556), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 1], 4, -1530992060), g, v, n[e + 4], 11, 1272893353), l, g, n[e + 7], 16, -155497632), m, l, n[e + 10], 23, -1094730640), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 13], 4, 681279174), g, v, n[e], 11, -358537222), l, g, n[e + 3], 16, -722521979), m, l, n[e + 6], 23, 76029189), v = c(v, m = c(m, l = c(l, g, v, m, n[e + 9], 4, -640364487), g, v, n[e + 12], 11, -421815835), l, g, n[e + 15], 16, 530742520), m, l, n[e + 2], 23, -995338651), v = f(v, m = f(m, l = f(l, g, v, m, n[e], 6, -198630844), g, v, n[e + 7], 10, 1126891415), l, g, n[e + 14], 15, -1416354905), m, l, n[e + 5], 21, -57434055), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 12], 6, 1700485571), g, v, n[e + 3], 10, -1894986606), l, g, n[e + 10], 15, -1051523), m, l, n[e + 1], 21, -2054922799), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 8], 6, 1873313359), g, v, n[e + 15], 10, -30611744), l, g, n[e + 6], 15, -1560198380), m, l, n[e + 13], 21, 1309151649), v = f(v, m = f(m, l = f(l, g, v, m, n[e + 4], 6, -145523070), g, v, n[e + 11], 10, -1120210379), l, g, n[e + 2], 15, 718787259), m, l, n[e + 9], 21, -343485551), l = t(l, i), g = t(g, a), v = t(v, d), m = t(m, h);
         return [l, g, v, m]
     }
     function a(n) {
         var t,
-            r = "",
-            e = 32 * n.length;
+        r = "",
+        e = 32 * n.length;
         for (t = 0; t < e; t += 8)
             r += String.fromCharCode(n[t >> 5] >>> t % 32 & 255);
         return r
     }
     function d(n) {
         var t,
-            r = [];
+        r = [];
         for (r[(n.length >> 2) - 1] = void 0, t = 0; t < r.length; t += 1)
             r[t] = 0;
         var e = 8 * n.length;
@@ -423,19 +421,19 @@ function checkCookie() {
     }
     function l(n, t) {
         var r,
-            e,
-            o = d(n),
-            u = [],
-            c = [];
+        e,
+        o = d(n),
+        u = [],
+        c = [];
         for (u[15] = c[15] = void 0, o.length > 16 && (o = i(o, 8 * n.length)), r = 0; r < 16; r += 1)
             u[r] = 909522486 ^ o[r], c[r] = 1549556828 ^ o[r];
         return e = i(u.concat(d(t)), 512 + 8 * t.length),
-            a(i(c.concat(e), 640))
+        a(i(c.concat(e), 640))
     }
     function g(n) {
         var t,
-            r,
-            e = "";
+        r,
+        e = "";
         for (r = 0; r < n.length; r += 1)
             t = n.charCodeAt(r), e += "0123456789abcdef".charAt(t >>> 4 & 15) + "0123456789abcdef".charAt(15 & t);
         return e
@@ -469,16 +467,16 @@ function Env(t, e) {
         }
         send(t, e = "GET") {
             t = "string" == typeof t ? {
-                    url: t
-                }
-                : t;
+                url: t
+            }
+             : t;
             let s = this.get;
             return "POST" === e && (s = this.post),
-                new Promise((e, i) => {
-                    s.call(this, t, (t, s, r) => {
-                        t ? i(t) : e(s)
-                    })
+            new Promise((e, i) => {
+                s.call(this, t, (t, s, r) => {
+                    t ? i(t) : e(s)
                 })
+            })
         }
         get(t) {
             return this.send.call(this.env, t)
@@ -490,16 +488,16 @@ function Env(t, e) {
     return new class {
         constructor(t, e) {
             this.name = t,
-                this.http = new s(this),
-                this.data = null,
-                this.dataFile = "box.dat",
-                this.logs = [],
-                this.isMute = !1,
-                this.isNeedRewrite = !1,
-                this.logSeparator = "\n",
-                this.startTime = (new Date).getTime(),
-                Object.assign(this, e),
-                this.log("", `🔔${this.name}, 开始!`)
+            this.http = new s(this),
+            this.data = null,
+            this.dataFile = "box.dat",
+            this.logs = [],
+            this.isMute = !1,
+            this.isNeedRewrite = !1,
+            this.logSeparator = "\n",
+            this.startTime = (new Date).getTime(),
+            Object.assign(this, e),
+            this.log("", `🔔${this.name}, 开始!`)
         }
         isNode() {
             return "undefined" != typeof module && !!module.exports
@@ -556,20 +554,20 @@ function Env(t, e) {
                 i = i ? i.replace(/\n/g, "").trim() : i;
                 let r = this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");
                 r = r ? 1 * r : 20,
-                    r = e && e.timeout ? e.timeout : r;
+                r = e && e.timeout ? e.timeout : r;
                 const[o, h] = i.split("@"),
-                    n = {
-                        url: `http://${h}/v1/scripting/evaluate`,
-                        body: {
-                            script_text: t,
-                            mock_type: "cron",
-                            timeout: r
-                        },
-                        headers: {
-                            "X-Key": o,
-                            Accept: "*/*"
-                        }
-                    };
+                n = {
+                    url: `http://${h}/v1/scripting/evaluate`,
+                    body: {
+                        script_text: t,
+                        mock_type: "cron",
+                        timeout: r
+                    },
+                    headers: {
+                        "X-Key": o,
+                        Accept: "*/*"
+                    }
+                };
                 this.post(n, (t, e, i) => s(i))
             }).catch(t => this.logErr(t))
         }
@@ -577,11 +575,11 @@ function Env(t, e) {
             if (!this.isNode())
                 return {}; {
                 this.fs = this.fs ? this.fs : require("fs"),
-                    this.path = this.path ? this.path : require("path");
+                this.path = this.path ? this.path : require("path");
                 const t = this.path.resolve(this.dataFile),
-                    e = this.path.resolve(process.cwd(), this.dataFile),
-                    s = this.fs.existsSync(t),
-                    i = !s && this.fs.existsSync(e);
+                e = this.path.resolve(process.cwd(), this.dataFile),
+                s = this.fs.existsSync(t),
+                i = !s && this.fs.existsSync(e);
                 if (!s && !i)
                     return {}; {
                     const i = s ? t : e;
@@ -596,12 +594,12 @@ function Env(t, e) {
         writedata() {
             if (this.isNode()) {
                 this.fs = this.fs ? this.fs : require("fs"),
-                    this.path = this.path ? this.path : require("path");
+                this.path = this.path ? this.path : require("path");
                 const t = this.path.resolve(this.dataFile),
-                    e = this.path.resolve(process.cwd(), this.dataFile),
-                    s = this.fs.existsSync(t),
-                    i = !s && this.fs.existsSync(e),
-                    r = JSON.stringify(this.data);
+                e = this.path.resolve(process.cwd(), this.dataFile),
+                s = this.fs.existsSync(t),
+                i = !s && this.fs.existsSync(e),
+                r = JSON.stringify(this.data);
                 s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r)
             }
         }
@@ -620,7 +618,7 @@ function Env(t, e) {
             let e = this.getval(t);
             if (/^@/.test(t)) {
                 const[, s, i] = /^@(.*?)\.(.*?)$/.exec(t),
-                    r = s ? this.getval(s) : "";
+                r = s ? this.getval(s) : "";
                 if (r)
                     try {
                         const t = JSON.parse(r);
@@ -635,16 +633,16 @@ function Env(t, e) {
             let s = !1;
             if (/^@/.test(e)) {
                 const[, i, r] = /^@(.*?)\.(.*?)$/.exec(e),
-                    o = this.getval(i),
-                    h = i ? "null" === o ? null : o || "{}" : "{}";
+                o = this.getval(i),
+                h = i ? "null" === o ? null : o || "{}" : "{}";
                 try {
                     const e = JSON.parse(h);
                     this.lodash_set(e, r, t),
-                        s = this.setval(JSON.stringify(e), i)
+                    s = this.setval(JSON.stringify(e), i)
                 } catch (e) {
                     const o = {};
                     this.lodash_set(o, r, t),
-                        s = this.setval(JSON.stringify(o), i)
+                    s = this.setval(JSON.stringify(o), i)
                 }
             } else
                 s = this.setval(t, e);
@@ -658,20 +656,20 @@ function Env(t, e) {
         }
         initGotEnv(t) {
             this.got = this.got ? this.got : require("got"),
-                this.cktough = this.cktough ? this.cktough : require("tough-cookie"),
-                this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar,
+            this.cktough = this.cktough ? this.cktough : require("tough-cookie"),
+            this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar,
             t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar))
         }
         get(t, e = (() => {})) {
             t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]),
-                this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
-                    "X-Surge-Skip-Scripting": !1
-                })), $httpClient.get(t, (t, s, i) => {
+            this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
+                        "X-Surge-Skip-Scripting": !1
+                    })), $httpClient.get(t, (t, s, i) => {
                     !t && s && (s.body = i, s.statusCode = s.status),
-                        e(t, s, i)
+                    e(t, s, i)
                 })) : this.isQuanX() ? (this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, {
-                    hints: !1
-                })), $task.fetch(t).then(t => {
+                        hints: !1
+                    })), $task.fetch(t).then(t => {
                     const {
                         statusCode: s,
                         statusCode: i,
@@ -689,7 +687,7 @@ function Env(t, e) {
                         if (t.headers["set-cookie"]) {
                             const s = t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();
                             s && this.ckjar.setCookieSync(s, null),
-                                e.cookieJar = this.ckjar
+                            e.cookieJar = this.ckjar
                         }
                     } catch (t) {
                         this.logErr(t)
@@ -718,15 +716,15 @@ function Env(t, e) {
         post(t, e = (() => {})) {
             if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon())
                 this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, {
-                    "X-Surge-Skip-Scripting": !1
-                })), $httpClient.post(t, (t, s, i) => {
+                        "X-Surge-Skip-Scripting": !1
+                    })), $httpClient.post(t, (t, s, i) => {
                     !t && s && (s.body = i, s.statusCode = s.status),
-                        e(t, s, i)
+                    e(t, s, i)
                 });
             else if (this.isQuanX())
                 t.method = "POST", this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, {
-                    hints: !1
-                })), $task.fetch(t).then(t => {
+                        hints: !1
+                    })), $task.fetch(t).then(t => {
                     const {
                         statusCode: s,
                         statusCode: i,
@@ -790,16 +788,16 @@ function Env(t, e) {
                     return t;
                 if ("string" == typeof t)
                     return this.isLoon() ? t : this.isQuanX() ? {
-                            "open-url": t
-                        }
-                        : this.isSurge() ? {
-                                url: t
-                            }
-                            : void 0;
+                        "open-url": t
+                    }
+                 : this.isSurge() ? {
+                    url: t
+                }
+                 : void 0;
                 if ("object" == typeof t) {
                     if (this.isLoon()) {
                         let e = t.openUrl || t.url || t["open-url"],
-                            s = t.mediaUrl || t["media-url"];
+                        s = t.mediaUrl || t["media-url"];
                         return {
                             openUrl: e,
                             mediaUrl: s
@@ -807,7 +805,7 @@ function Env(t, e) {
                     }
                     if (this.isQuanX()) {
                         let e = t["open-url"] || t.url || t.openUrl,
-                            s = t["media-url"] || t.mediaUrl;
+                        s = t["media-url"] || t.mediaUrl;
                         return {
                             "open-url": e,
                             "media-url": s
@@ -826,13 +824,13 @@ function Env(t, e) {
                 t.push(e),
                 s && t.push(s),
                 i && t.push(i),
-                    console.log(t.join("\n")),
-                    this.logs = this.logs.concat(t)
+                console.log(t.join("\n")),
+                this.logs = this.logs.concat(t)
             }
         }
         log(...t) {
             t.length > 0 && (this.logs = [...this.logs, ...t]),
-                console.log(t.join(this.logSeparator))
+            console.log(t.join(this.logSeparator))
         }
         logErr(t, e) {
             const s = !this.isSurge() && !this.isQuanX() && !this.isLoon();
@@ -843,9 +841,9 @@ function Env(t, e) {
         }
         done(t = {}) {
             const e = (new Date).getTime(),
-                s = (e - this.startTime) / 1e3;
+            s = (e - this.startTime) / 1e3;
             this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`),
-                this.log(),
+            this.log(),
             (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t)
         }
     }
