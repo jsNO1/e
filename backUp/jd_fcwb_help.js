@@ -1,40 +1,21 @@
 /*
-发财挖宝
-更新时间：2021-10-30
-活动入口：极速版-发财挖宝
-脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-============Quantumultx===============
-[task_local]
-#发财挖宝
-40 6,17 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, tag=发财挖宝, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
-
-================Loon==============
-[Script]
-cron "40 6,17 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js,tag=发财挖宝
-
-===============Surge=================
-发财挖宝 = type=cron,cronexp="40 6,17 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js
-
-============小火箭=========
-发财挖宝 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, cronexpr="40 6,17 * * *", timeout=3600, enable=true
-
+发财挖宝: 入口,极速版-我的,发财挖宝
+cron 40 12,16 * * * jd_fcwb.js
+支持助力码
+fcwbinviteCode
+fcwbinviter
 * * */
 const $ = new Env('发财挖宝');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [];
 let link = `pTTvJeSTrpthgk9ASBVGsw`;
-let wbRun = false;
-const JD_API_HOST = 'https://api.m.jd.com';
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
     })
     if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
     };
-    if (process.env.JD_FCWB_WB) {
-        wbRun = process.env.JD_FCWB_WB || wbRun;
-    }
 } else {
     cookiesArr = [
         $.getdata("CookieJD"),
@@ -44,8 +25,6 @@ if ($.isNode()) {
 let cookie = '';
 let fcwbinviter = "";
 let fcwbinviteCode = "";
-let roundList =[]
-let curRound = 1
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
@@ -53,10 +32,6 @@ let curRound = 1
     }
     console.log(`\n注意：本脚本暂时只会执行助力，助力后，请手动进活动进行游戏（发财挖宝: 入口,极速版-》我的-》发财挖宝）\n`)
     let res = [];
-
-    try{res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/fcwb.json');}catch (e) {}
-     if(!res){res = [];}
-    
     if(res.length > 0){
         let actCodeInfo = getRandomArrayElements(res,1)[0];
         fcwbinviter = actCodeInfo.fcwbinviter;
@@ -78,23 +53,10 @@ let curRound = 1
                 }
                 continue
             }
-            roundList =[]
             try {
                 await main()
             } catch (e) {
                 $.logErr(e)
-            }
-
-            if(wbRun) {
-                let data = roundList.filter(e => e.round === curRound)
-                if (!data[0]) {
-                    continue
-                }
-                console.log('当前正在通关' + curRound + '关\n')
-                for (let chunk of data[0].chunks.filter(e => e.state !== 1)) {
-                    await wb(curRound, chunk.colIdx, chunk.rowIdx)
-                    await $.wait(3000)
-                }
             }
         }
     }
@@ -103,45 +65,7 @@ let curRound = 1
 }).finally(() => {
     $.done();
 });
-function wb(round,rowIdx,colIdx) {
 
-    return new Promise((resolve) => {
-        let body = {"round":curRound,"rowIdx":rowIdx,"colIdx":colIdx,"linkId":link}
-        $.get(taskurl("happyDigDo",body), async (err, resp, data) => {
-
-            try {
-                if (err) {
-                    console.log(`${JSON.stringify(err)}`)
-                    console.log(`${$.name} API请求失败，请检查网路重试`)
-                } else {
-                    if (safeGet(data)) {
-                        data = JSON.parse(data);
-                        if(data.success === true){
-                            if(data.data.chunk.type ===4 ){
-                                console.log(`挖到炸弹  哦嚯`)
-                            }else if(data.data.chunk.type == 1){
-                                console.log(`挖到优惠券 ${data.data.chunk.value}`)
-                            }else if(data.data.chunk.type == 2){
-                                console.log(`挖到红包 ${data.data.chunk.value}`)
-                            }else if(data.data.chunk.type == 3){
-                                console.log(`挖到现金 ${data.data.chunk.value}`)
-                            }
-
-                            // console.log(`export fcwbinviter='${data.data.markedPin}'`)
-                        }else {
-
-                            console.log(`挖宝异常   `+data.errMsg)
-                        }
-                    }
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
-}
 async function main() {
     let homeInfo = await takeRequest(`happyDigHome`,`{"linkId":"${link}"}`,true);
     if(JSON.stringify(homeInfo) === '{}' || !homeInfo){
@@ -149,8 +73,6 @@ async function main() {
         return;
     }
     console.log(`获取活动详情成功`);
-    roundList = homeInfo.roundList
-    curRound = homeInfo.curRound
     console.log(`fcwbinviteCode='${homeInfo.inviteCode}'`)
     console.log(`fcwbinviter='${homeInfo.markedPin}'`)
     if(fcwbinviter && fcwbinviteCode){
@@ -159,7 +81,10 @@ async function main() {
         //console.log(`助力结果：${JSON.stringify(HelpInfo)}`);
     }
     $.freshFlag = false;
-    if($.index === 1){
+    if(process.env.fcwbinviter && process.env.fcwbinviteCode){
+        fcwbinviter = process.env.fcwbinviter
+        fcwbinviteCode = process.env.fcwbinviteCode
+    }else if($.index == 1){
         fcwbinviter = homeInfo.markedPin;
         fcwbinviteCode = homeInfo.inviteCode;
     }
@@ -202,30 +127,7 @@ async function doTask(){
         }
     }
 }
-function taskurl(functionId,body) {
-    return {
-        url: `${JD_API_HOST}/?functionId=${functionId}&body=${escape(JSON.stringify(body))}&t=1635561607124&appid=activities_platform&client=H5&clientVersion=1.0.0`,
 
-        headers: {
-
-            "Cookie": cookie,
-            "Origin": "https://api.m.jd.com",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
-
-        }
-    }
-}
-function safeGet(data) {
-    try {
-        if (typeof JSON.parse(data) == "object") {
-            return true;
-        }
-    } catch (e) {
-        console.log(e);
-        console.log(`京东服务器访问数据为空，请检查自身设备网络情况`);
-        return false;
-    }
-}
 async function takeRequest(functionId,bodyInfo,h5stFlag = false){
     let  url = `https://api.m.jd.com/?functionId=${functionId}&body=${encodeURIComponent(bodyInfo)}&t=${Date.now()}&appid=activities_platform&client=H5&clientVersion=1.0.0`;
     if(h5stFlag){
@@ -255,7 +157,7 @@ async function takeRequest(functionId,bodyInfo,h5stFlag = false){
                 }
             } catch (e) {
                 console.log(data);
-                //$.logErr(e, resp)
+                $.logErr(e, resp)
             } finally {
                 resolve(data.data || {});
             }
