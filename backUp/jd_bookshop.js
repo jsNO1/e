@@ -1,24 +1,22 @@
 /*
 口袋书店
-更新时间：2021-06-26 
-加了一个码,修复需要手动打开的问题
 活动入口：京东app首页-京东图书-右侧口袋书店
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
-#温佬口袋书店
-1 8,12,18 * * * jd_chinnkarahoi_jd_bookshop.js, tag=温佬口袋书店, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+#口袋书店
+1 8,12,18 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, tag=口袋书店, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "1 8,12,18 * * *" script-path=jd_chinnkarahoi_jd_bookshop.js,tag=温佬口袋书店
+cron "1 8,12,18 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js,tag=口袋书店
 
 ===============Surge=================
-温佬口袋书店 = type=cron,cronexp="1 8,12,18 * * *",wake-system=1,timeout=3600,script-path=jd_chinnkarahoi_jd_bookshop.js
+口袋书店 = type=cron,cronexp="1 8,12,18 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js
 
 ============小火箭=========
-温佬口袋书店 = type=cron,script-path=jd_chinnkarahoi_jd_bookshop.js, cronexpr="1 8,12,18* * *", timeout=3600, enable=true
+口袋书店 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_bookshop.js, cronexpr="1 8,12,18* * *", timeout=3600, enable=true
  */
 const $ = new Env('口袋书店');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -26,14 +24,13 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
-const ACT_ID = 'dz2010100034444201', shareUuid = '28a699ac78d74aa3b31f7103597f8927'
+const ACT_ID = 'dz2010100034444201', shareUuid = 'fa78fcdbb17943e599d1abf91357d876'
 let ADD_CART = false
 ADD_CART = $.isNode() ? (process.env.PURCHASE_SHOPS ? process.env.PURCHASE_SHOPS : ADD_CART) : ($.getdata("ADD_CART") ? $.getdata("ADD_CART") : ADD_CART);
 // 加入购物车开关，与东东小窝共享
 
 let inviteCodes = [
-  '',
-  ''
+    ''
 ]
 
 if ($.isNode()) {
@@ -90,7 +87,6 @@ async function jdBeauty() {
   await getActCk()
   await getActInfo()
   await getToken()
-  await accessLogWithAD()
   await getUserInfo()
   await getActContent(false, shareUuid)
   if ($.exit) return
@@ -267,35 +263,7 @@ function getUserInfo() {
     })
   })
 }
-// 获得用户信息
-function accessLogWithAD() {
-  return new Promise(resolve => {
-    let body = `venderId=${ $.shopId}&code=99&pin=${encodeURIComponent($.token)}&activityId=${ACT_ID}&pageUrl=https%3A%2F%2Flzdz-isv.isvjcloud.com%2Fdingzhi%2Fbook%2Fdevelop%2Factivity%3FactivityId%3Ddz2010100034444201%26lng%3D107.146945%26lat%3D33.255267%26sid%3Dcad74d1c843bd47422ae20cadf6fe5aw%26un_area%3D27_2442_2444_31912&subType=app&adSource=`
-    $.post(taskPostUrl('common/accessLogWithAD', body), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-    //      if (safeGet(data)) {
-          if($.isNode())
-            for (let ck of resp['headers']['set-cookie']) {
-              cookie = `${cookie}; ${ck.split(";")[0]};`
-            }
-          else{
-            for (let ck of resp['headers']['Set-Cookie'].split(',')) {
-              cookie = `${cookie}; ${ck.split(";")[0]};`
-            }
-          }
-       //   }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
+
 // 获得游戏信息
 function getActContent(info = false, shareUuid = '') {
   return new Promise(resolve => {
@@ -305,7 +273,6 @@ function getActContent(info = false, shareUuid = '') {
         if (err) {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
-   //     console.log(data)
           if (data && safeGet(data)) {
             data = JSON.parse(data);
             if (data.data) {
