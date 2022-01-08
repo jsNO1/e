@@ -168,7 +168,6 @@ $.shareCodesArr = [];
                     await $.wait(1000)
                 } while (conti)
 
-                await $.wait(8000)
                 await tigernian_sign()
                 do {
                     var ret = await tigernian_raise()
@@ -176,6 +175,8 @@ $.shareCodesArr = [];
                 console.log(`\n\n助力码：${res.inviteId}\n`)
                 $.newShareCodes.push(res.inviteId)
                 inviteId.push(res.inviteId)
+                await $.wait(80000)
+
             } catch (e) {
                 $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
             }
