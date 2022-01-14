@@ -12,7 +12,7 @@ const $ = new Env('天天压岁钱');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', secretp = '', joyToken = "", res = [],;
+let cookiesArr = [], cookie = '', secretp = '', joyToken = "", res = [];
 $.shareCoseList = [];
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -54,13 +54,13 @@ const JD_API_HOST = `https://m.jingxi.com`;
       }
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       //做任务
-        if($.index === 1){
-            for (let i = 0; i <= authorCode.length; i++) {
-                await task(`jxnhj/WishHelp`, `id=4&shareId=${authorCode[i]}`);
-                await $.wait(1000)
-                await task(`jxnhj/DoTask`, `taskId=3142&strShareId=${authorCode[i]}&bizCode=jxnhj_task&configExtra=`);
-            }            
-        }
+        // if($.index === 1){
+        //     for (let i = 0; i <= authorCode.length; i++) {
+        //         await task(`jxnhj/WishHelp`, `id=4&shareId=${authorCode[i]}`);
+        //         await $.wait(1000)
+        //         await task(`jxnhj/DoTask`, `taskId=3142&strShareId=${authorCode[i]}&bizCode=jxnhj_task&configExtra=`);
+        //     }            
+        // }
       await main()
     }
   };
