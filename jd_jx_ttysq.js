@@ -57,26 +57,26 @@ const JD_API_HOST = `https://m.jingxi.com`;
             }
         }
     }
-    let res = await getAuthorShareCode('https://raw.githubusercontent.com/zero205/updateTeam/main/shareCodes/ttysq2.json')
-    if (!res) {
-        res = await getAuthorShareCode('https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/ttysq2.json')
-    }
-    if (res) {
-        authorCode = res.sort(() => 0.5 - Math.random())
-        if (authorCode.length > 3) {
-            authorCode = authorCode.splice(0, 3)
-        }
-        authorCode = authorCode.map(entity => {
-            return {
-                "user": "author",
-                "code": entity.code,
-                "redId": entity.rpids[Math.floor((Math.random() * entity.rpids.length))],
-                "beHelp": 0,
-                "helpId": $.taskId
-            }
-        })
-        $.shareCoseList = [...$.shareCoseList, ...authorCode]
-    }
+    // let res = await getAuthorShareCode('https://raw.githubusercontent.com/zero205/updateTeam/main/shareCodes/ttysq2.json')
+    // if (!res) {
+    //     res = await getAuthorShareCode('https://raw.fastgit.org/zero205/updateTeam/main/shareCodes/ttysq2.json')
+    // }
+    // if (res) {
+    //     authorCode = res.sort(() => 0.5 - Math.random())
+    //     if (authorCode.length > 3) {
+    //         authorCode = authorCode.splice(0, 3)
+    //     }
+    //     authorCode = authorCode.map(entity => {
+    //         return {
+    //             "user": "author",
+    //             "code": entity.code,
+    //             "redId": entity.rpids[Math.floor((Math.random() * entity.rpids.length))],
+    //             "beHelp": 0,
+    //             "helpId": $.taskId
+    //         }
+    //     })
+    //     $.shareCoseList = [...$.shareCoseList, ...authorCode]
+    // }
     console.log(`要助力的助理码${JSON.stringify($.shareCoseList.length)}个\n`)
     //助力任务
     for (let i = 0; i < cookiesArr.length; i++) {
