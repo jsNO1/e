@@ -1,8 +1,9 @@
 /*
-暖暖红包
-0 0,20 * * * jd_redEnvelope.js
+京享红包
+0 0,20,21 * * * jd_redEnvelope.js
+添加环境变量FLCODE 如需自己返利，请填写该变量（https://u.jd.com/后面的英文）
 */
-const $ = new Env("暖暖红包");
+const $ = new Env("京享红包");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 let cookiesArr = [];
 if ($.isNode()) {
@@ -14,8 +15,8 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
-let codeLsit = ['vKM6ihT']
-$.code = codeLsit[random(0, codeLsit.length)];
+let cookie = "";
+$.shareCode = "DH50c";
 !(async () => {
   if (!cookiesArr[0]) {
     $.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/bean/signIndex.action", { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -53,7 +54,19 @@ async function main() {
   $.UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460622;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`;
   $.max = false;
   $.hotFlag = false;
-  for (let i = 0; i < 1 && !$.max; i++) {
+  const flCodeArr = ["SwMRxas", "SCM7Knk", "StMXMaQ"];
+  let flCode = flCodeArr[Math.floor(Math.random() * flCodeArr.length)];
+  let FLCODE = $.isNode() ? process.env.JD_FLCODE ? process.env.JD_FLCODE : '' : $.getdata("JD_FLCODE") ? $.getdata("JD_FLCODE") : ''
+  if (FLCODE) {
+    if ($.index === 1) {
+      flCode = FLCODE;
+    } else {
+      flCode = [flCode, FLCODE];
+      flCode = flCode[Math.floor(Math.random() * flCode.length)];
+    }
+  }
+  $.code = flCode;
+  for (let i = 0; i < 10 && !$.max; i++) {
     $.newCookie = "";
     $.url1 = "";
     $.url2 = "";
@@ -70,53 +83,60 @@ async function main() {
       $.hotFlag = true;
       break;
     }
-    $.actId = ($.url2.match(/mall\/active\/([^/]+)\/index\.html/) && $.url2.match(/mall\/active\/([^/]+)\/index\.html/)[1]) || "3nJaTysLg4QmXejNy3R8uWwNR1x8";
+    $.actId = ($.url2.match(/mall\/active\/([^/]+)\/index\.html/) && $.url2.match(/mall\/active\/([^/]+)\/index\.html/)[1]) || "2GdKXzvywVytLvcJTk2K3pLtDEHq";
     let arr = getBody($.UA, $.url2);
     await getEid(arr);
     console.log(`$.actId:` + $.actId);
-    await getcouponUrl()
     if ($.eid) {
-      await getCoupons("");
+      if (i === 0 && $.shareCode) {
+        await getCoupons($.shareCode);
+      } else {
+        await getCoupons("");
+      }
     }
     await $.wait(2000);
   }
+  if ($.index === 1 && !$.hotFlag) {
+      await $.wait(2000)
+      await mainInfo()
+  }
 }
 
-function getcouponUrl() {
+function mainInfo() {
   return new Promise((resolve) => {
-    const options = {
-      url: $.url2,
+    let opts = {
+      url: `https://api.m.jd.com/api?functionId=shareUnionCoupon&appid=u&_=${Date.now()}&loginType=2&body={%22unionActId%22:%2231134%22,%22actId%22:%22${$.actId}%22,%22platform%22:4,%22unionShareId%22:%22${$.shareCode}%22,%22d%22:%22${$.code}%22,%22supportPic%22:2,%22supportLuckyCode%22:0,%22eid%22:%22${$.eid}%22}&client=apple&clientVersion=8.3.6`,
       headers: {
-        "Host": "prodev.m.jd.com",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "User-Agent": $.UA,
-        "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+        "Accept-Language": "zh-cn",
         "Accept-Encoding": "gzip, deflate, br",
-        "Cookie": cookie
+        Cookie: `${cookie} ${$.newCookie}`,
+        "User-Agent": $.UA
       },
     };
-    $.post(options, async (err, resp, data) => {
+    $.get(opts, async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${$.toStr(err)}`);
-          console.log(`${$.name} getcouponUrl API请求失败，请检查网路重试`);
         } else {
-          if (data) {
-            if ($.code === "vKM6ihT" ) {
-              $.couponUrl = (data.match(/"value":"(.*)"\}'/) && data.match(/"value":"(.*)"\}'/)[1]) || ''
-            } else {
-              $.couponUrl = ''
+          let res = $.toObj(data, data);
+          if (typeof res == "object") {
+            if (res.code == 0 && res.data && res.data.shareUrl) {
+              $.shareCode = (res.data.shareUrl.match(/$.code\?s=([^&]+)/) && res.data.shareUrl.match(/$.code\?s=([^&]+)/)[1]) || "";
+              console.log("助力码:" + $.shareCode);
             }
+          } else {
+            console.log(data);
           }
         }
       } catch (e) {
         $.logErr(e, resp);
       } finally {
-        resolve(data);
+        resolve();
       }
     });
   });
 }
+
 function getEid(arr) {
   return new Promise((resolve) => {
     const options = {
@@ -157,20 +177,15 @@ function randomString(e) {
   return n;
 }
 
-async function getCoupons() {
+async function getCoupons(shareCode) {
   return new Promise((resolve) => {
     let opts = {
-      url: `https://api.m.jd.com/api?functionId=getUnionFreeCoupon&appid=u&loginType=2&_=${Date.now()}&body=${encodeURIComponent(JSON.stringify({"couponUrl":$.couponUrl,"source":20118}))}`,
+      url: `https://api.m.jd.com/api?functionId=getCoupons&appid=u&_=${Date.now()}&loginType=2&body={%22platform%22:4,%22unionActId%22:%2231134%22,%22actId%22:%22${$.actId}%22,%22d%22:%22${$.code}%22,%22unionShareId%22:%22${shareCode}%22,%22type%22:1,%22eid%22:%22${$.eid}%22}&client=apple&clientVersion=8.3.6&h5st=undefined`,
       headers: {
-        "Host": "api.m.jd.com",
-        "Accept": "application/json, text/plain, */*",
-        "Origin": "https://prodev.m.jd.com",
+        "Accept-Language": "zh-cn",
         "Accept-Encoding": "gzip, deflate, br",
-        "User-Agent": $.UA,
-        "Accept-Language": "zh-CN,zh-Hans;q=0.9",
-        "Referer": "https://prodev.m.jd.com/",
-        "Cookie": `${cookie} ${$.newCookie}`
-  
+        Cookie: `${cookie} ${$.newCookie}`,
+        "user-agent": $.UA
       }
     };
     $.get(opts, async (err, resp, data) => {
@@ -187,9 +202,19 @@ async function getCoupons() {
             if (res.msg.indexOf("上限") !== -1 || res.msg.indexOf("未登录") !== -1) {
               $.max = true;
             }
-            if (res.code == 200 && res.data) {
-              if (res.data.couponType == 2) {
-                console.log(`获得红包：${res.data.discount || 0}元`);
+            if ($.shareId && typeof res.data !== "undefined" && typeof res.data.joinNum !== "undefined") {
+              console.log(`当前${res.data.joinSuffix}:${res.data.joinNum}`);
+            }
+            if (res.code == 0 && res.data) {
+              if (res.data.type == 1) {
+                console.log(`获得红包：${res.data.discount}元`);
+              } else if (res.data.type == 3) {
+                console.log(`获得优惠券：️满${res.data.quota}减${res.data.discount}`);
+              } else if (res.data.type == 6) {
+                console.log(`获得打折券：满${res.data.quota}打${res.data.discount * 10}折`);
+              } else {
+                console.log(`获得未知${res.data.quota || ""} ${res.data.discount}`);
+                console.log(data);
               }
             }
           } else {
@@ -246,7 +271,7 @@ async function getInfo2() {
 async function getInfo1(cookie) {
   return new Promise((resolve) => {
     const options = {
-      url: `https://u.jd.com/${$.code}`,
+      url: `https://u.jd.com/${$.code}?s=${$.shareCode}`,
       followRedirect: false,
       headers: {
         Cookie: cookie,
@@ -3308,7 +3333,4 @@ function Env(t, e) {
         (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t);
     }
   })(t, e);
-}
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
 }
