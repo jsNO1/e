@@ -3,7 +3,7 @@
 =================================Quantumultx=========================
 [task_local]
 #城城领现金
-0 0-23/5,22 * 10 * gua_city.js, tag=城城领现金, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 22,0-23/5 9-21 1 * gua_city.js, tag=城城领现金, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
  */
 const $ = new Env('城城领现金');
@@ -11,8 +11,11 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //自动抽奖 ，环境变量  JD_CITY_EXCHANGE
-let exchangeFlag = $.getdata('jdJxdExchange') || "false";//是否开启自动抽奖，建议活动快结束开启，默认关闭
-exchangeFlag = $.isNode() ? (process.env.jdJxdExchange ? process.env.jdJxdExchange : `${exchangeFlag}`) : ($.getdata('jdJxdExchange') ? $.getdata('jdJxdExchange') : `${exchangeFlag}`);
+let exchangeFlag = $.getdata('JD_CITY_EXCHANGE') || "false";//是否开启自动抽奖，建议活动快结束开启，默认关闭
+exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE ? process.env.JD_CITY_EXCHANGE : `${exchangeFlag}`) : ($.getdata('JD_CITY_EXCHANGE') ? $.getdata('JD_CITY_EXCHANGE') : `${exchangeFlag}`);
+// 优先助力[助力池]
+let helpShareFlag = "false";//是否优先助力[助力池]，默认是
+helpShareFlag = $.isNode() ? (process.env.JD_CITY_HELPSHARE ? process.env.JD_CITY_HELPSHARE : `${helpShareFlag}`) : ($.getdata('JD_CITY_HELPSHARE') ? $.getdata('JD_CITY_HELPSHARE') : `${helpShareFlag}`);
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -27,8 +30,7 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = [
-  'GIDhyOmnQwqmMs_WF5h_mgWZIIucG4f3sw8-5XgX@HYbiyumnSAOgeoT1V5h_moPuEHNDqFgkgI8C2bOEPy6Ubg@RtGKzOitRA3yedKcH4c20cox1OFqA7Y_nEe-IRUHN20ucoyA4A@RtGKzur3RVygLYKaEdFl0m8PrvbnFxCFkdCPjLcIc1rV214Lsw@RtGKl4jnJ2rnHtTkQaF6mix4V5wisjhQ4YudBlD8uDRh4jeP@QNqjnYP4GFT3L-zWW5gzmisbO-LwJI_cCL0FtDt35hE@RMK2ye6mREbvMoPWW5hqiPKkBnD6BHNVoiwZ3A@RtGKzbr3FALxeYXMQ4Fih08I8aXQmeIj-m_DNfGn4_UsyZlw-g@QM-lweqnQALvMs-aW5h_j7h2ScY_SOgiFY5C0LI@S9LiyOyjQQrvMs-aW5h_jyRT5nBx5gIqNi5Ws20@HYbjweWjQA-qfoH1V5h_mgSIf9MI2moFKR0DofrpQAuk4w',
-  'GIDhyOmnQwqmMs_WF5h_mgWZIIucG4f3sw8-5XgX@HYbiyumnSAOgeoT1V5h_moPuEHNDqFgkgI8C2bOEPy6Ubg@RtGKzOitRA3yedKcH4c20cox1OFqA7Y_nEe-IRUHN20ucoyA4A@RtGKzur3RVygLYKaEdFl0m8PrvbnFxCFkdCPjLcIc1rV214Lsw@RtGKl4jnJ2rnHtTkQaF6mix4V5wisjhQ4YudBlD8uDRh4jeP@QNqjnYP4GFT3L-zWW5gzmisbO-LwJI_cCL0FtDt35hE@RMK2ye6mREbvMoPWW5hqiPKkBnD6BHNVoiwZ3A@RtGKzbr3FALxeYXMQ4Fih08I8aXQmeIj-m_DNfGn4_UsyZlw-g@QM-lweqnQALvMs-aW5h_j7h2ScY_SOgiFY5C0LI@S9LiyOyjQQrvMs-aW5h_jyRT5nBx5gIqNi5Ws20@HYbjweWjQA-qfoH1V5h_mgSIf9MI2moFKR0DofrpQAuk4w'
+  'pO3_WakPZGRGL17EBpfUh5g',
 ]
 $.shareCodesArr = [];
 
@@ -38,10 +40,15 @@ $.shareCodesArr = [];
     return;
   }
   // await requireConfig();
+  if(helpShareFlag+"" == "true"){
+    console.log('脚本优先助力[助力池] 如需开启优先助力[内部账号]，请设置环境变量  JD_CITY_HELPSHARE 为false\n')
+  }else{
+    console.log('脚本优先助力[内部账号] 如需开启优先助力[助力池]，请设置环境变量  JD_CITY_HELPSHARE 为true\n')
+  }
   if (exchangeFlag+"" == "true") {
     console.log(`脚本自动抽奖`)
   } else {
-    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在10.29日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
+    console.log(`脚本不会自动抽奖，建议活动快结束开启，默认关闭(在1.18日自动开启抽奖),如需自动抽奖请设置环境变量  JD_CITY_EXCHANGE 为true`);
   }
   $.inviteIdCodesArr = {}
   for (let i = 0; i < cookiesArr.length && true; i++) {
@@ -102,13 +109,17 @@ $.shareCodesArr = [];
         const res = await city_lotteryAward();//抽奖
         if (res && res > 0) {
           for (let i = 0; i < new Array(res).fill('').length; i++) {
+            if(i >= 10){
+              console.log('抽奖次数达10次，退出抽奖')
+              break
+            }
             await $.wait(1000)
             await city_lotteryAward();//抽奖
           }
         }
       } else {
         //默认10.29开启抽奖
-        if ((new Date().getMonth()  + 1) === 10 && new Date().getDate() >= 29) {
+        if ((new Date().getMonth()  + 1) === 1 && new Date().getDate() >= 18) {
           const res = await city_lotteryAward();//抽奖
           if (res && res > 0) {
             for (let i = 0; i < new Array(res).fill('').length; i++) {
@@ -144,10 +155,11 @@ function taskPostUrl(functionId,body) {
     }
   }
 }
+
 function getInviteId() {
   let body = {"lbsCity":"16","realLbsCity":"1315","inviteId":'',"headImg":"","userName":"","taskChannel":"1"}
   return new Promise((resolve) => {
-    $.post(taskPostUrl("city_getHomeData",body), async (err, resp, data) => {
+    $.post(taskPostUrl("city_getHomeDatav1",body), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -184,7 +196,7 @@ function getInviteId() {
 function getInfo(inviteId, flag = false) {
   let body = {"lbsCity":"16","realLbsCity":"1315","inviteId":inviteId,"headImg":"","userName":"","taskChannel":"1"}
   return new Promise((resolve) => {
-    $.post(taskPostUrl("city_getHomeData",body), async (err, resp, data) => {
+    $.post(taskPostUrl("city_getHomeDatav1",body), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
@@ -244,6 +256,7 @@ function getInfo(inviteId, flag = false) {
 function receiveCash(roundNum = '') {
   let body = {"cashType":2}
   if(roundNum) body = {"cashType":1,"roundNum":roundNum}
+  if(roundNum == -1) body = {"cashType":4}
   return new Promise((resolve) => {
     $.post(taskPostUrl("city_receiveCash",body), async (err, resp, data) => {
       try {
@@ -279,6 +292,10 @@ function getInviteInfo() {
           if (safeGet(data)) {
             // console.log(data)
             data = JSON.parse(data);
+            if(data.data.result.masterData.actStatus == 2){
+              console.log('领取赚赏金')
+              await receiveCash(-1)
+            }
           }
         }
       } catch (e) {
@@ -343,8 +360,10 @@ function shareCodesFormat() {
   return new Promise(async resolve => {
     // console.log(`第${$.index}个京东账号的助力码:::${$.shareCodesArr[$.index - 1]}`)
     $.newShareCodes = [];
-    if ($.shareCodesArr[$.index - 1]) {
-      $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
+    if(helpShareFlag+"" != "true"){
+      if ($.shareCodesArr[$.index - 1]) {
+        $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
+      }
     }
     if($.index == 1) $.newShareCodes = [...inviteCodes,...$.newShareCodes]
     try{
