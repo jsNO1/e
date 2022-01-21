@@ -68,9 +68,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       if ($.accountCheck) {
         helpInfo = $.helpInfo;
       }
-      console.log(`\n******结束【京东账号${$.index}】${$.nickName || $.UserName},等待20秒*********\n`);
-      await $.wait(20000);
-      console.log(`\n******结束20秒等待，继续下一账号*********\n`);
+      console.log(`\n******结束【京东账号${$.index}】${$.nickName || $.UserName},等待100秒*********\n`);
+      await $.wait(100000);
+      console.log(`\n******结束100秒等待，继续下一账号*********\n`);
     }
   }
 })()
