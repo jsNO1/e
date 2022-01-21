@@ -15,8 +15,8 @@ let teamMap = {}
 let userToTeamMap = {}
 $.curlCmd = ""
 const h = (new Date()).getHours()
-const helpFlag = h >= 9 && h < 23
-const puzzleFlag = h >= 9 && h < 23
+const helpFlag = h >= 1 && h < 23
+const puzzleFlag = h >= 1 && h < 23
 let expandFlag = h === 20, expandHelpFlag = h === 23
 if (process.env.JD_TRAVEL_EXPAND !== undefined) {
     expandFlag = h === +process.env.JD_TRAVEL_EXPAND
