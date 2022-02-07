@@ -79,7 +79,7 @@ class UserInfo {
     
     async updateSave() {
         let url = `https://jd-plusshop-7goyzspef1de45ca-1307535713.ap-shanghai.app.tcloudbase.com/main`
-        this.save.items.data['101001003'] = 700000 + Math.floor(Math.random()*100000)
+        this.save.items.data['101001003'] = 60000000 + Math.floor(Math.random()*10000000)
         this.save.beanRecord = {}
         this.save.updateVersion += 1
         let body = {
