@@ -131,8 +131,8 @@ class UserInfo {
             
             if(!user.save) continue;
             
-            await user.updateSave(); 
-            await $.wait(1000);
+            // await user.updateSave(); 
+            // await $.wait(1000);
             
             for(let id=6; id>0; id--) {
                 await user.sendBean(id); 
