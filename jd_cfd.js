@@ -91,29 +91,32 @@ if ($.isNode()) {
     res = await getAuthorShareCode('https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/shareCodes/cfd.json')
   }
   $.strMyShareIds = [...(res && res.shareId || [])]
-  await shareCodesFormat()
-  for (let i = 0; i < cookiesArr.length; i++) {
-    cookie = cookiesArr[i];
-    $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-    $.canHelp = true
-    UA = UAInfo[$.UserName]
-    if ($.newShareCodes && $.newShareCodes.length) {
-      console.log(`\n开始互助\n`);
-      for (let j = 0; j < $.newShareCodes.length && $.canHelp; j++) {
-        console.log(`账号${$.UserName} 去助力 ${$.newShareCodes[j]}`)
-        $.delcode = false
-        await helpByStage($.newShareCodes[j])
-        await $.wait(2000)
-        if ($.delcode) {
-          $.newShareCodes.splice(j, 1)
-          j--
-          continue
-        }
-      }
-    } else {
-      break
-    }
-  }
+  // await shareCodesFormat()
+  // for (let i = 0; i < cookiesArr.length; i++) {
+  //   cookie = cookiesArr[i];
+  //   $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+  //   $.canHelp = true
+  //   UA = UAInfo[$.UserName]
+  //   if ($.newShareCodes && $.newShareCodes.length) {
+  //     console.log(`\n开始互助\n`);
+  //     for (let j = 0; j < $.newShareCodes.length && $.canHelp; j++) {
+  //       console.log(`账号${$.UserName} 去助力 ${$.newShareCodes[j]}`)
+  //       $.delcode = false
+  //       await helpByStage($.newShareCodes[j])
+  //       await $.wait(2000)
+  //       if ($.delcode) {
+  //         $.newShareCodes.splice(j, 1)
+  //         j--
+  //         continue
+  //       }
+  //     }
+  //   } else {
+  //     break
+  //   }
+  // }
+  console.log(`\n******结束【京东账号${$.index}】${$.nickName || $.UserName},等待100秒*********\n`);
+  await $.wait(100000);
+  console.log(`\n******结束100秒等待，继续下一账号*********\n`);
   await showMsg();
 })()
     .catch((e) => $.logErr(e))
