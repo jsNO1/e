@@ -103,7 +103,7 @@ if ($.isNode()) {
   //       console.log(`账号${$.UserName} 去助力 ${$.newShareCodes[j]}`)
   //       $.delcode = false
   //       await helpByStage($.newShareCodes[j])
-  //       await $.wait(2000)
+  //       await $.wait(20000)
   //       if ($.delcode) {
   //         $.newShareCodes.splice(j, 1)
   //         j--
