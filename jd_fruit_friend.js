@@ -1,4 +1,5 @@
 /*
+只执行删除好友
 东东水果:脚本更新地址 jd_fruit_friend.js
 更新时间：2021-5-18
 活动入口：京东APP我的-更多工具-东东农场
@@ -137,7 +138,7 @@ async function getAwardInviteFriend() {
         }
       }
     }
-    await receiveFriendInvite();//为他人助力,接受邀请成为别人的好友
+    //await receiveFriendInvite();//为他人助力,接受邀请成为别人的好友
     if ($.friendList.inviteFriendCount > 0) {
       if ($.friendList.inviteFriendCount > $.friendList.inviteFriendGotAwardCount) {
         console.log('开始领取邀请好友的奖励');
