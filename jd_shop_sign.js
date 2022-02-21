@@ -87,6 +87,8 @@ if ($.isNode()) {
       }
       await dpqd()
       await showMsg()
+      await $.wait(30000);
+      console.log(`\n******结束30秒等待，继续下一账号*********\n`);
     }
   }
   if ($.isNode() && allMessage) {
