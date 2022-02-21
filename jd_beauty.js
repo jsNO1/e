@@ -494,7 +494,7 @@ async function mr() {
               //console.log(`benefit:${JSON.stringify(benefit)}`);
               if(benefit.description === "1 京豆" && parseInt(benefit.day_exchange_count) < 10 && $.total > benefit.coins){
                 $timenum = parseInt($.total / benefit.coins);
-                if ($timenum > 10) $timenum = 10;
+                if ($timenum > 5) $timenum = 5;
                 console.log(`\n可兑换${$timenum}次京豆:`)
                 for (let i = 0; i < $timenum; i++){
                   client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`);
