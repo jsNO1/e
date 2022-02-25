@@ -87,10 +87,10 @@ async function main() {
         continue
       case '邀请好友助力':
         await getShareCode(task_vos.assist_task_detail_vo.task_token)
-        await $.wait(1000)
+        await $.wait(2000)
 
         await getAssist()
-        await $.wait(1000)
+        await $.wait(2000)
 
         console.log(`第${$.index}个账号${$.UserName}去助力第${Math.floor(($.index - 1) / 6) + 1}个账号。`)
         await doAssist()
