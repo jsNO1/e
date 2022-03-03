@@ -450,10 +450,10 @@ async function RunMultiUser() {
     }
     
     //============= 提现 =============
-    console.log('\n查询提现信息...')
-    for(userIdx=0; userIdx<yddCookieArr.length; userIdx++) {
-        await QueryWithdrawList()
-    }
+    console.log('\n不执行查询提现信息...')
+    // for(userIdx=0; userIdx<yddCookieArr.length; userIdx++) {
+    //     await QueryWithdrawList()
+    // }
 }
 
 //查询签到状态
