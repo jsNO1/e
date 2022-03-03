@@ -101,7 +101,7 @@ if ($.isNode()) {
     }
     token = await getJxToken()
     await pasture();
-    await $.wait(2000);
+    await $.wait(20000);
   }
   $.res = await getAuthorShareCode('https://raw.githubusercontent.com/Aaron-lv/updateTeam/master/shareCodes/jxmc.json')
   if (!$.res) {
