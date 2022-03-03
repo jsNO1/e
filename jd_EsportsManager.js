@@ -67,6 +67,7 @@ let tasks = [], shareCodes = [], first = true;
       await $.wait(1000);
 
       await main();
+      await $.wait(20000);
     }
   }
   if ($.isNode() && allMessage && $.ctrTemp) {
