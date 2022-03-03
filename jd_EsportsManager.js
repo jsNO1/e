@@ -96,9 +96,9 @@ async function main() {
       // console.log(`第${$.index}个账号${$.UserName}去助力第${Math.floor(($.index - 1) / 6) + 1}个账号。`)
       // await doAssist()
         continue
-      case '去浏览精彩会场': case '去关注特色频道' :
-        product_info_vos = task_vos['shopping_activity_vos']
-        break
+      // case '去浏览精彩会场': case '去关注特色频道' :
+      //   product_info_vos = task_vos['shopping_activity_vos']
+      //   break
       case '去关注优质好店':
         product_info_vos = task_vos['follow_shop_vo']
         break
