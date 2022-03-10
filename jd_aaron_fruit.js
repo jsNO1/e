@@ -72,6 +72,7 @@ const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%2
       option = {};
       await shareCodesFormat();
       await jdFruit();
+      await $.wait(30000);
     }
   }
   if ($.isNode() && allMessage && $.ctrTemp) {
@@ -1060,7 +1061,7 @@ async function gotStageAwardForFarm(type) {
 }
 //浇水API
 async function waterGoodForFarm() {
-  await $.wait(1000);
+  await $.wait(3000);
   console.log('等待了1秒');
 
   const functionId = arguments.callee.name.toString();
@@ -1071,7 +1072,7 @@ async function initForTurntableFarm() {
   $.initForTurntableFarmRes = await request(arguments.callee.name.toString(), {version: 4, channel: 1});
 }
 async function lotteryForTurntableFarm() {
-  await $.wait(2000);
+  await $.wait(5000);
   console.log('等待了2秒');
   $.lotteryRes = await request(arguments.callee.name.toString(), {type: 1, version: 4, channel: 1});
 }
