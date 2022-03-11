@@ -1,6 +1,6 @@
 let mode = __dirname.includes('magic')
-//const {Env} = mode ? require('../magic') : require('./magic')
-const {Env} = mode ? require('./function/magic') : require('./function/magic')
+const {Env} = mode ? require('../magic') : require('./magic')
+//const {Env} = mode ? require('./function/magic') : require('./function/magic')
 const $ = new Env('M集卡抽奖');
 $.lz = 'LZ_TOKEN_KEY=lztokef1eb8494b0af868bd18bdaf8;LZ_TOKEN_VALUE=Aa5RE8RuY4X3zA==;';
 $.activityUrl = process.env.M_WX_COLLECT_CARD_URL
