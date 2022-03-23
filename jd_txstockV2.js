@@ -43,27 +43,27 @@ let userList = []
 let userIdx = 0
 let userCount = 0
 
-let TASK_WAITTIME = 2500
+let TASK_WAITTIME = 100
 let BULL_WAITTIME = 5000
 
 let test_taskList = []
 let todayDate = formatDateTime();
 let SCI_code = '000001' //上证指数
 let marketCode = {'sz':0, 'sh':1, 'hk':2, }
-let signType = {task:'welfare_sign', sign:'signdone', award:'award'}
+let signType = {task:'home', sign:'signdone', award:'award'}
 
 let taskList = {
     app: {
         daily: [1105, 1101, 1111, 1113],
         newbie: [1023, 1033],
-        dailyShare: ["news_share", "task_50_1111", "task_51_1111", "task_72_1113", "task_74_1113"],
+        dailyShare: ["news_share", "task_50_1101", "task_51_1101", "task_50_1111", "task_51_1111", "task_51_1113", "task_72_1113", "task_74_1113", "task_75_1113", "task_76_1113"],
         newbieShare: [],
     },
     wx: {
         daily: [1100, 1110, 1112],
         newbie: [1032],
-        dailyShare: ["task_50_1100", "task_51_1100", "task_66_1110", "task_50_1110", "task_51_1110", "task_51_1112", "task_51_1113"],
-        newbieShare: ["task_50_1032", "task_51_1032"],
+        dailyShare: ["task_50_1100", "task_51_1100", "task_50_1110", "task_51_1110", "task_66_1110", "task_51_1112", "task_75_1112"],
+        newbieShare: ["task_50_1032", "task_51_1032", "task_50_1033", "task_51_1033"],
     },
 }
 
@@ -107,6 +107,25 @@ class UserInfo {
         }
     }
     
+    async getUserName() {
+        try {
+            let url = `https://proxy.finance.qq.com/group/newstockgroup/RssService/getSightByUser2?g_openid=${this.openid}&openid=${this.openid}&fskey=${this.fskey}`
+            let body = `g_openid=${this.openid}&search_openid=${this.openid}`
+            let urlObject = populateUrlObject(url,this.cookie,body)
+            await httpRequest('post',urlObject)
+            let result = httpResult;
+            if(!result) return
+            //console.log(result)
+            if(result.code==0) {
+                this.name = result.data.user_name
+            } else {
+                console.log(`账号[${this.name}]查询账户昵称失败: ${result.msg}`)
+            }
+        } catch(e) {
+            console.log(e)
+        } finally {}
+    }
+    
     async getUserInfo(isWithdraw=false) {
         try {
             let url = `https://wzq.tenpay.com/cgi-bin/shop.fcgi?action=home_v2&type=2&openid=${this.openid}&fskey=${this.fskey}&channel=1`
@@ -120,7 +139,6 @@ class UserInfo {
                 this.valid = true
                 let lastCoin = this.coin
                 this.coin = result.shop_asset ? result.shop_asset.amount : 0
-                this.name = result.shop_asset ? result.shop_asset.nickname : this.index
                 if(lastCoin > -1) {
                     logAndNotify(`账号[${this.name}]金币余额：${this.coin}，本次运行共获得${this.coin-lastCoin}金币`)
                 } else {
@@ -152,9 +170,16 @@ class UserInfo {
         } finally {}
     }
     
-    async signTask(actid,type,ticket='') {
+    async signTask(actid,action,ticket='') {
         try {
-            let url = `https://wzq.tenpay.com/cgi-bin/activity_sign_task.fcgi?actid=${actid}&channel=1&type=welfare_sign&action=home&date=${todayDate}&openid=${this.openid}&fskey=${this.fskey}&reward_ticket=${ticket}`
+            let url = `https://wzq.tenpay.com/cgi-bin/activity_sign_task.fcgi?actid=${actid}&channel=1&action=${action}&openid=${this.openid}&fskey=${this.fskey}`
+            if(action == signType.task) {
+                url += `&type=welfare_sign`
+            } else if(action == signType.sign) {
+                url += `&date=${todayDate}`
+            } else if (action == signType.award) {
+                url += `&reward_ticket=${ticket}`
+            }
             let body = ``
             let urlObject = populateUrlObject(url,this.cookie,body)
             await httpRequest('get',urlObject)
@@ -165,7 +190,8 @@ class UserInfo {
                 if(result.forbidden_code) {
                     console.log(`查询签到任务失败，可能已黑号: ${result.forbidden_reason}`)
                 } else {
-                    if(type == signType.task) {
+                    if(action == signType.task) {
+                        console.log(`已连续签到${result.task_pkg.continue_sign_days}天，总签到天数${result.task_pkg.total_sign_days}天`)
                         for(let item of result.task_pkg.tasks) {
                             if(item.date == todayDate){
                                 if(item.status == 0){
@@ -182,9 +208,9 @@ class UserInfo {
                             await $.wait(TASK_WAITTIME);
                             await this.signTask(actid,signType.award,result.lotto_ticket);
                         }
-                    } else if(type == signType.sign) {
+                    } else if(action == signType.sign) {
                         console.log(`签到获得${result.reward_desc}`);
-                    } else if(type == signType.sign) {
+                    } else if(action == signType.award) {
                         console.log(`领取连续签到奖励获得${result.reward_desc}`);
                     }
                 }
@@ -328,7 +354,9 @@ class UserInfo {
             let result = httpResult;
             if(!result) return
             //console.log(result)
-            result = JSON.parse(result.body.replace(/\\x/g,''))
+            if(result.body) {
+                result = JSON.parse(result.body.replace(/\\x/g,''))
+            }
             if(result.retcode==0) {
                 let stockName = result.secu_info.secu_name || ''
                 if(stockName) {
@@ -519,10 +547,10 @@ class UserInfo {
                     await this.appGetTaskTicket(taskItem,id,tid);
                     
                 } else {
-                    console.log(`${taskItem.taskName}[${taskItem.actid}-${id}]已完成`);
+                    console.log(`${taskItem.taskName}[${taskItem.actid}-${id}-${tid}]已完成`);
                 }
             } else {
-                console.log(`查询[${taskItem.actid}-${id}]状态失败: ${result.retmsg}`)
+                console.log(`查询[${taskItem.actid}-${id}-${tid}]状态失败: ${result.retmsg}`)
             }
         } catch(e) {
             console.log(e)
@@ -559,9 +587,9 @@ class UserInfo {
             if(!result) return
             //console.log(result)
             if(result.retcode==0) {
-                console.log(`完成${taskItem.taskName}[${taskItem.actid}-${id}]:获得 ${result.reward_desc}`);
+                console.log(`完成${taskItem.taskName}[${taskItem.actid}-${id}-${tid}]:获得 ${result.reward_desc}`);
             } else {
-                console.log(`${taskItem.taskName}[${taskItem.actid}-${id}]未完成：${result.retmsg}`);
+                console.log(`${taskItem.taskName}[${taskItem.actid}-${id}-${tid}]未完成：${result.retmsg}`);
             }
         } catch(e) {
             console.log(e)
@@ -623,10 +651,10 @@ class UserInfo {
                     await $.wait(TASK_WAITTIME);
                     await this.wxGetTaskTicket(taskItem,id,tid);
                 } else {
-                    console.log(`${taskItem.taskName}[${taskItem.actid}-${id}]已完成`);
+                    console.log(`${taskItem.taskName}[${taskItem.actid}-${id}-${tid}]已完成`);
                 }
             } else {
-                console.log(`查询[${taskItem.actid}-${id}]状态失败: ${result.retmsg}`)
+                console.log(`查询[${taskItem.actid}-${id}-${tid}]状态失败: ${result.retmsg}`)
             }
         } catch(e) {
             console.log(e)
@@ -664,9 +692,9 @@ class UserInfo {
             if(!result) return
             //console.log(result)
             if(result.retcode==0) {
-                console.log(`完成${taskItem.taskName}[${taskItem.actid}-${id}]:获得 ${result.reward_desc}`);
+                console.log(`完成${taskItem.taskName}[${taskItem.actid}-${id}-${tid}]:获得 ${result.reward_desc}`);
             } else {
-                console.log(`${taskItem.taskName}[${taskItem.actid}-${id}]未完成：${result.retmsg}`);
+                console.log(`${taskItem.taskName}[${taskItem.actid}-${id}-${tid}]未完成：${result.retmsg}`);
             }
         } catch(e) {
             console.log(e)
@@ -855,10 +883,10 @@ class UserInfo {
             if(result.retcode==0) {
                 if(type == 'newbie') {
                     this.shareCodes.newbie[share_type] = result.share_code
-                    console.log(`获取到新手任务[${share_type}]互助码：${result.share_code}`)
+                    console.log(`获取新手任务[${share_type}]互助码：${result.share_code}`)
                 } else {
                     this.shareCodes.task[share_type] = result.share_code
-                    console.log(`获取到日常任务[${share_type}]互助码：${result.share_code}`)
+                    console.log(`获取日常任务[${share_type}]互助码：${result.share_code}`)
                 }
             } else {
                 console.log(`获取[${share_type}]互助码失败：${result.retmsg}`);
@@ -903,6 +931,8 @@ class UserInfo {
         
         console.log('\n=================== 用户信息 ===================')
         for(let user of userList.filter(x => x.hasAllEnv)) {
+            await user.getUserName();
+            await $.wait(TASK_WAITTIME);
             await user.getUserInfo(); 
             await $.wait(TASK_WAITTIME);
         }
@@ -917,6 +947,7 @@ class UserInfo {
             if(validUserCount < 2) {
                 console.log('有效用户少于2个，不做互助任务')
             } else {
+                console.log('有效用户大于等于2个，且设置了互助开关，开启互助')
                 doHelp = true;
             }
         } else {
@@ -1190,6 +1221,8 @@ function populateUrlObject(url,cookie,body=''){
         headers: {
             'Host': host,
             'Cookie': cookie,
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 MicroMessenger/8.0.16(0x18001028) NetType/WIFI Language/zh_CN',
+            'Connection': 'keep-alive',
         },
     }
     if(body) {
