@@ -5,8 +5,9 @@
 一天跑两次就够了，10点到13点之间运行一次猜涨跌做任务，16点半之后运行一次领猜涨跌奖励
 提现设置：默认提现5元，需要改的话自己设置TxStockCash变量，0代表不提现，1代表提现1元，5代表提现5元
 新手任务设置：默认不做新手任务，需要做的话设置TxStockNewbie为1
-分享任务设置：默认会做互助任务，需要多账号。不想做的话设置TxStockHelp为0
+分享任务设置：默认会做互助任务，需要多账号，黑号也能完成分享任务。不想做的话设置TxStockHelp为0
 可以设置某些号只助力别的号不做任务(没资格的小号可以助力大号)，在对应的ck后面加&task=0
+没有捉到微信CK的也可以跑脚本，删掉wzq_qlskey和wzq_qluin就行，会尝试用APP的CK去完成微信任务，出现做任务失败是正常现象
 
 青龙捉包，需要捉APP和公众号里面的小程序
 1. 打开APP，捉wzq.tenpay.com包，把url里的openid和fskey用&连起来填到TxStockCookie
@@ -81,7 +82,8 @@ class UserInfo {
     constructor(str) {
         this.index = ++userIdx
         this.name = this.index
-        this.hasAllEnv = true
+        this.canRun = true
+        this.hasWxCookie = true
         this.valid = false
         this.coin = -1
         this.shareCodes = {task:{}, newbie:{}, bull:{}, guess:{}}
@@ -101,9 +103,16 @@ class UserInfo {
             if(!this[param]) missEnv.push(param);
         }
         if(missEnv.length > 0) {
-            this.hasAllEnv = false
             let missStr = missEnv.join(', ')
-            console.log(`账号[${this.index}]缺少参数：${missStr}`)
+            let notiStr = `账号[${this.index}]缺少参数：${missStr}`
+            if(missStr.indexOf('openid') > -1 || missStr.indexOf('fskey') > -1 ) {
+                notiStr += '，无法运行脚本'
+                this.canRun = false
+            } else if(missStr.indexOf('wzq_qlskey') > -1 || missStr.indexOf('wzq_qluin') > -1) {
+                notiStr += '，尝试用APP的CK去完成微信任务和助力，可能出现失败情况'
+                this.hasWxCookie = false
+            }
+            console.log(notiStr)
         }
     }
     
@@ -896,7 +905,32 @@ class UserInfo {
         } finally {}
     }
     
-    async doShare(share_type,share_code) {
+    async appDoShare(share_type,share_code) {
+        try {
+            let url = `https://wzq.tenpay.com/cgi-bin/activity_share.fcgi?action=share_code_info&share_type=${share_type}&share_code=${share_code}&openid=${this.openid}&fskey=${this.fskey}&channel=1`
+            let body = ``
+            let urlObject = populateUrlObject(url,this.cookie,body)
+            await httpRequest('get',urlObject)
+            let result = httpResult;
+            if(!result) return
+            //console.log(result)
+            if(result.retcode==0) {
+                if(result.share_code_info && result.share_code_info.status == 1) {
+                    console.log(`[${share_type}]助力成功，对方昵称：[${result.share_code_info.nickname}]`);
+                } else if(result.retmsg == "OK") {
+                    console.log(`[${share_type}]已经助力过了`);
+                } else {
+                    console.log(result)
+                }
+            } else {
+                console.log(`[${share_type}]助力失败：${result.retmsg}`);
+            }
+        } catch(e) {
+            console.log(e)
+        } finally {}
+    }
+    
+    async wxDoShare(share_type,share_code) {
         try {
             let url = `https://wzq.tenpay.com/cgi-bin/activity_share.fcgi`
             let body = `action=share_code_info&share_type=${share_type}&share_code=${share_code}`
@@ -930,7 +964,7 @@ class UserInfo {
         if(!(await checkEnv())) return;
         
         console.log('\n=================== 用户信息 ===================')
-        for(let user of userList.filter(x => x.hasAllEnv)) {
+        for(let user of userList.filter(x => x.canRun)) {
             await user.getUserName();
             await $.wait(TASK_WAITTIME);
             await user.getUserInfo(); 
@@ -963,12 +997,16 @@ class UserInfo {
                 await $.wait(TASK_WAITTIME);
                 for(let id of taskList.app.daily) {
                     let taskItem = {"taskName":"APP任务","activity":"task_daily","type":"routine","actid":id}
-                    await user.appGetTaskList(taskItem,'app'); 
+                    await user.appGetTaskList(taskItem); 
                     await $.wait(TASK_WAITTIME);
                 }
                 for(let id of taskList.wx.daily) {
                     let taskItem = {"taskName":"微信任务","activity":"task_daily","type":"routine","actid":id}
-                    await user.wxGetTaskList(taskItem,'wx'); 
+                    if(user.hasWxCookie) {
+                        await user.wxGetTaskList(taskItem); 
+                    } else {
+                        await user.appGetTaskList(taskItem); 
+                    }
                     await $.wait(TASK_WAITTIME);
                 }
                 if(doHelp) {
@@ -977,7 +1015,11 @@ class UserInfo {
                         await $.wait(TASK_WAITTIME);
                     }
                     for(let task of taskList.wx.dailyShare) {
-                        await user.wxGetShareCode(task); 
+                        if(user.hasWxCookie) {
+                            await user.wxGetShareCode(task); 
+                        } else {
+                            await user.appGetShareCode(task); 
+                        }
                         await $.wait(TASK_WAITTIME);
                     }
                 }
@@ -991,12 +1033,16 @@ class UserInfo {
                     console.log(`\n----------- 账号${user.index}[${user.name}] -----------`)
                     for(let id of taskList.app.newbie) {
                         let taskItem = {"taskName":"APP新手任务","activity":"task_continue","type":"app_new_user","actid":id}
-                        await user.appGetTaskList(taskItem,'app'); 
+                        await user.appGetTaskList(taskItem); 
                         await $.wait(TASK_WAITTIME);
                     }
                     for(let id of taskList.wx.newbie) {
                         let taskItem = {"taskName":"微信新手任务","activity":"task_continue","type":"wzq_welfare_growth","actid":id}
-                        await user.wxGetTaskList(taskItem,'wx'); 
+                        if(user.hasWxCookie) {
+                            await user.wxGetTaskList(taskItem); 
+                        } else {
+                            await user.appGetTaskList(taskItem); 
+                        }
                         await $.wait(TASK_WAITTIME);
                     }
                 }
@@ -1008,7 +1054,11 @@ class UserInfo {
                     if(user.task == 1) {
                         console.log(`\n----------- 账号${user.index}[${user.name}] -----------`)
                         for(let task of taskList.wx.newbieShare) {
-                            await user.wxGetShareCode(task,'newbie'); 
+                            if(user.hasWxCookie) {
+                                await user.wxGetShareCode(task,'newbie'); 
+                            } else {
+                                await user.appGetShareCode(task,'newbie'); 
+                            }
                             await $.wait(TASK_WAITTIME);
                         }
                     }
@@ -1018,7 +1068,11 @@ class UserInfo {
                     let helpee = validUserList[(idx+1)%validUserCount]
                     console.log(`\n--> 账号${helper.index}[${helper.name}] 去助力 账号${helpee.index}[${helpee.name}]:`)
                     for(let type in helpee.shareCodes.newbie) {
-                        await helper.doShare(type,helpee.shareCodes.newbie[type]); 
+                        if(helper.hasWxCookie) {
+                            await helper.wxDoShare(type,helpee.shareCodes.newbie[type]); 
+                        } else {
+                            await helper.appDoShare(type,helpee.shareCodes.newbie[type]); 
+                        }
                         await $.wait(TASK_WAITTIME);
                     }
                 }
@@ -1041,7 +1095,11 @@ class UserInfo {
                     if(helpee.task == 0) continue;
                     console.log(`\n--> 账号${helper.index}[${helper.name}] 去助力 账号${helpee.index}[${helpee.name}]:`)
                     for(let type in helpee.shareCodes.task) {
-                        await helper.doShare(type,helpee.shareCodes.task[type]); 
+                        if(helper.hasWxCookie) {
+                            await helper.wxDoShare(type,helpee.shareCodes.task[type]); 
+                        } else {
+                            await helper.appDoShare(type,helpee.shareCodes.task[type]); 
+                        }
                         await $.wait(TASK_WAITTIME);
                     }
                 }
@@ -1157,7 +1215,7 @@ async function checkEnv() {
         for(let userCookies of userCookie.split(splitor)) {
             if(userCookies) userList.push(new UserInfo(userCookies))
         }
-        userCount = userList.filter(x => x.hasAllEnv).length
+        userCount = userList.filter(x => x.canRun).length
     } else {
         console.log('未找到CK')
         return;
