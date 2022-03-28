@@ -133,7 +133,7 @@ async function jdFruit() {
         return
       }
       await doDailyTask();
-      // await doTenWater();//浇水十次
+      await doTenWater();//浇水十次
       await getFirstWaterAward();//领取首次浇水奖励
       await getTenWaterAward();//领取10浇水奖励
       await getWaterFriendGotAward();//领取为2好友浇水奖励
