@@ -81,7 +81,7 @@ if ($.isNode()) {
         await $.wait(time)
       }
     }
-  } while (count < 25)
+  } while (count < 5)
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done());
@@ -260,7 +260,7 @@ function taskUrl(function_path, body = '', dwEnv = 7) {
       "User-Agent": UA,
       "Accept-Language": "zh-CN,zh-Hans;q=0.9",
       "Referer": "https://st.jingxi.com/",
-      "Cookie": cookie
+      "Cookie": `cid=4;${cookie}`
     }
   };
 }
@@ -333,7 +333,7 @@ async function requestAlgo() {
       'Accept-Language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7'
     },
     'body': JSON.stringify({
-      "version": "3.0",
+      "version": "3.1",
       "fp": $.fingerprint,
       "appId": $.appId.toString(),
       "timestamp": Date.now(),
