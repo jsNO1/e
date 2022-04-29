@@ -3,14 +3,14 @@
 ============Quantumultx===============
 [task_local]
 #店铺签到
-30 0 * * * https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/jd_shop_sign.js, tag=店铺签到, enabled=true
+15 2,14 * * * https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js, tag=店铺签到, enabled=true
 ===========Loon============
 [Script]
-cron "30 0 * * *" script-path=https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/jd_shop_sign.js,tag=店铺签到
+cron "15 2,14 * * *" script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js,tag=店铺签到
 ============Surge=============
-店铺签到 = type=cron,cronexp="30 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/jd_shop_sign.js
+店铺签到 = type=cron,cronexp="15 2,14 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.js
 ===========小火箭========
-店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/jd_shop_sign.jss, cronexpr="30 0 * * *", timeout=3600, enable=true
+店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_shop_sign.jss, cronexpr="15 2,14 * * *", timeout=3600, enable=true
 */
 const $ = new Env('店铺签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -25,28 +25,25 @@ let vender=''
 let num=0
 let shopname=''
 const token = [
-  "FBA3925491DB0ED62FB43EC963E2578D",
-  "957842018D611DAB5D1C8377C2BFD5C4",
-  "8B810BCC68E0E19AE7FAF510230F9272",
-  "ABFB0068BE7CDEAFEDF8169E90A26D78",
-  "E4B3CC65155F29636D23126757FC9B04",
-  "E7032CD0E6CA60EA0D5CE72D7D793586",
-  "69B31DB107B9FE242E286E4E8B3E0E75",
-  "2A7B39D6D5FDA9B03E613D7ACECA5D48",
-  "5244E4DDCC669905BC2C040C7F8FB3A8",
-  "1272A31C7B63CE8B6DE740D98F0B7F85",
-  "8BDACA0393745B3C63A00E71ACC3AFA3",
-  "650A0175DA1703BC513BB0D57FF98E7F",
-  "0A34FCE398530218A0CB7E62028576D3",
-  "A9616BA854DE84B84CA51F61DE3F383F",
-  "59B3135F79D8D630BA1EF61C4870FDA0",
-  "A1CD65F387F6E7A6098B614A44A3D570",
-  "9EC5E039D53B6CBA62E9C77CB7BFC736",
-  "4727D52427A6D8BA4D0FA297F96CB51D",
-  "C4FB10EC184E49AFBF5B093FF5138ACA",
-  "5A9AC468F19C70AF7EEDCBA81A36B555",
-  "B3855AA4C203EB79F222EFAFE68535FC",
-  "2FB868C5EECA6778C66F5A0C7AA1493D"
+  "63BAE1657C5127A5BD97D2492C82DE86",
+  "B681FBF146FDB0403F8445BE8BCB9113",
+  "07D72B6BEC5DDC95E475D019FA89F39D",
+  "E20BD5091D8F70B4649D529A09183F04",
+  "4DAE4AF44B8031613282AA320BB58BB2",
+  "0D4C9DBC259BCE76D2F7CE53D3CC2A10",
+  "B855B744C0E57CC72B97DC3A79C16372",
+  "3ABF873A139B3581FC039CCD3F35E73F",
+  "D06B3EABDA970A2D3EB09959A0FA1B8B",
+  "55903E776291DDC7E2C785A4659EC4CB",
+  "CDDABF3428C94BFF4575B7C712F3E233",
+  "46CF055009756611524DFC1EC56BF287",
+  "62F921549D1B7244101CCC5AFBC2E952",
+  "A3B3E3A15E365F2F5709618D27C9DDCD",
+  "FE30AB00038CFFEF00DA9E9B8E932721",
+  "F0C24D7588D90922393B423C6623F31A",
+  "7DB2D4F64C26D480216C14DB846BC52A",
+  "D881655EDC90A9B4387ACFE495CA3F18",
+  "13B10B1585CB27FAA5BA9365277D80F6"
 ]
 
 if ($.isNode()) {
@@ -88,8 +85,7 @@ if ($.isNode()) {
       }
       await dpqd()
       await showMsg()
-      await $.wait(30000);
-      console.log(`\n******结束30秒等待，继续下一账号*********\n`);
+      await $.wait(1500)
     }
   }
   if ($.isNode() && allMessage) {
@@ -108,6 +104,7 @@ async function dpqd(){
   for (var j = 0; j < token.length; j++) {
     num=j+1
     if (token[j]=='') {continue}
+    getUA()
     await getvenderId(token[j])
     if (vender=='') {continue}
     await getvenderName(vender)
@@ -128,7 +125,8 @@ function getvenderId(token) {
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "cookie": cookie,
         "referer": 'https://h5.m.jd.com/',
-        "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
+        "User-Agent": $.UA
+        // "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
       }
     }
     $.get(options, (err, resp, data) => {
@@ -166,7 +164,8 @@ function getvenderName(venderId) {
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "cookie": cookie,
-        "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
+        "User-Agent": $.UA
+        // "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
       }
     }
     $.get(options, (err, resp, data) => {
@@ -202,7 +201,8 @@ function getActivityInfo(token,venderId) {
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "cookie": cookie,
         "referer": `https://h5.m.jd.com/babelDiy/Zeus/2PAAf74aG3D61qvfKUM5dxUssJQ9/index.html?token=${token}&sceneval=2&jxsid=16105853541009626903&cu=true&utm_source=kong&utm_medium=jingfen&utm_campaign=t_1001280291_&utm_term=fa3f8f38c56f44e2b4bfc2f37bce9713`,
-        "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
+        "User-Agent": $.UA
+        // "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
       }
     }
     $.get(options, (err, resp, data) => {
@@ -245,7 +245,8 @@ function signCollectGift(token,venderId,activitytemp) {
         "accept-language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
         "cookie": cookie,
         "referer": `https://h5.m.jd.com/babelDiy/Zeus/2PAAf74aG3D61qvfKUM5dxUssJQ9/index.html?token=${token}&sceneval=2&jxsid=16105853541009626903&cu=true&utm_source=kong&utm_medium=jingfen&utm_campaign=t_1001280291_&utm_term=fa3f8f38c56f44e2b4bfc2f37bce9713`,
-        "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
+        "User-Agent": $.UA
+        // "User-Agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
       }
     }
     $.get(options, (err, resp, data) => {
@@ -277,7 +278,8 @@ function taskUrl(token,venderId) {
         "accept-language": "zh-CN,zh;q=0.9",
         "cookie": cookie,
         "referer": `https://h5.m.jd.com/`,
-        "user-agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
+        "User-Agent": $.UA
+        // "user-agent": `Mozilla/5.0 (Linux; U; Android 10; zh-cn; MI 8 Build/QKQ1.190828.002) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/79.0.3945.147 Mobile Safari/537.36 XiaoMi/MiuiBrowser/13.5.40`
       }
     }
     $.get(options, (err, resp, data) => {
@@ -286,10 +288,10 @@ function taskUrl(token,venderId) {
           console.log(`\n${$.name}: API查询请求失败 ‼️‼️`)
           $.logErr(err);
         } else {
-            //console.log(data)
-            data = JSON.parse(/{(.*)}/g.exec(data)[0])
-            console.log(`已签到：`+data.data.days+`天`)
-            message +=`已签到：`+data.data.days+`天\n`
+          //console.log(data)
+          data = JSON.parse(/{(.*)}/g.exec(data)[0])
+          console.log(`已签到：`+data.data.days+`天`)
+          message +=`已签到：`+data.data.days+`天\n`
         }
       } catch (e) {
         $.logErr(e, resp);
@@ -362,6 +364,18 @@ function jsonParse(str) {
       return [];
     }
   }
+}
+
+function randomString(e) {
+  e = e || 32;
+  let t = "abcdef0123456789", a = t.length, n = "";
+  for (i = 0; i < e; i++)
+    n += t.charAt(Math.floor(Math.random() * a));
+  return n
+}
+
+function getUA() {
+  $.UA = `jdapp;iPhone;10.2.2;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460611;appBuild/167863;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`
 }
 
 // prettier-ignore
