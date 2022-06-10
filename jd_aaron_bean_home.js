@@ -71,7 +71,7 @@ const JD_API_HOST = 'https://api.m.jd.com/';
         continue
       }
       await jdBeanHome();
-      await $.wait(30000)
+      await $.wait(300000)
     }
   }
   // for (let i = 0; i < cookiesArr.length; i++) {
