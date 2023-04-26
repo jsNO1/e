@@ -90,7 +90,7 @@ async function jdGlobal() {
     await wheelsHome()
 
     await signInit()
-    await sign()
+    //await sign()
     await invite()
     await $.wait(1000)
     await invite2()
