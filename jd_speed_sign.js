@@ -31,6 +31,7 @@ const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 
 let cookiesArr = [], cookie = '', message;
+let IPError = false; // 403 ip黑
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -71,6 +72,10 @@ const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
       }
       await jdGlobal()
       await $.wait(60*1000)
+      if (IPError) {
+        console.log(`403 黑IP了，换IP或等一段时间`);
+        break;
+    }
     }
   }
 })()
@@ -83,23 +88,23 @@ const JD_API_HOST = 'https://api.m.jd.com/', actCode = 'visa-card-001';
 
 async function jdGlobal() {
   try {
-    await richManIndex()
+    // await richManIndex()
 
-    await wheelsHome()
-    await apTaskList()
-    await wheelsHome()
+    // await wheelsHome()
+    // await apTaskList()
+    // await wheelsHome()
 
-    await signInit()
-    //await sign()
-    await invite()
-    await $.wait(1000)
-    await invite2()
-    await $.wait(1000)
+    // await signInit()
+    // //await sign()
+    // await invite()
+    // await $.wait(1000)
+    // await invite2()
+    // await $.wait(1000)
     $.score = 0
     $.total = 0
     await taskList()
     await queryJoy()
-    await signInit()
+    // await signInit()
     await cash()
     if ($.last_day) {
       console.log('月底了,自动领下单红包奖励')
@@ -180,7 +185,7 @@ async function sign() {
 async function taskList() {
   return new Promise(resolve => {
     $.get(taskUrl('ClientHandleService.execute', {
-        "version": "3.1.0",
+        // "version": "3.1.0",
         "method": "newTaskCenterPage",
         "data": {"channel": 1}
       }),
@@ -197,20 +202,30 @@ async function taskList() {
                 if (task.taskInfo.status === 0) {
                   if (task.taskType >= 1000) {
                     await doTask(task.taskType)
-                    await $.wait(1000)
+                    await $.wait(800);
+                    await doTask(task.taskType)
+                    await $.wait(500);
                   } else {
                     $.canStartNewItem = true
                     while ($.canStartNewItem) {
                       if (task.taskType !== 3) {
-                        await queryItem(task.taskType)
-                      } else {
-                        await startItem("", task.taskType)
+                        await $.wait(500);
+                        await queryItem(task.taskType);
+                        await $.wait(500);
+                    } else {
+                        await $.wait(500);
+                        await startItem("", task.taskType);
+                        await $.wait(500);
                       }
                     }
                   }
                 } else {
                   console.log(`${task.taskInfo.mainTitle}已完成`)
-                }
+              }
+              if (IPError) {
+                  console.error('API请求失败，停止执行')
+                  break
+              }
               }
             }
           }
@@ -233,6 +248,7 @@ async function doTask(taskId) {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          IPError = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -265,8 +281,9 @@ async function queryJoy() {
               data = JSON.parse(data);
               if (data.data.taskBubbles)
                 for (let task of data.data.taskBubbles) {
-                  await rewardTask(task.id, task.activeType)
-                  await $.wait(500)
+                  await $.wait(500);
+                  await rewardTask(task.id, task.activeType);
+                  await $.wait(500);
                 }
             }
           }
@@ -318,18 +335,22 @@ async function queryItem(activeType = 1) {
     }), async (err, resp, data) => {
       try {
         if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
+            console.log(`${JSON.stringify(err)}`);
+            console.log(`${$.name} API请求失败，请检查网路重试`);
+            await $.wait(1000);
         } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data.code === 0 && data.data) {
-              await startItem(data.data.nextResource, activeType)
-            } else {
-              console.log(`商品任务开启失败，${data.message}`)
-              $.canStartNewItem = false
+            if (safeGet(data)) {
+                data = JSON.parse(data);
+                if (data.code === 0 && data.data) {
+                    await $.wait(800);
+                    await startItem(data.data.nextResource, activeType);
+                    await $.wait(500);
+                } else {
+                    console.log(`商品任务开启失败，${data.message}`)
+                    $.canStartNewItem = false
+                    IPError = true
+                }
             }
-          }
         }
       } catch (e) {
         $.logErr(e, resp)
@@ -356,6 +377,7 @@ async function startItem(activeId, activeType) {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
+          IPError = true
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
@@ -366,7 +388,8 @@ async function startItem(activeId, activeType) {
                   videoBrowsing = activeType === 1 ? 5 : 10
                 console.log(`【${taskCompletionProgress + 1}/${taskCompletionLimit}】浏览商品任务记录成功，等待${videoBrowsing}秒`)
                 await $.wait(videoBrowsing * 1000)
-                await endItem(data.data.uuid, activeType, activeId, activeType === 3 ? videoBrowsing : "")
+                await endItem(data.data.uuid, activeType, activeId, activeType === 3 ? videoBrowsing : "");
+                await $.wait(1000);
               } else {
                 console.log(`${$.taskName}任务已达上限`)
                 $.canStartNewItem = false
@@ -409,7 +432,9 @@ async function endItem(uuid, activeType, activeId = "", videoTimeLength = "") {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data.code === 0 && data.isSuccess) {
+              await $.wait(500);
               await rewardItem(uuid, activeType, activeId, videoTimeLength)
+              await $.wait(500);
             } else {
               console.log(`${$.taskName}任务结束失败，${data.message}`)
             }
