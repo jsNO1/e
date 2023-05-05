@@ -142,10 +142,10 @@ async function jdBeanHome() {
     await $.wait(1000)
     await getUserInfo()
     await $.wait(1000)
-    await getTaskList();
-    await receiveJd2();
+    // await getTaskList();
+    // await receiveJd2();
 
-    await morningGetBean()
+    // await morningGetBean()
     await $.wait(1000)
 
     await beanTaskList(1)
@@ -199,7 +199,7 @@ function morningGetBean() {
 // 升级领京豆任务
 async function beanTaskList(type) {
   return new Promise(resolve => {
-    $.post(taskBeanUrl('beanTaskList', {"viewChannel":"myjd"}), async (err, resp, data) => {
+    $.post(taskBeanUrl('beanTaskList', { "viewChannel": "AppHome", "beanVersion": 1 }), async (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
